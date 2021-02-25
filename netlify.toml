@@ -8,7 +8,7 @@
   
 # The Production Context applies to the branch you have configured as main branch to deploy:
 [context.production.environment]
-  HUGO_VERSION = "0.81.0"
+  HUGO_VERSION = "0.63.2"
   HUGO_ENV = "production"
   HUGO_BASEURL = "https://docs.suitecrm.com"
 
