@@ -3,8 +3,7 @@ Title: Campaigns
 Weight: 190
 ---
 
-:imagesdir: /images/en/user
-:toc:
+:imagesdir: /images/en/8.x/user/modules/campaigns/
 
 = Campaigns
 
@@ -20,160 +19,167 @@ Allowing you to view recipient activity with your Campaign, such as those that v
 
 From the Campaigns Module select "Create Campaign" from the module dropdown.
 
-Here you can fill in the detail of your Campaign, such as Name, Start and End Date, Target Lists and Budget.
+image:Campaign-Edit.png[Campaigns Create View]
+
+=== Overview
+
+[cols="20,80"]
+|===
+|*Name*|The name of the Campaign.
+|*Start Date*|This is a representative date and does not determine the start of the sending process for the campaign.
+|*End Date*|This is a representative date and does not determine the end of the sending process for the campaign.
+|*Description*|Optional Description for the Campaign.
+|*Suppression Lists*| Suppression Lists will exclude certain targets from your Campaign. If a Suppression List (By Id) is not added on creation, one will be created / added automatically. To see more information
+on Suppression Lists see link:../../../../user/core-modules//target-lists/#_target_list_types[here.]
+|*Target Lists*| Lists of potential Targets that your campaign will send to.
+|===
 
 {{% notice note %}}
-Please note that the Target Lists you select here will be the *only* Target Lists shown/ selectable on the Marketing Record
+Please note that the Target Lists you select here will be the *only* Target Lists shown / selectable on the Marketing Record
 {{% /notice %}}
 
-If a Target List Suppression List - By Id (link to target list type documentation) is not selected on creation of the Record,
-one will automatically be created and assigned to the Campaign.
+=== Budget
 
-=== Campaign Charts
+[cols="30,70"]
+|===
+|*Budget*|The budget for the Campaign.
+|*Expected Cost*|The expected cost of the Campaign.
+|*Actual Cost*|The actual cost of the Campaign.
+|*Expected Revenue*|The expected revenue of the Campaign.
+|*Objective*| The Objective of the Campaign.
+|*Impressions*| How many impressions the Campaign has had.
+|===
 
-Within the "Insights" on the created Campaign Record there are two charts.
+== Campaign Charts
 
-Campaign Response By Recipient Activity
+image:Campaign-Charts.png[Campaign Charts]
 
-* Of the Emails sent, this chart will show the number of targets that viewed, clicked thru and opted out.
+Inside the Insights for Campaigns there are two *new* charts.
 
-Campaign Send Status
+=== Campaign Response By Recipient Activity
 
-* This chart shows the sent status of each Email. That includes;
-** Queued
-** Sent/ Attempted.
-** Suppressed/ Blocked
-** Viewed
-** Bounced / Invalid Email
-** Bounced / Other
+[cols="30,70"]
+|===
+|*Sent/Attempted*|The number of sent Emails.
+|*Viewed Message*|Of the sent emails, which have been viewed.
+|*Click-thru Link*|The number of unique users that have clicked-thru.
+|*Opted Out*|The number of targets that have opted out.
+|===
 
+=== Campaign Send Status
 
-=== Campaign Action Table
+[cols="40,60"]
+|===
+|*Message Queue*|The number of Emails currently in the queue to send.
+|*Sent/Attempted*|The number of sent Emails.
+|*Suppressed/Blocked*|Of the sent, which have been suppressed / blocked.
+|*Bounced Messages, Invalid Email*|The number of bounced messages / bounced because of an invalid email.
+|*Bounced Messages, Other*|The number of bounced messages for other reasons, such as being a duplicate email.
+|===
+
+== Campaign Action Table
 
 After creating the Campaign Record, you will see a new "Campaign Actions" table.
 
+image:Campaign-Actions-Table.png[Campaigns Actions Table]
+
 This table has four actions:
 
-*New Marketing Email*
-
-* This is selected to create an Email Marketing, Marketing type record; this record requires an unsubscribe
-link in the Email body. To add an unsubscribe link see here(link to unsubscribe).
-
-*New Transactional Email*
-
-* This is selected to create an Email Marketing, Transactional type record; this record is required to *not* have an
+[cols="20,80"]
+|===
+|*New Marketing Email*| This action will create a Marketing type Email Marketing Record; this record requires an unsubscribe
+link in the Email body. To add an unsubscribe link see link:../_campaigns/#_opt_out_tracker[here.]
+|*New Transactional Email*|This action will create a Transactional type Email Marketing record; this record is required to *not* have an
 unsubscribe link within the Email body.
-
-*New Survey Email*
-
-* This is selected to create an Email Marketing, Survey type record; this record is also required to have an unsubscribe link.
-
-*New Survey*
-
-* This is selected to create a new Survey.
+|*New Survey Email*|This action will create a Survey type Email Marketing record; this record is also required to have an unsubscribe link.
+|*New Survey*|This action will create a new Survey.
+|===
 
 == Creating an Email Marketing Record
 
-Select the type of Email Marketing record to create from the list above (e.g Marketing).
-
-ss
+image:create-email-marketing-demo.gif[Create Email Marketing]
 
 === Email Marketing Fields
 
-==== Status
+*Status*
 
-Draft
+[cols="20,80"]
+|===
+|*Draft*| * While in draft, the record will not start sending at the "Scheduled Run Date".
 
-* While in draft, the record will not start sending at the "Scheduled Run Date".
 * The record is *only* editable while in draft.
-* Send Test Emails can *only* be sent in draft.
 
-Scheduled
-
-* When scheduled, the record will start sending out Emails in batches (based on the "Number of emails processed/sent per batch"
+* Test Emails can *only* be sent while in draft.
+|*Scheduled*| * When scheduled, the record will start sending out Emails in batches (based on the "Number of emails processed/sent per batch"
 setting) at the "Scheduled Run Date".
-* This status can be achieved by clicking btn:[Schedule].
-* To set the record back to draft, select the button btn:[Unschedule].
 
-Pending Send
+* This status can be achieved by selecting the "Schedule" button.
 
-* If "Scheduled" and "Scheduled Run Date" is in the past, the record will show as pending send and will be picked up next time the Scheduler runs.
-* On this status, this record can no longer be "Unscheduled". To stop the process, select btn:[Abort].
+* To set the record back to draft, select the "Unschedule" button, you *cannot* do this when the sending process has started.
+|*Pending Send*| * If the record is "Scheduled" and "Scheduled Run Date" is in the past, the record will show as pending send and will be picked up the next time the Scheduler runs.
 
-Sending
+* While in "pending send", this record can no longer be "Unscheduled". To stop the process, select the "Abort" button.
+|*Sending*| * This status will show if the Emails are being / have been queued and the sending process has started.
 
-* This status will show if the Emails have been queued and the sending process has started.
-* On this status, this record can no longer be "Unscheduled". To stop the process, select btn:[Abort].
+* While "sending", this record can no longer be "Unscheduled". To stop the process, select the "Abort" button.
+|*Sent*| * This will show if all Targets have been sent to / attempted to send to.
+|*Aborted*| * This will show if the record was aborted during the sending process.
+|===
 
-Sent
+*Queuing Status*
 
-* This will show if all Targets have been sent to/ attempted to send.
+[cols="20,80"]
+|===
+|*Not Started*| * This will show when no emails have been queued from this Email Marketing Record to send.
+|*In Progress*| * This will show when the Scheduler has picked up this Marketing Record and began queuing emails to send.
 
-Aborted
-
-* This will show if at some point during the sending process it was aborted using btn:[Abort].
-* No other changes can be made to the record at this state.
-
-==== Queuing Status
-
-This will show the status of emails queuing to send to selected Targets.
-
-Not Started
-
-* This will show when no emails have been queued from this Email Marketing Record to send.
-
-In Progress
-
-* This will show when the Scheduler has picked up this Marketing Record and began queuing emails to send.
 * The number of emails it queues at a time is based on the "Number of emails processed/sent per batch" setting.
+|*Finished*| * This will show when all Emails have been queued to send.
 
-Finished
-
-* This will show when all Emails have been queued to send.
 * Please note, when finished here, sending could still be in process.
+|===
 
-==== From
+*From*
 
 This is the Outbound Email that will be used to send from.
 
-==== Target Lists
+*Target Lists*
 
 The Target Lists selected here will be the Targets that the Email will be sent to when "Scheduled".
 
-If a Target List Suppression type is added, those on the list will not have the Email sent to them.
+*Template*
 
-To see more Target Lists in the dropdown on this Record, select them on the Parent Campaign.
+You can select an existing email template for this record and edit it after selection or not use one at all.
 
-==== Template
+*Scheduled Run Date*
 
-You can select an existing template for this record and edit it after selection or not use one at all.
+This is the scheduled date / time that the sending process will start for the Email Marketing Record.
 
-==== Scheduled Run Date
-
-This is the scheduled time that the sending process will start for the Email Marketing Record.
-
-==== Trackers Enabled
+*Trackers Enabled*
 
 This is to enable trackers on this Email Marketing Record specifically.
-To change the value globally, change it on the "Campaign Email Settings" via the Admin Menu.
 
-==== Duplicate Handling
+Please Note if trackers are disabled globally, you *cannot* enable them on an Email Marketing record.
 
-Prevent sending to duplicate records
+See more information about trackers link:../_campaigns/#_tracker_urls[here].
 
-* This will prevent sending to the same record if selected on multiple target lists.
+*Duplicate Handling*
 
-Prevent sending to duplicate records and email addresses
-
-* This will prevent sending to the same email address twice, if two records have the same email,
+[cols="20,80"]
+|===
+|*Prevent sending to duplicate records*| This will prevent sending to the same record if selected on multiple target lists.
+|*Prevent sending to duplicate records and email addresses*|This will prevent sending to the same email address twice, if two records have the same email,
 it will only send it to one record, and the other will be blocked.
+|===
 
 == Tracker Urls
 
 Tracker URLs can be used to insert a link to your organization's website or direct link to a new product that you have launched, for example.
 A unique id is added to the link for each recipient which allows SuiteCRM to track click-thrus.
 
-The information gathered can be viewed on the charts on each record and the parent Campaign.
+The information gathered can be viewed collectively on the record charts or, more individually, on the subpanels below the record.
+
+image:track_recipient_activity.gif[Recipient Activity]
 
 To enable trackers globally, go to the "Campaign Email Settings" via the Admin Menu.
 
@@ -181,7 +187,7 @@ To enable trackers globally, go to the "Campaign Email Settings" via the Admin M
 
 You can add trackers to your Email Marketing Record by adding a hyperlink via the Campaign Email body field.
 
-inset gif here.
+image:Tracker.gif[Tracker Link]
 
 === Opt Out Tracker
 
@@ -189,21 +195,31 @@ An Opt-Out link allows the recipient to opt out of future Marketing Emails.
 
 To add an opt-out tracker to your Email Marketing Record, you can select the icon:
 
-image
+image:Unsubscribe-Icon.png[Unsubscribe Icon]
 
 This will add an unsubscribe link to the email.
+
+{{% notice warning %}}
+Please note: An unsubscribe link is required on both a marketing and survey type Email Marketing record.
+{{% /notice %}}
 
 == Email Marketing Record Actions
 
 === Send Test Email
 
-From the Email Marketing Record you are able to send a test email to Email Addresses, Users and test Targets Lists.
+You can send a test email to a User, test Target List or specific Email Address.
 
-ss
+image:send_test_entries_demo.gif[Send Test Email]
 
-By doing this you can view the campaign as a recipient and double-check that it appears as it should before selecting
-btn:[Schedule] and sending it out.
-Test Entries will generate views and click-thrus etc. just like non-test records.
+By doing this you can view the campaign as a recipient and double-check that it appears as it should.
+
+Test Entries will generate views and click-thrus etc. which can be viewed from the record subpanels and charts.
+
+image:test-entries-demo.gif[Test Entries]
+
+After sending out test emails, a warning banner will display to show that the data show is test data.
+
+Changing `test_email_limit` via `config.php` allows to send more test emails at once. The default for this is 50.
 
 You *cannot* send a test email after Scheduling.
 
@@ -211,24 +227,24 @@ You *cannot* send a test email after Scheduling.
 
 This will remove all test entries created by sending test emails.
 
-Test entries will be deleted on btn:[Schedule].
+Test entries will be deleted when the record is "Scheduled".
 
 === Schedule
 
-This will only show when in the "Draft" status and will Schedule the Email Marketing Record to start queuing/ sending at the Scheduled Run Date.
+This will Schedule the Email Marketing Record to start queuing / sending at the Scheduled Run Date.
 
-Scheduling also deletes test entries, as to not mix results.
+Scheduling also deletes test entries.
 
 {{% notice warning %}}
-Please note: The Record *CANNOT* be edited/ updated after scheduling.
+Please note: The Record *CANNOT* be edited / updated after scheduling.
 {{% /notice %}}
 
 === Unschedule
 
-This will show once the Email Marketing Record has been scheduled.
+Once the record has been scheduled, This action will set the record to Draft and allow the user to make further changes.
 
 {{% notice warning %}}
-The Record can only be unscheduled before starting to send. After this stage the record must be "Aborted" to stop the process.
+The Record can only be unscheduled before the sending process has begun. After this stage the record must be "Aborted" to stop the process.
 {{% /notice %}}
 
 === Abort
@@ -239,38 +255,36 @@ This will stop the sending process for the record and will delete everything for
 
 === Email Marketing Status Check
 
-There are three different sections on the Status Check sidebar; Schedulers, Inbound Email and Settings.
+image:Status-Check-Widget.png[Status Check Widget]
 
 ==== Schedulers
 
 This will show the interval for three schedulers related to Campaign Emails.
 
-* Send Campaign Emails
-** How often Campaign Emails will send from the queue.
-
-* Queue Campaign Emails
-** How often Campaign Emails will be added to the queue.
-
-* Run Nightly Process Bounced Campaign Emails
-** How often will there be a check for bounced campaign emails
+[cols="20,80"]
+|===
+|*Send Campaign Emails*|  How often will batched Campaign Emails be sent out.
+|*Queue Campaign Emails*| How often will Campaigns Emails be added in batches to the queue.
+|*Run Nightly Process Bounced Campaign Emails*| How often will there be a check for bounced campaign emails.
+|===
 
 ==== Inbound Email
 
-This will show you if there is currently an Inbound Email Record that exists that is type bounce.
+This will show you if there is currently an Inbound Email Record that exists that is of type Bounce.
 
 {{% notice note %}}
-A Bounce record can exist and not be configured properly, be weary of this if running into issues with sending.
+A Bounce record can exist and not be configured correctly, be weary of this if running into issues.
 {{% /notice %}}
 
 ==== Settings
 
-This shows some of the Settings that are present in the "Campaign Email Settings". To see more info about these settings, see here(link to settings).
+This shows some of the Settings that are present in the "Campaign Email Settings". To see more info about these settings, see link:../_campaigns/#_campaign_settings[here.]
 
 === Email Marketing Record Charts
 
-As for the parent Campaign, you can track the Recipient Activity and Send Status of each Email Marketing Record.
+As for the parent Campaign, you can track overall Recipient Activity and Send Status of each Email Marketing Record.
 
-To see more information about the Charts shown, see here(link to charts).
+To see more information about the Charts shown, see link:../_campaigns/#_campaign_charts[here.]
 
 == Campaign Email Subpanels
 
@@ -280,26 +294,16 @@ More information can be viewed in the subpanels below the record, where response
 
 You can see the settings for your campaigns via the Admin Menu -> "Campaign Email Settings".
 
+image:Campaign-Email-Settings.png[Campaign Email Settings]
+
 On this page you can change different Campaign Settings:
 
-Number of emails marketing records to process per run
-
-* This is the maximum number of Email Marketing Records to process at once time during the Queue and Send Campaign Email Schedulers.
-
-Number of emails processed/sent per batch
-
-* This is the maximum number of Emails to queue and send per run of Email Marketing Record.
-
-Trackers Enabled
-
-* This is to set trackers on/ off globally.
-
-Location of campaign tracking files
-
-* This is the location of the campaign tracking files.
-
-Keep copies of campaign messages
-
-* This is if you want copies of individual Email Marketing Records.
-
+[cols="20,80"]
+|===
+|*Number of emails marketing records to process per run*| This is the maximum number of Email Marketing Records to process at once time during the Queue and Send Campaign Email Schedulers.
+|*Number of emails processed/sent per batch*|This is the maximum number of Emails to queue and send per run of Email Marketing Record.
+|*Trackers Enabled*| This is to enable / disable trackers globally.
+|*Location of campaign tracking files*| This is to define the location of the campaign tracking files.
+|*Keep copies of campaign messages*|This is if you want copies of individual Email Marketing Records.
+|===
 
