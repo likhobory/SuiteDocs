@@ -15,6 +15,8 @@ to selected Targets (Users, Contacts, Targets, Leads & Accounts).
 With the tracking tools built into the Campaign Module, you can monitor the response you receive from your Campaign in real time.
 Allowing you to view recipient activity with your Campaign, such as those that view the email, click through and any blocked Emails.
 
+image:8-9-campaigns-overview.gif[Campaigns Overview]
+
 == Create a Campaign
 
 From the Campaigns Module select "Create Campaign" from the module dropdown.
