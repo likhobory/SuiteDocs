@@ -1,0 +1,297 @@
+---
+Title: Маркетинг
+Weight: 190
+---
+
+:imagesdir: /images/en/8.x/user/modules/campaigns/
+
+= Маркетинг
+
+== Общее описание
+
+Модуль используется для отправки и отслеживания различных типов писем, в частности: маркетинговых, транзакционных и опросных писем. Письма могут быть отправлены различным получателям: Пользователям системы, Контактам, Предварительным контактам, Адресатам и Контрагентам.
+
+Используя трекеры, встроенные в модуль, вы можете отслеживать  ответную реакцию получателей писем на проводимую рассылку в режиме реального времени: получать статистику по тем, кто только просмотрел письмо, перешёл по ссылкам в сообщении или отписался от рассылки.
+
+image:8-9-campaigns-overview.gif[Обзор кампаний]
+
+image:8-9-campaigns-overview.gif[Campaigns Overview]
+
+== Создание маркетинговой кампании
+
+В меню модуля *Маркетинг* выберите пункт *Мастер маркет. кампаний*
+
+image:Campaign-Edit.png[Campaigns Create View]
+
+=== Ввод основной информации о маркетинговой кампании
+
+Название:: Название маркетинговой кампании. 
+Дата начала:: Планируемая дата начала кампании, она не влияет на начало процесса отправки писем.
+Дата окончания:: Планируемая дата окончания кампании, она не влияет на окончание процесса отправки писем.
+Описание:: Краткое описание маркетинговой кампании.
+Список исключений:: Исключение определенных получателей из проводимой кампании. Если список исключений (по идентификатору) не был добавлен при создании кампании, он будет создан/добавлен автоматически. Дополнительная информация о списках Адресатов описана
+link:../../../../user/core-modules//target-lists/#_target_list_types[здесь.]
+Списки Адресатов:: Списки получателей писем проводимой маркетинговой кампании.
+
+{{% notice note %}}
+Please note that the Target Lists you select here will be the *only* Target Lists shown / selectable on the Marketing Record
+{{% /notice %}}
+
+=== Бюджет
+
+Бюджет:: Бюджет маркетинговой кампании.
+Ожидаемая стоимость:: Ожидаемая стоимость проведения маркетинговой кампании.
+Фактическая стоимость:: Фактическая сумма, потраченную на проведение  маркетинговой кампании.
+Ожидаемый доход:: Сумма ожидаемого от проводимой маркетинговой кампании дохода. 
+Цель:: Цель проведения маркетинговой кампании. 
+Количество показов:: Количество показов, проведённых за время  кампании. 
+
+== Диаграммы
+
+image:Campaign-Charts.png[Campaign Charts]
+
+Для анализа проводимой кампании доступно два вида диаграмм:
+
+=== Активность адресатов
+
+Отправлено/Попыток:: Количество отправленных писем.
+Просмотренных сообщений:: Количество писем, просмотренных получателями.
+Переходов по ссылкам:: Количество получателей, перешедших по ссылкам в полученном сообщении.
+Отписок:: Количество получателей, отписавшихся от рассылки.
+
+
+=== Статус отправки писем
+
+В очереди:: Количество писем, находящихся в очереди на отправку
+Отправлено/Попыток:: Количество отправленных писем.
+Исключённых/заблокированных:: Количество получателей, исключённых или отписавшихся от рассылки.
+Возвращённых сообщений (неверный адрес):: Количество возвращённых сообщений по причине указания неверного электронного адреса.
+Возвращённых сообщений (другое):: Количество сообщений, возвращённых по другим причинам, например, дублирование электронного адреса.
+
+
+== Действия маркетинговой кампании
+
+После ввода основной информации о маркетинговой кампании
+можно выполнить следующие действия:
+
+image:Campaign-Actions-Table.png[Campaigns Actions Table]
+
+Новое маркетинговое письмо:: Это действие создаст маркетинговую рассылку по электронной почте; для этой рассылки необходима ссылка отписки в тексте письма. Детальная информация о добавлении ссылки отписки находится 
+<<здесь,трекер_отписки_от_рассылки>>.
+Новое транзакционное письмо::Это действие создаст маркетинговую рассылку по электронной почте транзакционного типа; эта рассылка *НЕ ДОЛЖНА* иметь ссылку отписки в тексте письма.
+Новое опросное письмо::Это действие создаст маркетинговую рассылку по электронной почте опросного типа; для этой рассылки также необходима ссылка отписки в тексте письма.
+Новый опрос::Это действие создаст новый Опрос.
+
+
+== Creating an Email Marketing Record
+
+image:create-email-marketing-demo.gif[Create Email Marketing]
+
+=== Email Marketing Fields
+
+*Status*
+
+[cols="20,80"]
+|===
+|*Draft*| * While in draft, the record will not start sending at the "Scheduled Run Date".
+
+* The record is *only* editable while in draft.
+
+* Test Emails can *only* be sent while in draft.
+|*Scheduled*| * When scheduled, the record will start sending out Emails in batches (based on the "Number of emails processed/sent per batch"
+setting) at the "Scheduled Run Date".
+
+* This status can be achieved by selecting the "Schedule" button.
+
+* To set the record back to draft, select the "Unschedule" button, you *cannot* do this when the sending process has started.
+|*Pending Send*| * If the record is "Scheduled" and "Scheduled Run Date" is in the past, the record will show as pending send and will be picked up the next time the Scheduler runs.
+
+* While in "pending send", this record can no longer be "Unscheduled". To stop the process, select the "Abort" button.
+|*Sending*| * This status will show if the Emails are being / have been queued and the sending process has started.
+
+* While "sending", this record can no longer be "Unscheduled". To stop the process, select the "Abort" button.
+|*Sent*| * This will show if all Targets have been sent to / attempted to send to.
+|*Aborted*| * This will show if the record was aborted during the sending process.
+|===
+
+*Queuing Status*
+
+[cols="20,80"]
+|===
+|*Not Started*| * This will show when no emails have been queued from this Email Marketing Record to send.
+|*In Progress*| * This will show when the Scheduler has picked up this Marketing Record and began queuing emails to send.
+
+* The number of emails it queues at a time is based on the "Number of emails processed/sent per batch" setting.
+|*Finished*| * This will show when all Emails have been queued to send.
+
+* Please note, when finished here, sending could still be in process.
+|===
+
+*From*
+
+This is the Outbound Email that will be used to send from.
+
+*Target Lists*
+
+The Target Lists selected here will be the Targets that the Email will be sent to when "Scheduled".
+
+*Template*
+
+You can select an existing email template for this record and edit it after selection or not use one at all.
+
+*Scheduled Run Date*
+
+This is the scheduled date / time that the sending process will start for the Email Marketing Record.
+
+*Trackers Enabled*
+
+This is to enable trackers on this Email Marketing Record specifically.
+
+Please Note if trackers are disabled globally, you *cannot* enable them on an Email Marketing record.
+
+See more information about trackers link:../_campaigns/#_tracker_urls[here].
+
+*Duplicate Handling*
+
+[cols="20,80"]
+|===
+|*Prevent sending to duplicate records*| This will prevent sending to the same record if selected on multiple target lists.
+|*Prevent sending to duplicate records and email addresses*|This will prevent sending to the same email address twice, if two records have the same email,
+it will only send it to one record, and the other will be blocked.
+|===
+
+== Tracker Urls
+
+Tracker URLs can be used to insert a link to your organization's website or direct link to a new product that you have launched, for example.
+A unique id is added to the link for each recipient which allows SuiteCRM to track click-thrus.
+
+The information gathered can be viewed collectively on the record charts or, more individually, on the subpanels below the record.
+
+image:track_recipient_activity.gif[Recipient Activity]
+
+To enable trackers globally, go to the "Campaign Email Settings" via the Admin Menu.
+
+=== How to add trackers
+
+You can add trackers to your Email Marketing Record by adding a hyperlink via the Campaign Email body field.
+
+image:Tracker.gif[Tracker Link]
+
+=== Трекер отписки от рассылки
+
+An Opt-Out link allows the recipient to opt out of future Marketing Emails.
+
+To add an opt-out tracker to your Email Marketing Record, you can select the icon:
+
+image:Unsubscribe-Icon.png[Unsubscribe Icon]
+
+This will add an unsubscribe link to the email.
+
+{{% notice warning %}}
+Please note: An unsubscribe link is required on both a marketing and survey type Email Marketing record.
+{{% /notice %}}
+
+== Email Marketing Record Actions
+
+=== Send Test Email
+
+You can send a test email to a User, test Target List or specific Email Address.
+
+image:send_test_entries_demo.gif[Send Test Email]
+
+By doing this you can view the campaign as a recipient and double-check that it appears as it should.
+
+Test Entries will generate views and click-thrus etc. which can be viewed from the record subpanels and charts.
+
+image:test-entries-demo.gif[Test Entries]
+
+After sending out test emails, a warning banner will display to show that the data show is test data.
+
+Changing `test_email_limit` via `config.php` allows to send more test emails at once. The default for this is 50.
+
+You *cannot* send a test email after Scheduling.
+
+=== Delete Test Entries
+
+This will remove all test entries created by sending test emails.
+
+Test entries will be deleted when the record is "Scheduled".
+
+=== Schedule
+
+This will Schedule the Email Marketing Record to start queuing / sending at the Scheduled Run Date.
+
+Scheduling also deletes test entries.
+
+{{% notice warning %}}
+Please note: The Record *CANNOT* be edited / updated after scheduling.
+{{% /notice %}}
+
+=== Unschedule
+
+Once the record has been scheduled, This action will set the record to Draft and allow the user to make further changes.
+
+{{% notice warning %}}
+The Record can only be unscheduled before the sending process has begun. After this stage the record must be "Aborted" to stop the process.
+{{% /notice %}}
+
+=== Abort
+
+This will stop the sending process for the record and will delete everything for this record on the message queue.
+
+== Email Marketing Insights
+
+=== Email Marketing Status Check
+
+image:Status-Check-Widget.png[Status Check Widget]
+
+==== Schedulers
+
+This will show the interval for three schedulers related to Campaign Emails.
+
+[cols="20,80"]
+|===
+|*Send Campaign Emails*|  How often will batched Campaign Emails be sent out.
+|*Queue Campaign Emails*| How often will Campaigns Emails be added in batches to the queue.
+|*Run Nightly Process Bounced Campaign Emails*| How often will there be a check for bounced campaign emails.
+|===
+
+==== Inbound Email
+
+This will show you if there is currently an Inbound Email Record that exists that is of type Bounce.
+
+{{% notice note %}}
+A Bounce record can exist and not be configured correctly, be weary of this if running into issues.
+{{% /notice %}}
+
+==== Settings
+
+This shows some of the Settings that are present in the "Campaign Email Settings". To see more info about these settings, see link:../_campaigns/#_campaign_settings[here.]
+
+=== Email Marketing Record Charts
+
+As for the parent Campaign, you can track overall Recipient Activity and Send Status of each Email Marketing Record.
+
+To see more information about the Charts shown, see link:../_campaigns/#_campaign_charts[here.]
+
+== Campaign Email Subpanels
+
+More information can be viewed in the subpanels below the record, where responses are detailed on an individual record level.
+
+== Campaign Settings
+
+You can see the settings for your campaigns via the Admin Menu -> "Campaign Email Settings".
+
+image:Campaign-Email-Settings.png[Campaign Email Settings]
+
+On this page you can change different Campaign Settings:
+
+[cols="20,80"]
+|===
+|*Number of emails marketing records to process per run*| This is the maximum number of Email Marketing Records to process at once time during the Queue and Send Campaign Email Schedulers.
+|*Number of emails processed/sent per batch*|This is the maximum number of Emails to queue and send per run of Email Marketing Record.
+|*Trackers Enabled*| This is to enable / disable trackers globally.
+|*Location of campaign tracking files*| This is to define the location of the campaign tracking files.
+|*Keep copies of campaign messages*|This is if you want copies of individual Email Marketing Records.
+|===
+
