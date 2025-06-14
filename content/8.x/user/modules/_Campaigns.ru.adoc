@@ -199,7 +199,7 @@ image:create-email-marketing-demo.gif[Create Email Marketing]
 
 
 С адреса:: 
-* Адрес исходящей почты, которого будет осуществляться рассылка.
+* Адрес исходящей почты, с которого будет осуществляться рассылка.
 
 Списки адресатов:: 
 * Списки адресатов, которым будет осуществляться рассылка.
@@ -226,6 +226,7 @@ image:create-email-marketing-demo.gif[Create Email Marketing]
 
 * *Предотвращение отправки писем дублирующимся получателям*
 ** Предотвращение отправки нескольких писем одному и тому же получателю, если он присутствует в нескольких Списках адресатов.
+
 * *Предотвращение отправки писем на дублирующийся адрес электронной почты*
 ** Предотвращение отправки нескольких писем на один и тот же адрес электронной почты.
 ** Если разные получатели имеют одинаковый адрес электронной почты,
@@ -234,84 +235,110 @@ image:create-email-marketing-demo.gif[Create Email Marketing]
 
 == URL трекера
 
-Tracker URLs can be used to insert a link to your organization's website or direct link to a new product that you have launched, for example.
-A unique id is added to the link for each recipient which allows SuiteCRM to track click-thrus.
+URL-адреса трекера можно использовать для вставки ссылки на веб-сайт вашей 
+организации или прямой ссылки на новый продукт, который вы запустили.
+Трекеры используются для отслеживания ответной реакции адресатов на рассылку.
+Для каждой ссылки и адресата система создаёт уникальный ключ. Когда получатели открывают письма и кликают на содержащихся в нём ссылках, SuiteCRM отслеживает активность каждого из них, используя уникальные ключи, содержащиеся в ссылках.
 
-The information gathered can be viewed collectively on the record charts or, more individually, on the subpanels below the record.
+Собранную информацию можно просматривать как в общем виде, на графиках, так и более детально, в субпанелях проводимой кампании.
 
 image:track_recipient_activity.gif[Recipient Activity]
 
-To enable trackers globally, go to the "Campaign Email Settings" via the Admin Menu.
+Для глобального включения трекеров включите соответствующий параметр в разделе
+*Параметры рассылки E-mail* панели Администратора.
 
-=== How to add trackers
 
-You can add trackers to your Email Marketing Record by adding a hyperlink via the Campaign Email body field.
+=== Создание трекера
+
+Для создания трекера в тексте письма выделите необходимый фрагмент текста, на панели инструментов текстового редактора нажмите кнопку  ??? и введите текст создаваемой гиперссылки
 
 image:Tracker.gif[Tracker Link]
 
-=== Трекер отписки от рассылки
+=== Ссылка отписки от рассылки
 
-An Opt-Out link allows the recipient to opt out of future Marketing Emails.
+Ссылка отписки от рассылки позволяет получателям отписаться от получения последующих сообщений.
 
-To add an opt-out tracker to your Email Marketing Record, you can select the icon:
+Для создания ссылки на панели инструментов нажмите кнопку  ??? ,
+ что сразу создаст необходимую ссылку в месте расположения курсора.
+Для редактирования текста ссылки воспользуйтесь кнопкой ???
+
 
 image:Unsubscribe-Icon.png[Unsubscribe Icon]
 
-This will add an unsubscribe link to the email.
 
-{{% notice warning %}}
-Please note: An unsubscribe link is required on both a marketing and survey type Email Marketing record.
+{{% notice note %}}
+Рассылки и опросные письма в обязательном порядке должны содержать
+ссылку отписки от рассылки.
 {{% /notice %}}
 
-== Email Marketing Record Actions
+== Действия при настройке рассылки
 
-=== Send Test Email
+=== Выполнение тестовой рассылки
 
-You can send a test email to a User, test Target List or specific Email Address.
+Перед выполнением рассылки рекомендуется выполнить тестовую рассылку и посмотреть, как различные почтовые клиенты будут отображать рассылаемые сообщения.
+
+Тестовое электронное письмо может быть отправлено пользователям системы,
+Адресатам, тип которых указан как *Тестовый* 
+или по указанным адресам электронной почты.
 
 image:send_test_entries_demo.gif[Send Test Email]
 
-By doing this you can view the campaign as a recipient and double-check that it appears as it should.
+При работе получателей с тестовыми письмами в системе будет собираться статистика по просмотрам, переходам по ссылкам и т. д., которую можно просматривать на субпанелях кампании и диаграммах.
 
-Test Entries will generate views and click-thrus etc. which can be viewed from the record subpanels and charts.
 
 image:test-entries-demo.gif[Test Entries]
 
-After sending out test emails, a warning banner will display to show that the data show is test data.
+После отправки тестовых писем в верхней части окна системы появится предупреждающий баннер, сообщающий о том, что отображаемые данные являются тестовыми.
 
-Changing `test_email_limit` via `config.php` allows to send more test emails at once. The default for this is 50.
+По умолчанию может быть отправлено до 50 тестовых писем. 
+При необходимости вы можете изменить эту цифру, отредактировав 
+значение параметра `test_email_limit` в файле `config.php`.
 
-You *cannot* send a test email after Scheduling.
 
-=== Delete Test Entries
-
-This will remove all test entries created by sending test emails.
-
-Test entries will be deleted when the record is "Scheduled".
-
-=== Schedule
-
-This will Schedule the Email Marketing Record to start queuing / sending at the Scheduled Run Date.
-
-Scheduling also deletes test entries.
-
-{{% notice warning %}}
-Please note: The Record *CANNOT* be edited / updated after scheduling.
+{{% notice note %}}
+Тестовое письмо не может быть отправлено, 
+если рассылка находится в статусе *Запланирована*.
 {{% /notice %}}
 
-=== Unschedule
 
-Once the record has been scheduled, This action will set the record to Draft and allow the user to make further changes.
+
+=== Удаление информации о тестовой рассылке
+
+Удаление тестовой информации может быть выполнено следующим образом :
+
+* Принудительно, при нажатии кнопки {btn}[Удаление тестовых записей] в меню *Действия*.
+* Если рассылка переведена в статус *Запланирована*.
+
+=== Перевод рассылки в статус ЗАПЛАНИРОВАНА
+
+При нажатии соответствующей кнопки письма текущей рассылки будут поставлены в очередь на отправку, но только после наступлении даты, 
+указанной  в поле *Запланированная дата рассылки*.
+
+Тестовая информация о рассылке (если таковая была) будет удалена из системы.
 
 {{% notice warning %}}
-The Record can only be unscheduled before the sending process has begun. After this stage the record must be "Aborted" to stop the process.
+Данные рассылки *не могут быть отредактированы*, 
+если рассылка находится в статусе *Запланирована*.
 {{% /notice %}}
 
-=== Abort
+=== Отмена запланированной рассылки
 
-This will stop the sending process for the record and will delete everything for this record on the message queue.
+При нажатии на эту кнопку запланированной рассылке будет присвоен  статус *Черновик* и и она станет доступна для редактирования.
 
-== Email Marketing Insights
+{{% notice warning %}}
+Отмена запланированной рассылки может быть выполнена только 
+*ДО* начала процесса отправки писем. +
+Если процесс отправки писем уже был запущен - 
+воспользуйтесь кнопкой прерывания рассылки.
+{{% /notice %}}
+
+
+=== Прерывание рассылки
+
+При нажатии на кнопку {btn}[Прервать] процесс отправки писем текущей рассылки будет остановлен, все сообщения из очереди отправки текущей рассылки будут удалены.
+
+
+== Диагностика маркетинговой кампании
 
 === Email Marketing Status Check
 
