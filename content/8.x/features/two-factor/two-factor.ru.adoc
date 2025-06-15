@@ -9,6 +9,11 @@ weight: 50
 
 :experimental:
 
+//
+:sectnums:
+:sectnumlevels: 2
+//
+
 :imagesdir: /images/ru/8.x/features/two-factor
 
 ifdef::env-github[:imagesdir: ../../../static/images/ru/8.x/user/features/quick-filters]
