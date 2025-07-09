@@ -82,7 +82,7 @@ link:../../../../user/core-modules//target-lists/#_target_list_types[здесь.
 Списки получателей писем проводимой маркетинговой кампании.
 
 {{% notice note %}}
-Please note that the Target Lists you select here will be the *only* Target Lists shown / selectable on the Marketing Record
+Обратите внимание: при создании рассылки, транзакционного или опросного письма будут доступны Списки адресатов, указанные *только в текущей маркетинговой кампании*.
 {{% /notice %}}
 
 === Бюджет кампании
