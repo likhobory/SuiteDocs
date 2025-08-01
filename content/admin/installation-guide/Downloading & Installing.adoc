@@ -99,7 +99,7 @@ you need to install SuiteCRM by following the on-screen installation
 wizard. You can navigate to the wizard by entering the following in your
 web browser:
 
-`http://<yourServer>/<yourSuiteCRMDirectory>/install.php` 
+`http://<yourServer>/<yourSuiteCRMDirectory>/install.php`
 
 You can perform a typical installation or a custom installation. Typical
 installation is recommended, but you can choose custom installation for
@@ -187,7 +187,7 @@ installation.
 
 .  Launch your browser and go to your new SuiteCRM installation. The URL should be similar to the following:
 `http://crm.yourserver.com/Suite-CRM-Directory/install.php`
- 
+
 .  The _Welcome to the SuiteCRM Setup Wizard_ screen
 You need to accept the license agreement first. To do so:
 ..  Click the _I Accept_ checkbox.
@@ -241,7 +241,6 @@ This is the administrator's email address. Ex:
 ...  _More Options_
 In this section you can opt to:
 * Populate SuiteCRM with demo data
-* Add SMTP server specifications
 * Add branding (Name and logo)
 * Set the system locale
 * Set security options

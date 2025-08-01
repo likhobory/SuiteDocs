@@ -85,9 +85,9 @@ link:../../../../user/advanced-modules/workflow/[workflow] email notifications.
 
 image:StandardEmailSettings.png[Outgoing Mail Configuration]
 
-Select the mail provider by clicking the appropriate button and then enter the required configuration
- information for your system. Verify that any default
-port/protocol settings are valid for your setup.
+The account shown on Email Settings will now be the default system outbound email account.
+
+You can configure the default outgoing mail account from the Admin panel, under Outbound Email Accounts.
 
 [cols = "30, 70", frame = "none", grid = "none"]
 |===
@@ -95,22 +95,11 @@ port/protocol settings are valid for your setup.
 will be able to send emails using this outgoing mail account, which is the same as that used
 to send system notifications and alerts. If the option is not selected, users can still use the
 outgoing mail server after providing their own account information.
-|*Users may send as themselves*|When this option selected, all users will be able to send emails
+|*Users may send as themselves*|*Will only show when "Enable Legacy Email Compose Behaviour" is enabled* || When this option selected, all users will be able to send emails
  using the same outgoing mail account used to send system notifications and alerts.
 If the option is not selected, users can still use the outgoing mail server after providing their
  own account information.
 |===
-
-Click btn:[SEND TEST EMAIL] to check your settings. You will be asked to enter
-an email address for the test message to be sent to.
-
-image:EmailSendTest.png[Send Test Email]
-
-A verification message will be displayed if the email was sent successfully.
-Check that you have received this test message.
-
-Once the settings have been verified, click btn:[SAVE] so that
-these settings are retained before leaving the settings page.
 
 ==== Troubleshooting
 If the test message was not sent successfully, check the log file for any further error messages
@@ -130,6 +119,8 @@ image:EmailNotificationSettings.png[Email options]
 and email address will be included in the From field of the email.
 This feature might not work with SMTP servers that do not allow sending from a different email account than the server
 account.
+|*Enable Legacy Email Compose Behaviour*| When selected, this will show inbound email accounts in the email compose from dropdown.
+This will also show and enable the option "Users may send as themselves".
 |===
 
 ==== Opt In Settings
