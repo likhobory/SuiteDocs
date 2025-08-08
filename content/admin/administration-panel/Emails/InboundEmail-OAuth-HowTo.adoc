@@ -1,5 +1,5 @@
 ---
-Title: How to configure Inbound Email with OAuth
+Title: How to configure Outbound or Inbound Email with OAuth
 weight: 30
 ---
 
@@ -7,7 +7,7 @@ weight: 30
 
 == 1. Intro
 
-This guide will explain how to configure an inbound email connections using a previously configured OAuth Provider.
+This guide will explain how to configure an inbound and outbound email connections using a previously configured OAuth Provider.
 
 As example we will use a Microsoft account, however the steps should be similar for other providers
 
@@ -22,9 +22,12 @@ As an admin you can create three types of records:
 . Group
 .. Records that will be used by many users
 .. Group records are meant to be use by accounts in a domain that are meant to be used by several users, e.g. all members of the support team would have access to `support@example-inc.onmicrosoft.com`.
-. Bounce
+. Bounce (only on Inbound Email)
 .. Records meant to be used just for reading Campaings bounce emails
 
+{{% notice warning %}}
+Please be sure to use the same type of OAuth Provider as the type of account you are configuring. E.g. use a Group OAuth Provider to configure a Group Inbound/ Outbound Account.
+{{% /notice %}}
 
 {{% notice note %}}
 If you haven't yet configure the OAuth Provider or don't know how to, please have a look at link:../microsoft-oauth-provider-howto[How to configure a Microsoft OAuth Provider Guide]
@@ -86,8 +89,9 @@ Go ahead and *save* your record.
 image:suitecrm-save-button.png[suitecrm-save-button.png]
 
 
-== 3. Configure an Inbound Email Account
+== 3. Configure an Email Account
 
+=== 3.1 Inbound Email Account
 Now it is time to create an Inbound Email Account. Click on the "Inbound Email Accounts" sidebar menu link.
 
 image:suitecrm-inbound-email-accounts-menu-link.png[suitecrm-inbound-email-accounts-menu-link.png]
@@ -168,6 +172,65 @@ image:suitecrm-inbound-email-fully-configured.png[suitecrm-inbound-email-fully-c
 Go ahead and *save* your record.
 
 image:suitecrm-save-button.png[suitecrm-save-button.png]
+
+=== 3.2 Outbound Email Account
+
+Now it is time to create an Outbound Email Account. Click on the "Outbound Email Accounts" sidebar menu link.
+
+image:suitecrm-outbound-email-button.png[Outbound Email Accounts]
+
+This should take you to the Outbound Emails module list view.
+
+image:suitecrm-outbound-email-listview.png[Outbound Email Listview]
+
+From here, select the "New Personal Outbound Email Account".
+
+image:suitecrm-outbound-email-new.png[Create New Outbound Email Account]
+
+This should take you to the following view:
+
+image:suitecrm-outbound-create-view.png[Outbound Email Create View]
+
+Add a meaningful name to your outbound, it can be the username of your account, or something that helps you identify and differentiate this outbound email account from other existing accounts.
+
+Next, select the "OAuth" type on the Auth Type field.
+
+image:suitecrm-inbound-email-auth-type-field.png[suitecrm-inbound-email-auth-type-field.png]
+
+The 3 different types of Auth Type here are:
+
+. No Auth
+.. This is the default type, it does not require any authentication. It is meant to be used when you are using a server that does not require authentication, like a local SMTP server.
+. Basic Auth
+.. This is the type to use when you are using a server that requires basic authentication, like a local SMTP server or a server that does not support OAuth.
+. OAuth
+.. This is the type to use when you are using a server that supports OAuth authentication, like Microsoft or Google accounts.
+
+By selecting the OAuth type, the "External OAuth Connection" field should now display. Click on the arrow to select the OAuth Connection you created before.
+
+image:suitecrm-inbound-email-external-oauth-connection-field.png[suitecrm-inbound-email-external-oauth-connection-field.png]
+
+{{% notice warning %}}
+Group Outbound Emails should be linked to Group External OAuth Connection records. If they are linked Personal External OAuth Connection records errors may occur
+{{% /notice %}}
+
+Clicking on the arrow button should open a popup where you can select the OAuth Connection we've created before.
+
+image:suitecrm-outbound-email-connection-popup.png[Outbound Email Connection Popup]
+
+Enter the username for your account. It should be the same you've used to create the OAuth Connection.
+
+Enter server address for your account. E.g. for Microsoft it would be `smtp-mail.outlook.com`.
+
+image:suitecrm-outbound-server-field.png[Outbound Email Server Field]
+
+Depending on your server configurations enable the ssl/tls and set the port.
+
+image:suitecrm-outbound-port-field.png[Outbound Email Port Field]
+
+After this you should fill the other fields, like the "From Name", "From Address" and "Reply To Address".
+
+Go ahead and *save* your record.
 
 == 4. Configure the Inbound Email to display on the Emails module
 

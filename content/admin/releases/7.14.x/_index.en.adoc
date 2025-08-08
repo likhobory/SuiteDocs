@@ -9,6 +9,81 @@ weight: 9850
 :icons: font
 :imagesdir: /images/en/admin/release
 
+== 7.14.7
+
+_Released 06 August 2025_
+
+=== icon:box-open[] Assets
+
+* https://github.com/suitecrm/SuiteCRM/releases/tag/v7.14.7[GitHub - Download]
+* link:../../installation-guide/downloading-installing[SuiteCRM 7 Install Guide]
+* link:../../installation-guide/upgrading[SuiteCRM 7 Upgrade Guide]
+
+===  icon:check[] Release Notes
+
+==== icon:star[] Outbound Email Changes
+
+* You are now able to configure an Outbound Email Account with OAuth. To see more information on setup please see link:../../administration-panel/emails/inboundemail-oauth-howto[here.]
+
+==== icon:lock[] Security
+
+* CVE: https://nvd.nist.gov/vuln/detail/CVE-2025-54785[CVE-2025-54785: RCE Vulnerability] | https://github.com/SuiteCRM/SuiteCRM/security/advisories/GHSA-53cp-mpfw-qj67[GitHub Advisory] | Reporter: dzentota
+* CVE: https://nvd.nist.gov/vuln/detail/CVE-2025-54786[CVE-2025-54786: Improper Access Control Vulnerability] | https://github.com/SuiteCRM/SuiteCRM-Core/security/advisories/GHSA-rf2v-4mv3-qcgm[GitHub Advisory] | Reporter: sec31uk
+* CVE: https://nvd.nist.gov/vuln/detail/CVE-2025-54787[CVE-2025-54787: Improper Access Control Vulnerability] | https://github.com/SuiteCRM/SuiteCRM/security/advisories/GHSA-8r72-224q-g9fv[GitHub Advisory] | Reporter: paul1278
+* CVE: https://nvd.nist.gov/vuln/detail/CVE-2025-54788[CVE-2025-54788: SQL Injection Vulnerability] | https://github.com/SuiteCRM/SuiteCRM/security/advisories/GHSA-v3m9-8wg7-c72x[GitHub Advisory] | Reporter: Parnuski
+* CVE: https://nvd.nist.gov/vuln/detail/CVE-2025-54783[CVE-2025-54783: XSS Vulnerability] | https://github.com/SuiteCRM/SuiteCRM/security/advisories/GHSA-vqrj-gp9m-8c6r[GitHub Advisory] | Reporter: Sergio Marín Martínez
+* CVE: https://nvd.nist.gov/vuln/detail/CVE-2025-54784[CVE-2025-54784: XSS Vulnerability] | https://github.com/SuiteCRM/SuiteCRM/security/advisories/GHSA-vg8q-xcq5-mh3p[GitHub Advisory] | Reporter: paul1278
+
+==== icon:bug[] Bug Fixes
+
+* PR: https://github.com/SuiteCRM/SuiteCRM/pull/10599[10599] - Fix Importing Error Styling
+* PR: https://github.com/SuiteCRM/SuiteCRM/pull/10565[10565] - Fix https://github.com/SuiteCRM/SuiteCRM/issues/10564[#10564] - Thank you message in Surveys only in English
+* PR: https://github.com/SuiteCRM/SuiteCRM/pull/10549[10549] - Fix variable name typo in getEmailInfo
+* PR: https://github.com/SuiteCRM/SuiteCRM/pull/10502[10502] - Remove duplicate line
+* PR: https://github.com/SuiteCRM/SuiteCRM/pull/10480[10480] - Fix https://github.com/SuiteCRM/SuiteCRM/issues/10479[#10479] -  Call LoggerManager's warn() method instead of warning()
+* PR: https://github.com/SuiteCRM/SuiteCRM/pull/10400[10400] - Correctly find the id of related objects in search results
+* PR: https://github.com/SuiteCRM/SuiteCRM/pull/9810[9810] - Fix https://github.com/SuiteCRM/SuiteCRM/issues/9809[#9809] - Incorrect parsing of 0 values in PDF templates
+* PR: https://github.com/SuiteCRM/SuiteCRM/pull/10662[10662] - Fix https://github.com/SuiteCRM/SuiteCRM/issues/10661[#10661] - Fix preference on setting role
+* PR: https://github.com/SuiteCRM/SuiteCRM/pull/10660[10660] - Fix Email Template not saving in plain text
+* PR: https://github.com/SuiteCRM/SuiteCRM/pull/10659[10659] - Fix https://github.com/SuiteCRM/SuiteCRM/issues/10637[#10637] - Local users gets Profile wizard on each login
+* PR: https://github.com/SuiteCRM/SuiteCRM/pull/10309[10309] - Fix https://github.com/SuiteCRM/SuiteCRM/issues/10264[#10264] - Error Assigned_user_name SearchView.tpl ({php} tag now crashes Smarty 4)
+* PR: https://github.com/SuiteCRM/SuiteCRM/pull/10476[10476] - Fix https://github.com/SuiteCRM/SuiteCRM/issues/10475[#10475] - Rename the History subpanel by changing the label
+* PR: https://github.com/SuiteCRM/SuiteCRM/pull/10649[10649] - Fix https://github.com/SuiteCRM/SuiteCRM/issues/8280[#8280] - Fix Autocomplete search in line items
+* PR: https://github.com/SuiteCRM/SuiteCRM/pull/10612[10612] - Fix https://github.com/SuiteCRM/SuiteCRM/issues/10611[#10612] - Subpanels don't show related records links when view permission is set to "group"
+* PR: https://github.com/SuiteCRM/SuiteCRM/pull/10607[10607] - Fix https://github.com/SuiteCRM/SuiteCRM/issues/10606[#10606] - Recently viewed items tooltip shows module name instead of full record name
+* PR: https://github.com/SuiteCRM/SuiteCRM/pull/10625[10625] - Fix https://github.com/SuiteCRM/SuiteCRM/issues/10624[#10624] - Prevent Multiple Submissions on Survey Forms
+* PR: https://github.com/SuiteCRM/SuiteCRM/pull/10538[10538] - Fix https://github.com/SuiteCRM/SuiteCRM/issues/10243[#10243] - studio not saving field properties correctly
+* PR: https://github.com/SuiteCRM/SuiteCRM/pull/10285[10285] - Fix non-countable error when importing CSV
+* PR: https://github.com/SuiteCRM/SuiteCRM/pull/10617[10617] - Fix https://github.com/SuiteCRM/SuiteCRM/issues/10616[#10616] - Default values of DateTime always in English and value “first day of next month” gives an error
+* PR: https://github.com/SuiteCRM/SuiteCRM/pull/10648[10648] - Fix https://github.com/SuiteCRM/SuiteCRM/issues/8632[#8632] -  API V8 /meta/fields/{moduleName} endpoint output without field labels
+* PR: https://github.com/SuiteCRM/SuiteCRM/pull/10623[10623] - Allow End Users to use the PATCH method for the V8 API
+* PR: https://github.com/SuiteCRM/SuiteCRM/pull/10601[10601] - Fix https://github.com/SuiteCRM/SuiteCRM/issues/10113[#10113] - Contracts / List Items table for services has bogus width
+* PR: https://github.com/SuiteCRM/SuiteCRM/pull/10544[10544] - Fix https://github.com/SuiteCRM/SuiteCRM/issues/10543[#10543] - Remove Security Groups button on subpanelsbased on EditView
+* PR: https://github.com/SuiteCRM/SuiteCRM/pull/10675[10675] - Fix https://github.com/SuiteCRM/SuiteCRM/issues/10147[#10147], https://github.com/SuiteCRM/SuiteCRM/issues/10396[#10369] - Smarty unregistered function deprecated notice
+* PR: https://github.com/SuiteCRM/SuiteCRM/pull/10378[10378] - Fix https://github.com/SuiteCRM/SuiteCRM/issues/10532[10532], https://github.com/SuiteCRM/SuiteCRM/issues/10377[10377] - Fix issues with global search not displaying values correctly
+* PR: https://github.com/SuiteCRM/SuiteCRM/pull/10700[10700] - Fix https://github.com/SuiteCRM/SuiteCRM/issues/10345[#10345] - Azure OAuth Redirect Uri Entrypoint
+
+Other Fixes:
+
+* Fix notice messages preventing importing.
+* Fix Importer progress bar using incorrect values.
+
+=== icon:heart[] Community
+
+_Special thanks to the following members for their contributions and participation in this release!_
+
+{{% ghcontributors ssamko0911 SinergiaCRM LoLei gunnicom desarrollador20 aurelien1980 chris001 604media TwizzX17 pgorod LukaszMaslej kale1d0code restena-sw abuzarfaris Govind-Patel %}}
+
+_Special thanks to everyone who reported the security issues addressed in this release!_
+
+{{% ghcontributors sezio dzentota sec31uk paul1278 Parnuski %}}
+
+Please https://suitecrm.com/releases/[visit the official website] to find the appropriate upgrade package.
+
+To report any security issues please follow our link:../../../community/security-policy[Security Policy]
+
+'''
+
 == 7.14.6
 
 _Released 05 November 2024_
