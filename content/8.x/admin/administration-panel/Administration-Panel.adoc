@@ -1,5 +1,5 @@
 ---
-title: Administration Panel
+title: Administration Panel Index
 weight: 20
 ---
 
@@ -41,7 +41,7 @@ image:Admin-Panel-Bottom.png[Admin-Panel-Bottom.png]
 ** Currencies
 ** Languages
 ** Themes
-** Scheduler
+** link:../administration-panel/schedulers/[Schedulers]
 
 * link:../../../../admin/administration-panel/search/elasticsearch/[Elasticsearch]
 ** Elasticsearch

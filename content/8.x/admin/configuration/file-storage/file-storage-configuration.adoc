@@ -1,0 +1,317 @@
+---
+Title: File storage configuration reference
+weight: 50
+---
+
+:imagesdir: /images/en/user
+
+{{% notice info %}}
+The following documentation is for SuiteCRM Version 8.9.0+
+{{% /notice %}}
+
+== 1. Intro
+
+The new media storage mechanism uses a flexible, environment-driven file storage system for handling media uploads and downloads. The configuration is managed via environment variables (see `.env` and `.env.local`), allowing seamless switching between local, AWS S3, and Azure Blob storage backends.
+
+== 2. Media Storage Overview
+
+=== Symfony Bundles Used
+
+* *VichUploaderBundle*: Handles file uploads and mapping files to Doctrine entities.
+* *LeagueFlysystemBundle*: Integrates the Flysystem filesystem abstraction, supporting multiple storage backends (local, S3, Azure, etc.).
+* *DoctrineBundle*: Manages database interactions for media metadata.
+* *ApiPlatform*: Exposes media objects as API resources.
+
+=== Storage Types (Media Object Storages)
+
+The system defines several storage types, each mapped to a specific use case and backend:
+
+* `private.documents.storage`::
+For storing private documents. Access is restricted to authorized users.
+Used by: `PrivateDocumentMediaObject`
+
+* `archived.documents.storage`::
+For storing archived documents, typically for long-term retention or compliance.
+Used by: `ArchivedDocumentMediaObject`
+
+* `private.images.storage`::
+For storing private images, accessible only to authorized users.
+Used by: `PrivateImageMediaObject`
+
+* `public.images.storage`::
+For storing images intended for public access (e.g., user avatars, public galleries).
+Used by: `PublicImageMediaObject`
+
+* `public.documents.storage`::
+For storing documents that can be accessed publicly (e.g., downloadable resources).
+Used by: `PublicDocumentMediaObject`
+
+Storage backends (local, AWS S3, Azure Blob) are configured via environment variables.
+
+Each storage is configured in the `MEDIA_FLY_SYSTEM_STORAGES` environment variable as a JSON object, specifying the adapter (`local`, `aws`, `azure`) and options (such as bucket or container).
+
+=== Configuration Notes
+
+* When using secrets in JSON, always wrap the reference in double quotes.
+* The storage configuration is merged with sensible defaults, so you only need to override what you want to change.
+* The mapping between entity classes and storages is defined in the VichUploader mapping YAML files under `config/vich_uploader/`.
+* For more details, see the example configurations in `.env` and `.env.local`, and the bundle configuration files in `config/packages/`.
+
+== 3. Base/Default Configuration
+
+=== Flysystem Configuration
+
+The `config/packages/flysystem.php` file merges default and environment-defined storages:
+
+- Default storages use the `local` adapter and store files in project directories.
+- Custom storages can be defined via `MEDIA_FLY_SYSTEM_STORAGES` for AWS S3 or Azure Blob.
+- The configuration is injected into the `flysystem` extension.
+
+
+=== VichUploader Configuration
+
+The `config/packages/vich_uploader.php` file:
+
+- Reads AWS and Azure client definitions from environment variables.
+- Sets up service definitions for each client.
+- Defines mappings for each media object type, e.g.:
+  * `archived_documents_media_object` → `archived.documents.storage`
+  * `private_documents_media_object` → `private.documents.storage`
+  * `private_images_media_object` → `private.images.storage`
+  * `public_images_media_object` → `public.images.storage`
+  * `public_documents_media_object` → `public.documents.storage`
+- Each mapping specifies URI prefix, upload destination, file namer, and directory namer.
+
+== 4. Media Storage Environment Variables
+
+=== MEDIA_FLY_SYSTEM_STORAGES
+
+Purpose::
+Defines the storage backends for Flysystem, mapping logical storage names to adapters (local, AWS S3, Azure Blob, etc).
+
+Configuration::
+Set as a JSON string mapping storage keys to adapter configurations.
+
+Default::
+[source,json]
+----
+{
+  "private.documents.storage": {
+    "adapter": "local",
+    "options": {
+      "directory": "%kernel.project_dir%/uploads/documents"
+    }
+  },
+  "archived.documents.storage": {
+    "adapter": "local",
+    "options": {
+      "directory": "%kernel.project_dir%/uploads/archived"
+    }
+  },
+  "private.images.storage": {
+    "adapter": "local",
+    "options": {
+      "directory": "%kernel.project_dir%/uploads/images"
+    }
+  },
+  "public.images.storage": {
+    "adapter": "local",
+    "options": {
+      "directory": "%kernel.project_dir%/public/media-upload/images"
+    }
+  },
+  "public.documents.storage": {
+    "adapter": "local",
+    "options": {
+      "directory": "%kernel.project_dir%/public/media-upload/documents"
+    }
+  }
+}
+----
+
+Example override:
+[source,json]
+----
+MEDIA_FLY_SYSTEM_STORAGES='{
+  "private.documents.storage": {
+    "adapter": "aws",
+    "options": {
+      "client": "aws.s3.client.main",
+      "bucket": "your-bucket"
+    }
+  },
+  "private.images.storage": {
+    "adapter": "azure",
+    "options": {
+      "client": "azure.blob.client.main",
+      "container": "your-blob-container"
+    }
+  }
+}'
+----
+
+=== MEDIA_UPLOADER_MAPPINGS
+
+Purpose::
+Defines VichUploader mappings, associating entity fields with storage destinations and naming strategies.
+
+Configuration::
+Set as a JSON string mapping mapping names to configuration objects.
+
+Default::
+[source,json]
+----
+{
+  "archived_documents_media_object": {
+    "uri_prefix": "/media/archived",
+    "upload_destination": "archived.documents.storage",
+    "namer": "App\\MediaObjects\\Services\\UuidMediaObjectFileNamer",
+    "directory_namer": {
+      "service": "Vich\\UploaderBundle\\Naming\\CurrentDateTimeDirectoryNamer",
+      "options": {
+        "date_time_format": "Y/m",
+        "date_time_property": "dateEntered"
+      }
+    }
+  },
+  "private_documents_media_object": {
+    "uri_prefix": "/media/documents",
+    "upload_destination": "private.documents.storage",
+    "namer": "App\\MediaObjects\\Services\\UuidMediaObjectFileNamer",
+    "directory_namer": {
+      "service": "Vich\\UploaderBundle\\Naming\\CurrentDateTimeDirectoryNamer",
+      "options": {
+        "date_time_format": "Y/m",
+        "date_time_property": "dateEntered"
+      }
+    }
+  },
+  "private_images_media_object": {
+    "uri_prefix": "/media/images",
+    "upload_destination": "private.images.storage",
+    "namer": "App\\MediaObjects\\Services\\UuidMediaObjectFileNamer",
+    "directory_namer": {
+      "service": "Vich\\UploaderBundle\\Naming\\CurrentDateTimeDirectoryNamer",
+      "options": {
+        "date_time_format": "Y/m",
+        "date_time_property": "dateEntered"
+      }
+    }
+  },
+  "public_images_media_object": {
+    "uri_prefix": "/media-upload/images",
+    "upload_destination": "public.images.storage",
+    "namer": "Vich\\UploaderBundle\\Naming\\SmartUniqueNamer",
+    "directory_namer": {
+      "service": "Vich\\UploaderBundle\\Naming\\CurrentDateTimeDirectoryNamer",
+      "options": {
+        "date_time_format": "Y/m",
+        "date_time_property": "dateEntered"
+      }
+    }
+  },
+  "public_documents_media_object": {
+    "uri_prefix": "/media-upload/documents",
+    "upload_destination": "public.documents.storage",
+    "namer": "Vich\\UploaderBundle\\Naming\\SmartUniqueNamer",
+    "directory_namer": {
+      "service": "Vich\\UploaderBundle\\Naming\\CurrentDateTimeDirectoryNamer",
+      "options": {
+        "date_time_format": "Y/m",
+        "date_time_property": "dateEntered"
+      }
+    }
+  }
+}
+----
+
+Example override:
+[source,json]
+----
+MEDIA_UPLOADER_MAPPINGS='{
+  "private_documents_media_object": {
+    "uri_prefix": "/media/documents",
+    "upload_destination": "private.documents.storage",
+    "namer": "App\\MediaObjects\\Services\\UuidMediaObjectFileNamer"
+  }
+}'
+----
+
+=== AWS_S3_INSTANCES
+
+Purpose::
+Configures AWS S3 client instances for use as storage backends.
+
+Configuration::
+Set as a JSON string mapping instance names to AWS credentials and region.
+
+Default::
+[source,json]
+----
+{}
+----
+
+Example:
+[source,json]
+----
+AWS_S3_INSTANCES='{
+  "main": {
+    "region": "eu-west-1",
+    "access_key": "%env(AWS_S3_ACCESS_KEY)%",
+    "access_secret": "%env(AWS_S3_ACCESS_SECRET)%"
+  }
+}'
+----
+
+=== AZURE_BLOB_INSTANCES
+
+Purpose::
+Configures Azure Blob Storage client instances for use as storage backends.
+
+Configuration::
+Set as a JSON string mapping instance names to connection strings.
+
+Default::
+[source,json]
+----
+{}
+----
+
+Example:
+[source,json]
+----
+AZURE_BLOB_INSTANCES='{
+  "main": {
+    "connection_string": "DefaultEndpointsProtocol=https;AccountName=...;AccountKey=...;EndpointSuffix=core.windows.net"
+  }
+}'
+----
+
+=== 7. Using Symfony Secrets
+
+You can reference Symfony secrets in these environment variables for sensitive data (like access keys or connection strings).
+
+Example using secrets:
+[source,json]
+----
+AWS_S3_INSTANCES='{
+  "main": {
+    "region": "eu-west-1",
+    "access_key": "%env(AWS_S3_ACCESS_KEY)%",
+    "access_secret": "%env(AWS_S3_ACCESS_SECRET)%"
+  }
+}'
+----
+
+To set a secret:
+[source,bash]
+----
+php bin/console secrets:set AWS_S3_ACCESS_KEY
+php bin/console secrets:set AWS_S3_ACCESS_SECRET
+----
+
+Then reference the secret in your JSON config using `%env(SECRET_NAME)%`.
+
+NOTE: When using secrets in JSON, always wrap the reference in double quotes.
+
+

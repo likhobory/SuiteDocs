@@ -26,7 +26,7 @@ _Released 06 August 2025_
 
 ==== icon:star[] Outbound Email Changes
 
-* You are now able to configure an Outbound Email Account with OAuth. To see more information on setup please see link:../../administration-panel/emails/inboundemail-oauth-howto[here.]
+* You are now able to configure an Outbound Email Account with OAuth. To see more information on setup please see link:../../../../admin/administration-panel/emails/inboundemail-oauth-howto[here.]
 
 ==== icon:lock[] Security
 
@@ -287,7 +287,7 @@ If you have found an issue you think we should know about, or have suggestion/fe
 
 If you want to get involved and submit a fix, fork the repo and when ready please link:https://github.com/salesagility/SuiteCRM-Core/pulls[Submit A PR] - More detail for developers can be found link:https://docs.suitecrm.com/8.x/developer/installation-guide/[here].
 
-Please link:https://suitecrm.com/suitecrm-pre-release/[visit the official website] to find the appropriate upgrade package.
+Please https://suitecrm.com/releases/[visit the official website] to find the appropriate upgrade package.
 
 To report any security issues please follow our Security Process and send them directly to us via email security@suitecrm.com
 

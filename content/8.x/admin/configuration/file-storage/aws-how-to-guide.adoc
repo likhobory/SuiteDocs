@@ -1,0 +1,108 @@
+---
+Title: How to store to AWS S3
+weight: 40
+---
+
+:imagesdir: /images/en/user
+
+{{% notice info %}}
+The following documentation is for SuiteCRM Version 8.9.0+
+{{% /notice %}}
+
+
+== How to store to AWS S3
+
+In this example we will configure the `private.documents.storage` to use AWS S3 for file storage.
+
+=== Prerequisites
+
+* AWS S3 bucket created and accessible.
+* AWS access key and secret.
+* The application is running with Symfony and Flysystem integration.
+
+=== Step 1: Set AWS Credentials
+
+Edit your `.env.local` file and add your AWS credentials:
+
+[source,ini]
+----
+AWS_S3_ACCESS_KEY=your_aws_access_key
+AWS_S3_ACCESS_SECRET=your_aws_secret_key
+----
+
+=== Step 2: Define AWS S3 Instance
+
+Add the AWS S3 instance configuration in `.env.local`:
+
+[source,ini]
+----
+AWS_S3_INSTANCES='{
+   "main": {
+       "region": "your-aws-region",
+       "access_key": "%env(AWS_S3_ACCESS_KEY)%",
+       "access_secret": "%env(AWS_S3_ACCESS_SECRET)%"
+   }
+}'
+----
+
+=== Step 3: Configure Flysystem Storage
+
+Set the `MEDIA_FLY_SYSTEM_STORAGES` variable to use AWS for `private.documents.storage`:
+
+Note: on the following example `main` from `aws.s3.client.main` in the `client` option should match the key defined in `AWS_S3_INSTANCES`.
+
+[source,ini]
+----
+MEDIA_FLY_SYSTEM_STORAGES='{
+   "private.documents.storage": {
+       "adapter": "aws",
+       "options": {
+           "client": "aws.s3.client.main",
+           "bucket": "your-s3-bucket-name"
+       }
+   }
+}'
+----
+
+=== Step 4: Verify Configuration
+
+* Ensure the `config/packages/flysystem.php` file is present and not overridden.
+* The storage will be merged with defaults and used by the application.
+
+=== Step 5: Test Upload
+
+* Upload a file using the application.
+* Confirm the file appears in your AWS S3 bucket under the expected path.
+
+=== References
+
+* See `.env`, `.env.local`, and `config/packages/flysystem.php` for more details.
+
+== Using Symfony Secrets
+
+Symfony secrets allow you to securely store sensitive configuration values (like API keys, passwords, etc.) outside of your codebase. Instead of putting secrets in `.env` files, you use the Symfony secrets vault, which encrypts values and keeps them out of version control.
+
+You can reference Symfony secrets in these environment variables for sensitive data (like access keys or connection strings).
+
+Example using secrets:
+[source,json]
+----
+AWS_S3_INSTANCES='{
+  "main": {
+    "region": "eu-west-1",
+    "access_key": "%env(AWS_S3_ACCESS_KEY)%",
+    "access_secret": "%env(AWS_S3_ACCESS_SECRET)%"
+  }
+}'
+----
+
+To set a secret:
+[source,bash]
+----
+php bin/console secrets:set AWS_S3_ACCESS_KEY
+php bin/console secrets:set AWS_S3_ACCESS_SECRET
+----
+
+Then reference the secret in your JSON config using `%env(SECRET_NAME)%`.
+
+NOTE: When using secrets in JSON, always wrap the reference in double quotes.

@@ -1,0 +1,80 @@
+---
+title: "Footnotes option"
+weight: 20
+---
+
+:imagesdir: /images/en/8.x/developer/extensions/backend/field/footnotes/
+
+== 1. Introduction
+
+In SuiteCRM 8, you can add `footnotes` to fields definitions.
+This allows you to provide additional information or context about a field to users.
+
+== 2. Footnotes Metadata Definition
+
+The first thing to define is the `footnotes` entry in the metadata.
+
+The configuration for the logic can be added to the `vardefs.php` or the `detailviewdefs.php`.
+
+In the following example we are going to add one to the `Opportunities` module field vardefs.
+
+=== 2.1 Steps to add footnotes on the custom vardefs
+
+. Create a new field in custom extensions for Accounts module:
+.. Example:  `public/legacy/custom/Extension/modules/Opportunities/Ext/Vardefs/probability.php`
+. Copy the `probability` definition from `public/legacy/modules/Opportunities/vardefs.php`
+. Add the `footnotes` entry to the `probability` definition with the code on the snippet below.
+** Re-set permissions if needed (will depend on your setup)
+. Run `Repair and Rebuild` on Admin menu
+
+
+[source,php]
+----
+<?php
+
+$dictionary['Opportunity']['fields']['probability'] = array(
+    'name' => 'probability',
+    'vname' => 'LBL_PROBABILITY',
+    'type' => 'int',
+    'dbType' => 'double',
+    'audited' => true,
+    'comment' => 'The probability of closure',
+    'validation' => array('type' => 'range', 'min' => 0, 'max' => 100),
+    'merge_filter' => 'enabled',
+    'footnotes' => [
+        [
+            'labelKey' => 'LBL_NEW_ADDED_LABEL',
+            'displayModes' => ['edit', 'create'],
+        ]
+    ]
+);
+----
+
+{{% notice note %}}
+Note: `displayModes` is used to define when the footnote should be displayed. In this example it is set to be shown only when creating or editing a record.
+{{% /notice %}}
+
+This should now display the footnote:
+
+image:Opportunity-Footnote.png[Opportunity Footnote]
+
+=== 2.2 Other footnotes configuration options
+
+Other configuration options for footnotes are:
+
+[cols="1,2,2"]
+|===
+| Option | Description | Example
+
+| `activeOn`
+| Used to compare to the fields value to determine if the footnote should be shown.
+| `'activeOn' => [ ['operator' => 'is-equal', 'values' => ['legacy'] ] ]`
+
+| `icon`
+| This can be added to show an icon next to the footnote text. It uses the SuiteCRM icon library.
+| `'icon' => 'info_circled'`
+
+| `iconKlass`
+| This can be used to add custom classes to the icon.
+| `'iconKlass' => 'mr-1 align-text-bottom svg-size-3 stroke'`
+|===

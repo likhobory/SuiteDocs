@@ -1,0 +1,117 @@
+---
+title: "Filter option"
+weight: 20
+---
+
+:imagesdir: /images/en/8.x/developer/extensions/backend/field-options/filter/
+
+== 1. Introduction
+
+The `filter` object can be passed as part of the field definition to control
+the criteria used for filtering related records in the MultiRelateEditFieldComponent.
+
+== 2. Format
+
+The `filter` object supports the following options:
+
+[source,php]
+----
+    'filter' => [
+        'static' => [
+            'field' => ['accepted-value-1', 'accepted-value-2'],
+            'another_field' => 'single-accepted-value'
+        ],
+        'preset' => [
+            'type' => 'preset-filter-key',
+            'params' => [
+                // module is automatically set to the current module
+                // 'module' => '',
+                'preset-filter-param-1' => 'param-value',
+            ]
+        ],
+        'attributes' => [
+            'filter-attribute' => 'parent-attribute',
+            'another-filter-attribute' => 'another-parent-attribute'
+        ]
+    ]
+----
+
+== 3. Options
+
+=== 3.1 Option: preset
+Defines a preset filter configuration. When provided, it is assigned to `criteria.preset` and its `params.module` is set to the current module.
+
+
+Accepted Values:
+
+[source,php]
+----
+[
+    'type' => 'preset-filter-key',
+    'params' => [
+        // module is always automatically set to the current module
+        // 'module' => '',
+        'preset-filter-param-1' => 'param-value',
+    ]
+]
+----
+
+Example:
+[source, php]
+----
+    'preset' => [
+        'type' => 'prospectlists',
+        'params' => [
+            'parent_field' => 'propects_lists',
+            'parent_module' => 'Campaigns',
+        ],
+    ],
+----
+
+=== 3.2 Option: attributes
+Maps keys to record attribute names. For each key in `attributes`, the corresponding value from the current record's attributes is assigned to `criteria.preset.params[key]`.
+
+Attributes is typically used to pass dynamic values from the current record to the filter criteria.
+
+It requires the `preset` option to be defined.
+
+
+Accepted Values:
+[source, php]
+----
+    'attributes' => [
+        'filter-attribute' => 'parent-attribute', // key is the param name, value is the record attribute name
+        'another-filter-attribute' => 'another-parent-attribute'
+    ]
+----
+
+Example:
+[source, php]
+----
+    'attributes' => [
+        'assigned_user_id' => 'assigned_user_id',
+        'account_id' => 'id' // maps to the current record's id
+    ]
+----
+
+=== 3.2 Option: static
+
+Defines static filter fields and their values. Each key is a field name, and the value can be a single value or an array of values. These are added to `criteria.filters` with operator '=' and no range search.
+
+Accepted Values:
+[source, php]
+----
+        'static' => [
+            'field' => ['accepted-value-1', 'accepted-value-2'],
+            'another_field' => 'single-accepted-value'
+        ],
+----
+
+Example:
+[source, php]
+----
+    'static' => [
+        'status' => ['Active', 'Pending'],
+        'type' => 'Customer'
+    ],
+----

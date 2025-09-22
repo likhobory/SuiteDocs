@@ -1,0 +1,118 @@
+---
+Title: Media Object Lifecycle
+weight: 60
+---
+
+:imagesdir: /images/en/user
+
+{{% notice info %}}
+The following documentation is for SuiteCRM Version 8.9.0+
+{{% /notice %}}
+
+
+== Media Object Lifecycle
+
+This section describes the lifecycle of media objects (files) uploaded via the system.
+
+=== Flow Steps
+
+==== Upon Upload
+
+1. When a user selects a file, it is immediately uploaded to the server.
+2. Upon upload, a new entry is created in the corresponding storage table (e.g., `private-documents`, `public-documents`).
+3. The uploaded file is marked as a temporary file.
+
+==== Linking to parent Record
+
+1. When the parent record (e.g., a Note) is saved, the media object is linked to the parent using the `parentModule`, `parentId`, and `parentField` fields. The media object is then unmarked as temporary.
+2. If the user cancels or does not use the uploaded media object, the temporary file remains in the system until it is removed.
+
+==== Temporary File Cleanup
+
+1. A scheduler runs every minute (configurable) to remove temporary media objects that were created more than 3 days ago (also configurable through `max_temp_file_lifetime`). The cleanup is done in batches of 50 (configurable). This ensures that unused temporary files do not accumulate in the system.
+
+==== Deletion of Parent Record
+
+1. When a parent record is soft deleted, all linked media objects are also marked as deleted.
+
+==== File Replacement
+
+1. When a file is replaced with a new upload, the old media object is immediately deleted and the corresponding file removed, it is not marked as deleted.
+
+==== Permanent Deletion
+
+1. When the `pruneDatabase` scheduler runs and deletes the parent record, the linked media objects are also deleted and their files are removed from storage.
+
+=== Notes
+
+* Temporary media objects are automatically cleaned up by the scheduler.
+* The linkage between media objects and parent records ensures proper cleanup and data integrity.
+* All configuration options (such as scheduler frequency and temporary file age) are adjustable.
+
+=== Configuration Options
+
+=== Temporary Files cleanup Frequency
+
+Purpose::
+Define the frequency of the temporary files cleanup job. Default is every minute.
+
+Configuration::
+Go to Admin > Schedulers and edit the "Clean Up Temporary Files" job. You can set the frequency to your desired interval (e.g., hourly, daily, weekly).
+
+Default::
+[source,json]
+----
+every minute
+----
+
+=== max_temp_file_lifetime
+
+Purpose::
+The maximum age (in days) of temporary files before they are deleted by the scheduler. Default is 3 days.
+
+Configuration::
+Set a value in HOURS/DAYS/MINUTES format. In config.php or config_override.php, use the key `max_temp_file_lifetime`.
+
+Default::
+[source,json]
+----
+72 HOURS
+----
+
+Override Example:
+[source,php]
+----
+//public/legacy/config_override.php or can also be added to config.php
+
+<?php
+
+...
+
+$sugar_config['max_temp_file_lifetime'] = '24 HOURS';
+----
+
+=== max_temp_file_batch_per_table
+
+Purpose::
+The number of temporary files to delete in each batch per table. Default is 50. Each time the scheduler runs, it will process up to this number of records per table.
+
+Configuration::
+Set the number of records to process. In config.php or config_override.php, use the key `max_temp_file_batch_per_table`.
+
+Default::
+[source,json]
+----
+50
+----
+
+Override Example:
+[source,php]
+----
+//public/legacy/config_override.php or can also be added to config.php
+
+<?php
+
+...
+
+$sugar_config['max_temp_file_batch_per_table'] = '10';
+----

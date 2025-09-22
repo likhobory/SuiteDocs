@@ -3,7 +3,7 @@ title: "Adding a Process Handler"
 weight: 20
 ---
 
-:imagesdir: /images/en/8.x/developer/extensions/backed-end/process-api/
+:imagesdir: /images/en/8.x/developer/extensions/backend/process-api/
 
 
 
@@ -448,7 +448,7 @@ The following are some examples of how to set the feedback for the response.
         $process->setMessages([]);
 ----
 
-**Success with no message**
+**Success with a message**
 [source,php]
 ----
         $process->setStatus('success');

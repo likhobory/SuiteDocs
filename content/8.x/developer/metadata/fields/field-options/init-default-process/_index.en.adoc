@@ -1,0 +1,214 @@
+---
+title: "Init Default Process option"
+weight: 20
+---
+
+:imagesdir: /images/en/8.x/developer/extensions/backend/field/init-default-process/
+
+== 1. Introduction
+
+In SuiteCRM 8, it is possible to configure a backend driven default value, by defining a process handler to run when setting the default value for a field. This is achieved with the `initDefaultProcess` option on field definitions.
+This calls the backend on initialization of the field to get the default value.
+
+== 2. initDefaultProcess Metadata Definition
+
+The first thing to define is the `initDefaultProcess` entry in the metadata. This is where we will define the key for our async validator and any parameters it may need.
+
+The configuration for the logic can be added to the `vardefs.php` or the `detailviewdefs.php`.
+
+In the following example we are going to add one to the `Accounts` module field vardefs.
+
+=== 2.1 Steps to add the logic on the custom vardefs
+
+. Create a new field in custom extensions for Accounts module:
+.. Example:  `public/legacy/custom/Extension/modules/Accounts/Ext/Vardefs/annual_revenue.php`
+. Copy the `phone_office` definition from `public/legacy/include/SugarObjects/templates/company/vardefs.php`
+. Add the `initDefaultProcess` entry to the `phone_office` definition with the code on the snippet below.
+** Re-set permissions if needed (will depend on your setup)
+. Run `Repair and Rebuild` on Admin menu
+
+
+[source,php]
+----
+<?php
+
+$dictionary['Account']['fields']['phone_office'] = array(
+    'name' => 'phone_office',
+    'vname' => 'LBL_PHONE_OFFICE',
+    'type' => 'phone',
+    'dbType' => 'varchar',
+    'len' => 100,
+    'audited' => true,
+    'unified_search' => true,
+    'full_text_search' => array('boost' => 1),
+    'comment' => 'The office phone number',
+    'initDefaultProcess' => 'phone-default',
+    'defaultValueModes' => [
+        'create',
+    ],
+    'merge_filter' => 'enabled',
+);
+----
+
+{{% notice note %}}
+Note: `defaultValueModes` is used to define when the `initDefaultProcess` should be called. In this example it is set to be called only when creating a new record.
+{{% /notice %}}
+
+=== 2.2 Steps to add a new field async validator
+
+{{% notice info %}}
+As a best practice extension backend code should be added to `extensions/<your-extension>/backend/` or `extensions/<your-extension>/modules/`. For `extensions/<your-extension>/backend/` the subfolder should follow the same structure as used in `core/backend`
+{{% /notice %}}
+
+. Create the folder `extensions/defaultExt/modules/Accounts/Service/Fields/`
+.. This is a best practice not a hard requirement
+.. As long as you add under the `extensions/<your-ext>/backend` or `extensions/<your-ext>/modules` it should work.
+. Within that folder create the `PhoneDefaultValue.php`, i.e. `extensions/defaultExt/modules/Accounts/Service/Fields/PhoneDefaultValue.php`
+.. If you are not using the recommended path, make sure that the `namespace` follows the one you are using
+.. On our example the namespace is `namespace App\Extension\defaultExt\backend\modules\Accounts\Service\Fields;`
+. On `PhoneDefaultValue.php`, add the code on the snippet on link:./#_2_3_init_default_process_implementation[2.3 Init Default Process implementation] section
+. Run `./bin/console cache:clear` or delete the contents of the cache folder under the root of the project
+. Re-set the correct file permissions if you need to (This will depend on your setup and the user you are using to make changes)
+
+=== 2.3 Init Default Process implementation
+
+To add `initDefaultProcess` the class used needs to implement the `ProcessHandlerInterface`. Plus for it to be matched with a request, it needs the following:
+
+- Set the `ProcessType` to be the same as the value that was defined on the metadata (or other), in this example it is `phone-default`
+
+The following snippet has sample implementation of the process handler:
+
+[source,php]
+----
+<?php
+
+namespace App\Extension\defaultExt\backend\modules\Accounts\Service\Fields;
+
+use App\Process\Entity\Process;
+use App\Process\Service\ProcessHandlerInterface;
+
+class PhoneDefaultValue implements ProcessHandlerInterface
+{
+    protected const MSG_OPTIONS_NOT_FOUND = 'Process options are not defined';
+    public const PROCESS_TYPE = 'phone-default';
+
+    public function __construct(
+    ) {
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getProcessType(): string
+    {
+        return self::PROCESS_TYPE;
+    }
+
+    public function getHandlerKey(): string
+    {
+        return self::PROCESS_TYPE;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function requiredAuthRole(): string
+    {
+        return 'ROLE_USER';
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getRequiredACLs(Process $process): array
+    {
+        return [];
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function configure(Process $process): void
+    {
+        $process->setId(self::PROCESS_TYPE);
+        $process->setAsync(false);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function validate(Process $process): void
+    {
+        $options = $process->getOptions();
+
+        if (empty($options)) {
+            throw new InvalidArgumentException(self::MSG_OPTIONS_NOT_FOUND);
+        }
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function run(Process $process): void
+    {
+        $responseData = [
+            'value' => '123-456-7890',
+        ];
+
+        $process->setStatus('success');
+        $process->setMessages([]);
+        $process->setData($responseData);
+    }
+}
+----
+
+==== 2.3.1 Process Handler implementation
+
+===== 2.3.1.1 getProcessType()
+
+This method should return the identifier of the process the handler implements. The same that is defined on the metadata logic `key` entry. In our example: `case-calculate-priority`
+
+===== 2.3.1.2 requiredAuthRole()
+
+This method defines if the auth role that is required to have access to the process.
+
+- `'ROLE_USER'` means that the user needs to be logged in to have access to this process.
+- `'ROLE_ADMIN'` means that the user needs to be logged in as an admin user to have access to this process.
+- `''` means that a non-authenticated user can access the process.
+
+===== 2.3.1.3 getRequiredACLs()
+
+This method defines the SuiteCRM ACLs that are required to have access to the process.
+2.2.1.3 getRequiredACLs()
+See more information link:../../../../extensions/backend/process-api/process-handler#_2_2_1_3_getrequiredacls[2.2 Process handler implementation]
+
+===== 2.3.1.4 validate()
+
+This method is where we should add the code to validate the process inputs.
+
+If the inputs aren't valid it should throw a `InvalidArgumentException`.
+
+===== 2.3.1.5 run()
+
+This method is where we add the code to run the logic that our ProcessHandler is supposed to do.
+
+This method **does not** return anything. Instead, it should update the `$process` argument that is passed by reference.
+
+In our example, we are setting a default value of `123-456-7890` to be returned as the field value.
+
+====== Return Field Value
+
+To return the value to be set on the field, we need to set it on the `data` property of the process.
+
+[source,php]
+----
+        $responseData = [
+            'value' => '123-456-7890',
+        ];
+
+        $process->setStatus('success');
+        $process->setMessages([]);
+        $process->setData($responseData);
+----
+
+To set the fields `valueList` or `valueObject` you can also add them to the `data` array.

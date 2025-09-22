@@ -3,7 +3,7 @@ title: "Introduction to the Process Api"
 weight: 10
 ---
 
-:imagesdir: /images/en/8.x/developer/extensions/backed-end/process-api/
+:imagesdir: /images/en/8.x/developer/extensions/backend/process-api/
 
 
 == 1. Introduction

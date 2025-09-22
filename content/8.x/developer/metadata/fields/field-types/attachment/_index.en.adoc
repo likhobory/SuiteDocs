@@ -1,0 +1,127 @@
+---
+Title: Attachment Field Configuration
+weight: 20
+---
+
+:imagesdir: /images/en/8.x/user/features
+
+{{% notice info %}}
+The following documentation is for SuiteCRM Version 8.9.0+
+{{% /notice %}}
+
+== Intro
+
+Attachment fields allow you to associate uploaded files (such as documents or images) with your entities. These fields are managed by the media uploader system and support various storage backends.
+
+image:attchments-field-detail.png[Attachments Field Detail]
+
+=== How Attachment Fields Work
+
+When a field is configured as type `attachment`, it enables file upload and management for that field. The system uses the configured storage backend to store and retrieve files, and links the uploaded file metadata to the entity record.
+
+To use an attachment field, you must specify the `storage_type` in the field's `metadata` configuration. This tells the system which storage backend to use for the uploaded files.
+
+To understand how the media uploader and storage system works, please refer to the link:../../../../../admin/configuration/file-storage/file-storage-configuration/[File Storage Configuration Reference].
+
+It is also important to know the link:../../../../../admin/configuration/file-storage/media-object-lifecycle[lifecycle of media objects] to understand how files are managed in the system.
+
+By default, the Attachment field type uses the `private_documents` storage type, as defined in the field metadata.
+
+=== Configuration Example
+
+To define an attachment field in your vardefs:
+
+Minimal configuration:
+[source,php]
+----
+'attachments' => [
+    'name' => 'attachments',
+    'vname' => 'LBL_ATTACHMENTS',
+    'type' => 'attachment',
+    'source' => 'non-db',
+    'reportable' => false,
+    'importable' => false,
+    'metadata' => [
+        'storage_type' => 'private-documents', // Required!
+    ],
+],
+----
+
+Full configuration with attachment specific options:
+[source,php]
+----
+'attachments' => [
+    'name' => 'attachments',
+    'vname' => 'LBL_ATTACHMENTS',
+    'type' => 'attachment',
+    'source' => 'non-db',
+    'reportable' => false,
+    'importable' => false,
+    'metadata' => [
+        'storage_type' => 'private-documents', // Required!
+        'upload_maxsize' => 10000000, // Optional, defaults to global config
+        'breakpoint' => 1, // Optional
+        'maxPerRow' => 3, // Optional
+        'popoverMaxTextLength' => '200px', // Optional
+        'popoverMinWidth' => '315px', // Optional
+        'maxTextWidth' => '150px', // Optional
+        'minWidth' => '185px', // Optional
+    ],
+],
+----
+
+=== Configuration Options
+
+[cols="1,2,1"]
+|===
+| Option | Description | Required
+
+| `type`
+| Must be set to `attachment`
+| Yes
+
+| `storage_type`
+| The storage backend to use for this field. Must match a configured storage (e.g., `private-documents`, `public-images`). See the link:../../../../../admin/configuration/file-storage/file-storage-configuration/[File Storage Configuration Reference].
+| Yes
+
+| `upload_maxsize`
+| Maximum allowed file size in bytes.
+| No
+
+| `breakpoint`
+| Number of attachments before a "Show More" link is displayed in the UI.
+| No
+
+| `maxPerRow`
+| Maximum number of attachments to display per row in the UI.
+| No
+
+| `popoverMaxTextLength`
+| Maximum file name length in the popover before truncation.
+| No
+
+| `popoverMinWidth`
+| Minimum width of each attachment inside the popover.
+| No
+
+| `maxTextWidth`
+| Maximum file name length before truncation.
+| No
+
+| `minWidth`
+| Minimum width of each attachment.
+| No
+|===
+
+=== Declaring Storage Types
+
+The `storage_type` must correspond to a storage defined in your media configuration (see link:../../../../../admin/configuration/file-storage/file-storage-configuration/[File Storage Configuration Reference]). Example storage types include:
+
+- `private-documents`
+- `archived-documents`
+- `private-images`
+- `public-images`
+- `public-documents`
+
+If you do not declare a valid `storage_type`, file uploads will not work for this field.
+

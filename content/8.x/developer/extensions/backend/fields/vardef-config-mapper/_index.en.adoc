@@ -1,0 +1,102 @@
+---
+title: "Adding field vardef config mapper"
+weight: 20
+---
+
+:imagesdir: /images/en/8.x/developer/extensions/backend/field/init-default-process/
+
+== 1. Introduction
+
+In SuiteCRM 8, you can define "VardefConfigMapper"s, this allows you to transform/ modify vardefs during the field definition loading process.
+
+VardefConfigMappers serve several key purposes:
+
+* **Field Configuration Enhancement**: Modify field definitions to add missing properties or default values
+* **Business Logic Enforcement**: Apply business rules consistently across field definitions
+* **Legacy Compatibility**: Bridge differences between legacy and modern field configurations
+* **Dynamic Configuration**: Apply context-dependent modifications to field definitions
+
+In this example we will set `labelDisplay` to none on vardef fields. This will hide all labels for `varchar` fields.
+
+== 2. VardefConfigMapper Definition
+
+The first thing to define is the `VardefConfigMapper` class.
+
+{{% notice info %}}
+As a best practice extension backend code should be added to `extensions/<your-extension>/backend/` or `extensions/<your-extension>/modules/`. For `extensions/<your-extension>/backend/` the subfolder should follow the same structure as used in `core/backend`
+{{% /notice %}}
+
+. Create the folder `extensions/defaultExt/backend/Module/Service/Fields/Vardefs/FieldDefinitions`
+.. This is a best practice not a hard requirement
+.. As long as you add under the `extensions/<your-ext>/backend` or `extensions/<your-ext>/modules` it should work.
+. Within that folder create the `VardefMapper.php`, i.e. `extensions/defaultExt/backend/Module/Service/Fields/Vardefs/FieldDefinitions/VardefMapper.php`
+.. If you are not using the recommended path, make sure that the `namespace` follows the one you are using
+.. On our example the namespace is `namespace App\Extension\defaultExt\backend\Module\Service\Fields\Vardefs\FieldDefinitions;`
+. On `VardefMapper.php`, add the code on the snippet on link:./#_2_1_vardefconfigmapper_implementation[2.1 VardefConfigMapper implementation] section
+. Run `./bin/console cache:clear` or delete the contents of the cache folder under the root of the project
+. Re-set the correct file permissions if you need to (This will depend on your setup and the user you are using to make changes)
+
+=== 2.1 VardefConfigMapper implementation
+
+Add the following configurtion to `VardefMapper.php`
+
+[source,php]
+----
+<?php
+
+namespace App\Extension\defaultExt\backend\Module\Service\Fields\Vardefs\FieldDefinitions;
+
+use App\FieldDefinitions\Service\VardefConfigMapperInterface;
+
+class VardefMapper implements VardefConfigMapperInterface
+{
+    /**
+     * @inheritDoc
+     */
+    public function getKey(): string
+    {
+        return 'disable-label-on-vardefs';
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getModule(): string
+    {
+        return 'default';
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function map(array $vardefs): array
+    {
+
+        foreach ($vardefs as $index => $vardef) {
+            $metadata = $vardef['metadata'] ?? [];
+
+            if ($vardef['type'] === 'varchar') {
+                $metadata['labelDisplay'] = 'none';
+                $vardefs[$index]['metadata'] = $metadata;
+            }
+
+        }
+        return $vardefs;
+    }
+}
+
+----
+
+==== 2.2.1 Process Handler implementation
+
+===== 2.2.1.1 getKey()
+
+This method returns a unique key that identifies this specific VardefConfigMapper.
+
+===== 2.2.1.2 getModule()
+
+This is where you specify the module this mapper applies to. In this example we are using `default` which means it will apply to all modules.
+
+===== 2.2.1.2 map()
+
+This is the method where the actual mapping logic is implemented.
