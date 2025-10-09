@@ -149,7 +149,7 @@ image:{en-img}suitecrm-sso-azure-application-users-groups.png[SuiteCRM SSO Azure
 
 Войдите в систему под учётной записью администратора.
 
-В панели Администратора откройте раздел *Управление паролями* и включите SAML-аутентификацию:
+В панели администратора откройте раздел *Управление паролями* и включите SAML-аутентификацию:
 
 image:image9.png[SuiteCRM SSO Enable SAML]
 

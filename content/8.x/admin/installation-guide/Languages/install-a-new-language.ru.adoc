@@ -33,7 +33,7 @@ link:../update-a-language-pack/[этом] разделе.
 
 На данный момент доступны следующие публичные пакеты русификации: ::
 * https://github.com/likhobory/SuiteCRM-CoreRU[Russian RAPIRA Language Pack^]
-* https://crowdin.com/project/suitecrmtranslations[Альтернативный перевод на русский язык, осуществляющийся всеми желающими на основе языковых файлов RAPIRA на сайте crowdin.com^] 
+* https://sourceforge.net/projects/suitecrmtranslations/files[Альтернативный перевод на русский язык^], осуществляющийся всеми желающими на основе языковых файлов RAPIRA на сайте https://crowdin.com/project/suitecrmtranslations[crowdin.com^] 
 
 {{% notice note %}}
 В языковом пакете RAPIRA используется та же терминология, что и в данном руководстве, с другой стороны - альтернативный пакет обновляется несколько чаще. Окончательный выбор по использованию того или иного пакета остаётся за пользователями системы. 
