@@ -14,7 +14,7 @@ weight: 30
 
 :imagesdir: /images/ru/8.x/admin/administration-panel/Schedulers
 
-ifdef::env-github[:imagesdir: ../../../../static/images/ru/8.x/admin/administration-panel/Schedulers]
+ifdef::env-github[:imagesdir: ../../../static/images/ru/8.x/admin/administration-panel/Schedulers]
 
 :btn: btn:
 
@@ -38,7 +38,7 @@ link:../../../../admin/administration-panel/system/#_планировщик[эт
 Для выполнения заданий в SuiteCRM используются ресурсы внешних планировщиков, таких как cron (в UNIX-подобных операционных системах) или планировщик заданий (в Windows).
 
 В Windows используйте системный *Планировщик заданий*, вариант настройки для Windows описан в 
-link:../../../../admin/administration-panel/system/#_winscheduler[этом] разделе для SuiteCRM 7.x.
+link:../../../../admin/administration-panel/system/#winscheduler[этом] разделе для SuiteCRM 7.x.
 
 Ниже описывается настройка планировщика в Linux и iOS.
 
@@ -107,11 +107,11 @@ image:image3.png[Планировщик SuiteCRM 8.x - настройка Зад
  
 Проверять почтовые ящики для входящей почты::
  Задание проверяет почтовые ящики активных учётных записей, настроенных в разделе
-link:../emails/email/#_входящие_e_mail[Входящие E-mail^] панели администрирования. 
+link:../../../../admin/administration-panel/emails/email/#_входящие_e_mail[Входящие E-mail^] панели администрирования. 
 
 Проверять почтовые ящики для возвращаемых писем::
  Задание проверяет все учётные записи, у которых в колонке *Действие* указано *Обработка возврата*. Задание является важной составляющей при проведении
-link:../../../user/core-modules/campaigns/#_подготовка_к_рассылке[массовой рассылки^] писем.
+link:../../../user/modules/_campaigns[массовой рассылки^] писем.
 
 Запускать ночью массовую рассылку писем::
  Задание обрабатывает очередь исходящих писем при проведении массовой рассылки *(Не актуально для SuiteCRM версий 8.9+)*.
@@ -134,17 +134,17 @@ link:../../../user/core-modules/campaigns/#_подготовка_к_рассыл
  
 Выполнять настроенные процессы::
  Задание выполняет действия, настроенные в модуле 
-link:../../../user/advanced-modules/workflow[Процессы^].
+link:../../../../user/advanced-modules/workflow[Процессы^].
 
 Портал - проверять почтовые ящики для входящей почты::
  Задание необходимо для работы с Обращениями через внешний портал.
  
 Elasticsearch-индексация::
- Задание индексирует документы для выполнения по ним link:../../../user/introduction/user-interface/search[полнотекстового поиска^].
+ Задание индексирует документы для выполнения по ним link:../../../../user/introduction/user-interface/search[полнотекстового поиска^].
 
 Создавать отчёты по расписанию::
  Задание создаёт и рассылает отчёты, указанные в модуле 
-link:../../../user/advanced-modules/reports/#_отчёты_по_расписанию[Отчёты по расписанию^].
+link:../../../../user/advanced-modules/reports/#_отчёты_по_расписанию[Отчёты по расписанию^].
 
 [discrete]
 === Дополнительные Задания в SuiteCRM версий 8.9+
