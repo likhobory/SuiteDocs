@@ -1,6 +1,6 @@
 ---
 Title: Подготовка к обновлению
-weight: 30
+weight: 20
 ---
 
 :author: likhobory

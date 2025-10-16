@@ -1,6 +1,6 @@
 ---
 Title: Обновление с версии 8.0.x до версии 8.1.x
-weight: 30
+weight: 40
 ---
 
 :author: likhobory

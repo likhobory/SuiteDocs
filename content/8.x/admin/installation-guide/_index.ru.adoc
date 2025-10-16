@@ -1,5 +1,5 @@
 ---
-title: Установка и обновление SuiteCRM
+title: Установка SuiteCRM
 weight: 10
 ---
 
