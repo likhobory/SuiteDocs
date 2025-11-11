@@ -9,6 +9,55 @@ weight: 9850
 :icons: font
 :imagesdir: /images/en/admin/release
 
+== 7.14.8
+
+_Released 6 November 2025_
+
+=== icon:box-open[] Assets
+
+* https://github.com/suitecrm/SuiteCRM/releases/tag/v7.14.8[GitHub - Download]
+* link:../../installation-guide/downloading-installing[SuiteCRM 7 Install Guide]
+* link:../../installation-guide/upgrading[SuiteCRM 7 Upgrade Guide]
+
+===  icon:check[] Release Notes
+
+==== icon:lock[] Security
+
+* CVE: https://nvd.nist.gov/vuln/detail/CVE-2025-64488[CVE-2025-64488: SQL Injection Vulnerability] | https://github.com/SuiteCRM/SuiteCRM/security/advisories/GHSA-5v53-v44q-ww2c[GitHub Advisory] | Reporter: allannjuguna
+* CVE: https://nvd.nist.gov/vuln/detail/CVE-2025-64489[CVE-2025-64489: Privilege Escalation Vulnerability] | https://github.com/SuiteCRM/SuiteCRM/security/advisories/GHSA-j6jg-9jj3-q2ph[GitHub Advisory] | Reporter: prakhar0x01
+* CVE: https://nvd.nist.gov/vuln/detail/CVE-2025-64490[CVE-2025-64490: Improper Access Control] | https://github.com/SuiteCRM/SuiteCRM/security/advisories/GHSA-jh8v-wqgj-hhc2[GitHub Advisory] | Reporter: prakhar0x01
+* CVE: https://nvd.nist.gov/vuln/detail/CVE-2025-64491[CVE-2025-64491: XSS Vulnerability] | https://github.com/SuiteCRM/SuiteCRM/security/advisories/GHSA-prfm-6667-x3mv[GitHub Advisory] | Reporter: Nicolas Decayeux (Patrowl)
+
+==== icon:bug[] Bug Fixes
+
+* PR: https://github.com/SuiteCRM/SuiteCRM/pull/10709[10709] - Fix https://github.com/SuiteCRM/SuiteCRM/issues/10708[#10708] - Converting Quote to Invoice ignores field defaults
+* PR: https://github.com/SuiteCRM/SuiteCRM/pull/10713[10713] - Fix #10713 - Fix edit link (pencil) in Global Search
+* PR: https://github.com/SuiteCRM/SuiteCRM/pull/10714[10714] - Fix #10714 - Fix multienum fields in dashlet filters
+* PR: https://github.com/SuiteCRM/SuiteCRM/pull/10716[10716] - Fix #10716 - Fix Inline Edit for decimal fields
+* PR: https://github.com/SuiteCRM/SuiteCRM/pull/10725[10725] - Fix #10725 - Set Email Warning Notification to false
+* PR: https://github.com/SuiteCRM/SuiteCRM/pull/10571[10571] - Fix https://github.com/SuiteCRM/SuiteCRM/issues/10570[#10570] - Email Signature Compose View Issues
+* PR: https://github.com/SuiteCRM/SuiteCRM/pull/10727[10727] - Fix https://github.com/SuiteCRM/SuiteCRM/issues/10726[#10726] - Search Pagination and Module Filter
+* PR: https://github.com/SuiteCRM/SuiteCRM/pull/10733[10733] - Fix https://github.com/SuiteCRM/SuiteCRM/issues/10732[#10732] - Can't list view inbound email inboxes after soft-deleting a user with an active email inbox
+* PR: https://github.com/SuiteCRM/SuiteCRM/pull/10736[10736] - Fix #10736 - Fix Workflow modify record date issue
+* PR: https://github.com/SuiteCRM/SuiteCRM/pull/10723[10723] - Fix https://github.com/SuiteCRM/SuiteCRM/issues/10722[#10722] - Set date_entered after save update
+* PR: https://github.com/SuiteCRM/SuiteCRM/pull/10734[10734] - Fix https://github.com/SuiteCRM/SuiteCRM/issues/10724[#10724] - Email Subject not importing correctly
+
+=== icon:heart[] Community
+
+_Special thanks to the following members for their contributions and participation in this release!_
+
+{{% ghcontributors QuickCRM BastianHammer Dmbob %}}
+
+_Special thanks to everyone who reported the security issues addressed in this release!_
+
+{{% ghcontributors  allannjuguna prakhar0x01 Infikus %}}
+
+Please https://suitecrm.com/releases/[visit the official website] to find the appropriate upgrade package.
+
+To report any security issues please follow our link:../../../community/security-policy[Security Policy]
+
+'''
+
 == 7.14.7
 
 _Released 06 August 2025_

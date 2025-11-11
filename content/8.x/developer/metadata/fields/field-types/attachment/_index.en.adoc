@@ -72,45 +72,55 @@ Full configuration with attachment specific options:
 
 === Configuration Options
 
-[cols="1,2,1"]
+[cols="1,2,1,1"]
 |===
-| Option | Description | Required
+| Option | Description | Required | Default Value
 
 | `type`
 | Must be set to `attachment`
 | Yes
+| N/A
 
 | `storage_type`
 | The storage backend to use for this field. Must match a configured storage (e.g., `private-documents`, `public-images`). See the link:../../../../../admin/configuration/file-storage/file-storage-configuration/[File Storage Configuration Reference].
 | Yes
+| `private-documents`
 
 | `upload_maxsize`
 | Maximum allowed file size in bytes.
 | No
+| Value from global configuration (`upload_maxsize`)
 
 | `breakpoint`
 | Number of attachments before a "Show More" link is displayed in the UI.
 | No
+| 1
 
 | `maxPerRow`
 | Maximum number of attachments to display per row in the UI.
 | No
+| Dynamically calculated based on available space
 
 | `popoverMaxTextLength`
 | Maximum file name length in the popover before truncation.
 | No
+| 200px
 
 | `popoverMinWidth`
 | Minimum width of each attachment inside the popover.
 | No
+| 315px
 
 | `maxTextWidth`
 | Maximum file name length before truncation.
 | No
+| 150px
 
 | `minWidth`
 | Minimum width of each attachment.
 | No
+| 185px
+
 |===
 
 === Declaring Storage Types

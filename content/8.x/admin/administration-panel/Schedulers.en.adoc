@@ -34,6 +34,10 @@ After installation, these instructions remain accessible at the bottom of the `A
 To prevent permissions issues with Scheduler jobs, it is recommended to execute them using the same user account that runs your web server.
 If you need to use a different user account, you must modify the `allowed_cron_users` array in `config.php` to include that user.
 
+There is also a small step by step shown on the schedulers listview:
+
+image:Scheduler-Setup-Widget.png[Scheduler Setup Widget]
+
 To see more information about setting up, refer to the "Crontab Info" section below.
 
 === Accessing Schedulers
@@ -45,7 +49,7 @@ image:Admin-Panel-Scheduler-Section.png[Admin Panel]
 === Managing Schedulers
 In the Schedulers module, you can view a list of all schedulers along with their status, interval and range (start to end date).
 
-image:Schedulers-List-View.png[Scheduler List View]
+image:Scheduler-List-View.png[Scheduler List View]
 
 To see detailed information about a scheduler, click on its name to open the Detail View.
 
@@ -92,6 +96,14 @@ The following schedulers are available in SuiteCRM:
 |*Prune Database scheduler*| Prune Database scheduler has been moved to symfony side and now also removes media objects from the new storage system.
 |===
 
+=== How do I know if Schedulers are working?
+
+To see if schedulers are working / running, there is an added widget on Schedulers Listview to show:
+
+* The last user to run schedulers.
+* Last successful run time.
+
+image:Scheduler-Widget.png[Scheduler Widget]
 
 === Crontab Info
 
