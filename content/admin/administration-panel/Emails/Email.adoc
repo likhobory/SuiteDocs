@@ -197,6 +197,13 @@ Check this box to import emails automatically, which means that records will be 
 all incoming emails. These associated emails can then be viewed via the History subpanel of the relevant record.
 This setting is selected by default in *SuiteCRM*.
 
+The `Check Inbound Mailboxes` scheduler job is responsible for automatically importing email from group email accounts
+into *SuiteCRM*. This job runs at regular intervals (as configured in the *Schedulers* module) and checks all active,
+non-personal inbound email accounts for new mail.
+
+Read more about this scheduler and how to configure it in link:../automatic-email-importing/[Automatic Email Importing].
+
+
 ==== Create Case From Email
 Check this box to set up *SuiteCRM* to create a link:../../../../user/core-modules/cases[Case] record from an incoming email.
 

@@ -1,0 +1,130 @@
+---
+Title: Automatic Email Importing
+weight: 60
+---
+:experimental:   ////this is here to allow btn:[]syntax used below
+
+:imagesdir: /images/en/admin
+
+
+The `Check Inbound Mailboxes` scheduler job is responsible for automatically importing emails from group email accounts
+into *SuiteCRM*. This job runs at regular intervals (as configured in the *Schedulers* module) and checks all active,
+non-personal inbound email accounts for new mail.
+
+== Overview
+
+The import job is called by the scheduler. For each *non-personal*, *active* inbound email account the scheduler:
+
+* Iterates over each of the configured monitored folders (for that account).
+* Fetches messages from the mail server in date order, day by day, starting from the last imported date for that folder until the configured threshold is reached.
+** (Optional, configurable) it is possible to only fetch UNSEEN messages.
+* Fully imports each selected message into the `emails` table.
+* If configured, case creation is triggered for each imported message.
+* If configured, autoresponses (out of office replies) are sent.
+* (Optionally, configurable) deletes messages from the mail server after successful import.
+* Updates the Inbound Email Account's last import run timestamp and per-mailbox (monitored folder) last import cursors.
+
+== How messages are selected for import
+
+* Per mailbox a cursor `mailbox_last_imported_days` stores the last imported day (Y-m-d).
+* The service advances the cursor day-by-day from the saved date to today OR until the configured per-run message limit is reached.
+* For each date it:
+** Queries the mail server for messages on that date, and retrieves all messages for that day.
+** Filters out messages already present in the local `emails` table to avoid duplicates, by checking the message UID.
+** The cursor is updated after the run.
+
+==  Configuration options
+
+=== Global options
+
+In the Administration panel > Email Settings page, you can find the global configuration options for email import.
+
+image:global-email-import-configuration.png[global-email-import-configuration.png]
+
+There you will find an Email Import Configuration section with the following options:
+
+* Threshold for Number of Emails Imported Per Run (per Mailbox)
+** Defines the threshold number of emails to be imported per run for each inbound email account mailbox.
+** Config entry: `email_import_per_run_threshold` (integer)
+** Maximum number of messages imported per run (across day iteration). Must be a positive integer.
+** Default: `25`.
+
+* Starting Point for New Mailbox Imports
+** Defines how far back in time to start importing emails when no per-mailbox cursor exists.
+** Config entry: `email_import_timeframe_start` (string)
+** Anchor for the default starting date when no per-mailbox cursor exists.
+** Accepted format: leading minus, number, and unit — e.g. `-30 days`, `-3 months`, `-1 years`.
+** If invalid or missing the system uses `-30 days`.
+
+* Only fetch unread emails when importing
+** Defines whether only UNSEEN messages are fetched from the mail server.
+** Config entry: `email_import_fetch_unread_only` (boolean)
+** When true, IMAP imports only fetch UNSEEN messages. Default: `false`.
+
+=== Per inbound email account options
+
+==== Group configurations
+
+image:group-inbox-import-config.png[group-inbox-import-config.png]
+
+* Import Emails Automatically
+** Defines if emails are imported automatically for this inbound email account.
+
+* Move Messages To Trash After Import
+** Defines if messages are deleted from the mail server after successful import.
+
+* Threshold for Number of Emails Imported Per Run (per Mailbox)
+** Defines the threshold number of emails to be imported per run for each inbound email account mailbox.
+** Overrides the global configuration.
+** Field: `email_import_per_run_threshold` (integer)
+** Maximum number of messages imported per run (across day iteration). Must be a positive integer.
+** Default: Uses the current `email_import_per_run_threshold` global setting value as default.
+
+* Starting Point for New Mailbox Imports
+** Defines how far back in time to start importing emails when no per-mailbox cursor exists.
+** Overrides the global configuration.
+** Field: `email_import_timeframe_start` (string)
+** Anchor for the default starting date when no per-mailbox cursor exists.
+** Accepted format: leading minus, number, and unit — e.g. `-30 days`, `-3 months`, `-1 years`.
+** Default: Uses the current `email_import_timeframe_start` global setting value as default.
+
+* Only fetch unread emails when importing
+** Defines whether only UNSEEN messages are fetched from the mail server.
+** Overrides the global configuration.
+** Field: `email_import_unread_only` (boolean)
+** When true, IMAP imports only fetch UNSEEN messages.
+** Default: Uses the current `email_import_fetch_unread_only` global setting value as default.
+
+
+==== Case configurations
+
+It is possible to configure automatic case creation from imported emails on a per inbound email account basis.
+
+For more information on case creation from emails, refer to the Create Case from Email section in the Email module documentation:
+link:../email/#_create_case_from_email
+
+== Checking status
+
+image:group-inbox-import-status.png[group-inbox-import-status.png]
+
+On the Detail view of an inbound email account record, the following fields provide information on the last import run:
+
+* Last Import Run Date/Time:
+** Defines the timestamp of the last import run for this inbound email account.
+
+* Last Imported Date Per Mailbox:
+** Defines the per-mailbox (monitored folder) last imported day cursors.
+
+
+==  Troubleshooting & tips
+
+* Make sure the `Check Inbound Mailboxes` scheduler is active and running.
+* Make sure that cron is properly configured.
+* Check that the inbound email account is active, not personal and properly configured.
+* Configure the `Threshold for Number of Emails Imported Per Run` according to the resources available on your server.
+* Check the SuiteCRM logs for any errors during the import process.
+* If you are experiencing performance issues, consider increasing the import threshold or adjusting the scheduler frequency.
+* For large mailboxes, consider running the import job more frequently to avoid long processing times per run.
+* If you need to re-import emails, you can reset the per-mailbox last imported date cursors by directly modifying the database. Be cautious when doing this and ensure you have a backup of your data.
+* If you want to avoid duplicate imports, ensure that the email UIDs are unique and not being reused by the mail server.
+
