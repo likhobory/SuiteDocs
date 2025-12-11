@@ -1,0 +1,98 @@
+---
+title: "7.15.x Releases"
+weight: 9840
+---
+
+:toc:
+:toc-title:
+:toclevels: 1
+:icons: font
+:imagesdir: /images/en/admin/release
+
+== 7.15.0
+
+_Released 18 December 2025_
+
+=== icon:box-open[] Assets
+
+* https://github.com/suitecrm/SuiteCRM/releases/tag/v7.15.0[GitHub - Download]
+* link:../../installation-guide/downloading-installing[SuiteCRM 7 Install Guide]
+* link:../../installation-guide/upgrading[SuiteCRM 7 Upgrade Guide]
+
+===  icon:check[] Release Notes
+
+==== icon:exclamation-triangle[] Lucene Search Deprecation
+
+**Lucene Global Search is now officially deprecated.**
+
+If you currently use Lucene, it will remain functional after the upgrade to 7.15.0. However, we strongly recommend transitioning to an alternative search mechanism, as support will be removed in a future release.
+
+==== icon:code[] System & PHP Updates
+
+* **Support for PHP 8.4:** SuiteCRM is now fully compatible with PHP 8.4.
+** In PHP 8.4, the IMAP extension is no longer bundled. Ensure your environment is configured correctly. link:https://www.php.net/releases/8.4/en.php#deprecations_and_bc_breaks[See PHP 8.4 Change Log].
+* **Minimum Version Bump:** To ensure security and performance, the **minimum supported version is now PHP 8.1**.
+
+==== icon:envelope[] Better Control Over Email Imports
+
+We have introduced more granular controls for automatic email importing to reduce server load and improve accuracy:
+
+* **Unread Only:** Fetch only unread emails during import.
+* **Custom Start Points:** Set a specific starting date/point for new mailbox imports.
+* **Threshold Limits:** Define the maximum number of emails imported per scheduled run.
+
+*Global defaults can be managed in **Admin > Email Settings**, or overridden for individual inbound accounts.*
+
+To see more information on these new configuration options,
+please refer to the link:../../../admin/administration-panel/emails/automatic-email-importing[Automatic Email Importing] documentation.
+
+==== icon:calendar[] Advanced Calendar Integration & Sync
+
+The calendar experience has been overhauled with a focus on interoperability:
+
+* **Calendar Invite Support:** SuiteCRM meeting and call invites now support "Calendar Invite" functionality for both **Google Calendar**, **Outlook** and many more.
+** When a user receives a SuiteCRM meeting or call invite, they will be able to add the event directly to their calendar with a single click.
+* **Admin Sync Settings:** A new dedicated section in the Administration panel for global synchronization behavior.
+* **New "Calendar Accounts" Module:** Manage all connections (including new **CalDAV** support) directly from your User Profile.
+
+image:calendar-account-create.png[Calendar Account Create]
+
+To learn more about setting up Calendar integration and the configuration options available, please refer to the link:../../../admin/administration-panel/calendar-sync[Calendar Configuration] documentation.
+
+
+==== icon:desktop[] Interface & Developer Enhancements
+
+* **TinyMCE 8:** The text editor has been upgraded to provide a consistent look and feel across all SuiteCRM modules.
+* **Responsive Surveys:** Improved CSS styling ensures that Surveys look professional and remain easy to use on mobile devices and tablets.
+* **V8 API: OAuth Auth Code Grant:** We now support the **Authorization Code Grant** flow, allowing for more secure, industry-standard authentication for external applications.
+
+image:oauth-code-grant-popup-authorize.png[OAuth Code Grant Popup Authorize]
+
+To learn more information on what an Auth Code Grant is and how to set it up, please refer to the link:../../../developer/api/developer-setup-guide/configure-authentication#_authorization_code_grant[OAuth Authorization Code Grant Type] documentation.
+
+==== icon:book[] Documentation Updates
+
+New or updated guides are available for:
+
+* link:../../../admin/administration-panel/emails/automatic-email-importing[Automatic Email Importing]
+* Sending Email Invitation for:
+** link:../../../user/core-modules/calls#_sending_call_email_invitations[Calls]
+** link:../../../user/core-modules/meetings#_sending_meeting_email_invitations[Meetings]
+* link:../../../user/calendar-sync/[Calendar Sync]
+* link:../../../user/calendar-sync/user-guide[Setting up your Calendar]
+* link:../../../user/calendar-sync/caldav-guide/[User Calendar CalDav Setup Guide]
+* link:../../../admin/administration-panel/calendar-sync[Calendar Configuration]
+* link:../../../user/core-modules/surveys#_view_survey[Surveys]
+* link:../../../developer/api/developer-setup-guide/configure-authentication#_authorization_code_grant[OAuth Authorization Code Grant Type]
+
+=== icon:heart[] Community
+
+_Special thanks to the following members for their contributions and participation in this release!_
+
+{{% ghcontributors HVStechnik SinergiaCRM %}}
+
+Please https://suitecrm.com/releases/[visit the official website] to find the appropriate upgrade package.
+
+To report any security issues please follow our link:../../../community/security-policy[Security Policy]
+
+'''
