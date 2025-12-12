@@ -1,0 +1,117 @@
+---
+Title: Calendar Sync
+Weight: 80
+---
+
+:imagesdir: /images/en/admin/calendar-sync
+
+:toc:
+
+== What is Calendar Sync
+
+SuiteCRM's Calendar Sync enables bidirectional synchronization between your SuiteCRM meetings and external calendar systems. Changes made in either system are reflected in both - when you update a meeting in SuiteCRM, it syncs to your external calendar, and vice versa.
+
+Calendar Sync supports multiple providers including Google Calendar and CalDAV servers, with an extensible architecture for future providers.
+
+Data flows directly between your SuiteCRM instance and the calendar provider's servers with no intermediary services.
+
+== Quick Start
+
+Get calendar synchronization running in 5 steps:
+
+1. **Configure OAuth Provider** (Google Calendar only): Navigate to *Administration* > *External OAuth Providers* and create a Google OAuth provider with your API credentials
+2. **Enable Scheduler**: Ensure the SuiteCRM scheduler (cron job) is running - see link:/admin/administration-panel/system#_scheduler[Scheduler Configuration]
+3. **Activate Sync Job**: Go to *Administration* > *Scheduler*, find *Calendar Accounts Sync*, and set it to Active
+4. **Create Calendar Account**: Navigate to *Calendar Accounts* module, create a new account, select your provider, and authenticate
+5. **Test Connection**: Click *Test Connection* to verify setup, then click *Sync Now* to trigger initial synchronization
+
+== Key Features
+
+* **Multi-Provider Support**: Connect to Google Calendar, CalDAV servers, and extensible for future providers
+* **Bidirectional Sync**: Changes sync both ways between SuiteCRM and external calendars
+* **Per-User Configuration**: Each user manages their own calendar connections
+* **Conflict Resolution**: Configurable strategies when the same event is modified in both systems
+* **Flexible Scheduling**: Automatic synchronization runs on a configurable schedule
+* **Manual Sync**: Trigger immediate synchronization when needed
+
+== Requirements
+
+Before setting up Calendar Sync, ensure you have:
+
+=== Scheduler Running
+
+The SuiteCRM scheduler (cron job) must be running for automatic synchronization. Without it, only manual synchronization is possible. See link:/admin/administration-panel/system#_scheduler[Scheduler Configuration] for setup instructions.
+
+=== Valid Credentials
+
+**For Google Calendar (OAuth2):**
+
+* Credentials from https://console.developers.google.com/[Google Developer Console]
+* External OAuth Provider configured in *Administration* > *External OAuth Providers*
+* External OAuth Connection created by the user via *Profile* > *External OAuth Connection*
+* User authorization through the Calendar Account module (the user's profile sidebar menu or accessible via navigation menu)
+
+**For CalDAV servers (Basic Auth):**
+
+* CalDAV URL for the specific calendar you want to sync
+* Valid username and password credentials
+* No OAuth configuration required
+
+== Where to Go Next
+
+Choose your path based on your role and needs:
+
+=== Administrator setting up for the first time
+
+Start with link:/admin/administration-panel/calendar-sync/admin-setup[Admin Setup Guide] to:
+
+* Configure global synchronization settings
+* Set up the scheduler and sync frequency
+* Configure performance and throttling options
+* Understand conflict resolution strategies
+* Enable or disable logic hooks
+
+=== User connecting a calendar
+
+Go to link:/user/calendar-sync/user-guide[User Guide] to:
+
+* Create and configure your Calendar Account
+* Authenticate with Google Calendar or CalDAV
+* Test your connection
+* Trigger manual synchronization
+* View synced meetings
+
+=== Needing CalDAV Configured
+
+See link:/user/calendar-sync/caldav-guide[CalDAV Provider Guide] for:
+
+* Finding your CalDAV URL for various providers
+* CalDAV authentication and credentials
+* Testing CalDAV connections
+* Troubleshooting CalDAV-specific issues
+
+=== Understanding how to sync / Troubleshoot Issues
+
+Check link:/admin/administration-panel/calendar-sync/understanding-sync-troubleshooting[Understanding Sync & Troubleshooting] for:
+
+* How synchronization works (discovery, comparison, resolution phases)
+* What data gets synchronized
+* Sync direction and deletion behavior
+* Error message reference
+* Common issues and solutions
+* Logging and diagnostics
+
+=== Migrating from legacy Google Sync
+
+Review link:/admin/administration-panel/calendar-sync/advanced-migration[Advanced Topics & Migration] for:
+
+* Key differences between legacy and new Calendar Sync
+* Automatic migration process
+* Manual migration steps
+* Complete configuration reference
+* Security considerations
+* Advanced configuration examples
+
+{{% notice note %}}
+Calendar Sync replaces the legacy Google Calendar sync available in SuiteCRM 7.11+. If you're upgrading, see link:/admin/administration-panel/calendar-sync/advanced-migration[Advanced Topics & Migration] for migration information.
+{{% /notice %}}
