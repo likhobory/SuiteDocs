@@ -11,6 +11,54 @@ aliases:
 :icons: font
 :imagesdir: /images/en/8.x/admin/release
 
+== 8.9.2
+
+_Released 13th January 2026_
+
+=== icon:box-open[] Assets
+
+* https://github.com/suitecrm/SuiteCRM-Core/releases/tag/v8.9.2[GitHub - Download]
+* link:../../installation-guide/downloading-installing[SuiteCRM 8 Install Guide]
+* link:../../upgrading[SuiteCRM 8 Upgrade Guide]
+* link:../../legacy-migration/8.7.0-legacy-migration/[SuiteCRM 8 Migration from SuiteCRM 7]
+
+===  icon:check[] Release Notes
+
+==== icon:level-up-alt[] Yarn update
+
+**Minimum version update** - Yarn v4.10.3
+
+==== icon:bug[] Bug Fixes
+
+* PR: https://github.com/SuiteCRM/SuiteCRM-Core/pull/818[818] - Fix #818 - Fix Various Attachment Styling Issues
+* PR: https://github.com/SuiteCRM/SuiteCRM-Core/pull/817[817] - Fix #817 - Update Squire Composer package
+* PR: https://github.com/SuiteCRM/SuiteCRM-Core/pull/816[816] - Fix https://github.com/SuiteCRM/SuiteCRM-Core/issues/810[#810] - Search Failing
+* PR: https://github.com/SuiteCRM/SuiteCRM-Core/pull/815[815] - Fix https://github.com/SuiteCRM/SuiteCRM-Core/issues/797[#797] - Default Email Template Editor incorrect
+* PR: https://github.com/SuiteCRM/SuiteCRM-Core/pull/814[814] - Fix https://github.com/SuiteCRM/SuiteCRM-Core/issues/800[#800] - Scheduler not handling all job types
+* PR: https://github.com/SuiteCRM/SuiteCRM-Core/pull/819[819] - Fix https://github.com/SuiteCRM/SuiteCRM-Core/issues/707[#707] - Date filter in list views with today/yesterday/etc options
+* PR: https://github.com/SuiteCRM/SuiteCRM-Core/pull/820[820] - Fix https://github.com/SuiteCRM/SuiteCRM-Core/issues/708[#708] https://github.com/SuiteCRM/SuiteCRM-Core/issues/637[#637] - Date field default value not working
+* PR: https://github.com/SuiteCRM/SuiteCRM-Core/pull/826[826] - Fix https://github.com/SuiteCRM/SuiteCRM-Core/issues/799[#799] - New file fields 'uploads' directory gets deleted during upgrade
+* PR: https://github.com/SuiteCRM/SuiteCRM-Core/pull/827[827] - Fix #827 - Fix Campaigns when no access to Email Marketing
+* PR: https://github.com/SuiteCRM/SuiteCRM-Core/pull/828[828] - Fix #828 - Update Listview Loading so mass update values take effect
+
+=== icon:heart[] Community
+
+We would love to have your feedback and input to help make SuiteCRM 8 great for everyone.
+
+_Special thanks to the following members for their contributions and participation in this release!_
+
+{{% ghcontributors BastianHammer GoryMoon markbond1007 %}}
+
+If you have found an issue you think we should know about, or have suggestion/feedback, please link:https://github.com/suitecrm/SuiteCRM-Core/issues[Submit An Issue].
+
+If you want to get involved and submit a fix, fork the repo and when ready please link:https://github.com/suitecrm/SuiteCRM-Core/pulls[Submit A PR] - More detail for developers can be found link:https://docs.suitecrm.com/8.x/developer/installation-guide/[here].
+
+Please link:https://suitecrm.com/releases/[visit the official website] to find the appropriate upgrade package.
+
+To report any security issues please follow our link:../../../../community/security-policy[Security Policy]
+
+'''
+
 == 8.9.1
 
 _Released 6 November 2025_
