@@ -19,15 +19,29 @@ After the support period ends, for ESR (Extended Support Release) releases, ther
 |===
 | Version | Initial Release | Active Support Until | Security Support Until
 
-| 7.14 ESR
-| August 2023
-| October 2025
+| 7.15 ESR
 | December 2025
+| December 2027
+| March 2028
 
 | 8.9
 | September 2025
-| December 2025
+| January 2026
 | -
+
+|===
+
+== Security only Supported Versions
+
+
+[cols="1,1,1,1"]
+|===
+| Version | Initial Release | Active Support Until | Security Support Until
+
+| 7.14 ESR
+| August 2023
+| October 2025
+| March 2026
 
 |===
 
