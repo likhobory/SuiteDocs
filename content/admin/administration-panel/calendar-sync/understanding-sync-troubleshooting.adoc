@@ -1,0 +1,658 @@
+---
+Title: Understanding Sync & Troubleshooting
+Weight: 85
+---
+
+:imagesdir: /images/en/admin/calendar-sync
+
+:toc:
+
+== Overview
+
+This guide explains how calendar synchronization works internally and provides comprehensive troubleshooting guidance. Use this as your technical reference for understanding sync behavior, diagnosing issues, and implementing security best practices.
+
+For initial setup, see link:/admin/administration-panel/calendar-sync/admin-setup[Administrator Setup Guide] and link:/user/calendar-sync/user-guide[User Guide]. For CalDAV-specific details, see link:/user/calendar-sync/caldav-guide[CalDAV Provider Guide].
+
+== How Synchronization Works
+
+Calendar synchronization operates in four distinct phases, each running automatically on the configured schedule or when you trigger manual sync.
+
+=== Phase 1: Discovery
+
+The system identifies Calendar Accounts ready for synchronization (accounts with an assigned user that are not deleted) and queues them for processing.
+
+**What Happens:**
+
+* Scheduler job queries Calendar Accounts with an assigned calendar user
+* Prioritizes accounts by last sync attempt date (oldest first)
+* Queues sync jobs for eligible accounts (up to the configured batch limit)
+
+**Accounts Skipped:**
+
+* Accounts without an assigned calendar user
+* Deleted Calendar Accounts
+
+{{% notice note %}}
+Phase 1 does not validate authentication (OAuth tokens or CalDAV credentials). Authentication validation occurs in Phase 2 when fetching external events. Accounts with expired tokens or invalid credentials are queued but will fail during Phase 2.
+{{% /notice %}}
+
+=== Phase 2: Comparison
+
+For each queued Calendar Account, the system validates authentication, retrieves events from both systems, and compares them to identify differences.
+
+**What Happens:**
+
+* Validates authentication (OAuth token validity, CalDAV credentials)
+* Automatically refreshes expired OAuth tokens if possible
+* Retrieves SuiteCRM meetings within the configured sync window (past days + future days)
+* Fetches external calendar events via API (Google Calendar) or CalDAV protocol
+* Matches events between systems using external calendar IDs
+* Identifies new events, modified events, and deleted events in both systems
+
+**Sync Window Application:**
+
+Events are initially filtered by the configured time range:
+
+* **Past Days**: Events from X days ago until today
+* **Future Days**: Events from today until Y days ahead
+
+{{% notice note %}}
+**Linked Event Enrichment**: Events outside the sync window are initially excluded, but if they are linked to events within the window (via External Calendar ID), they are fetched to ensure accurate matching and conflict resolution. This prevents orphaned links and ensures deletions are properly detected.
+{{% /notice %}}
+
+**Event Matching:**
+
+Events are matched using:
+
+* **Linked Event IDs**: Each synced event stores its counterpart's ID. The system uses this link to match events between systems
+* **Content Comparison**: A comparison of core event fields (title, description, location, start/end times) quickly determines if content has changed since the last sync
+* **Modification Detection**: Events are flagged as modified when their last-modified timestamp is newer than the last sync date
+* **Deletion Detection**: When a linked event exists in one system but is no longer present in the other, it is flagged for deletion (according to deletion behavior configuration)
+
+=== Phase 3: Resolution
+
+When the same event is modified in both systems, the configured conflict resolution strategy determines which version to keep.
+
+**Strategies:**
+
+[cols="1,3"]
+|===
+|Strategy |Behavior
+
+|*Most Recent Change Wins*
+|Compares modification timestamps (second-level precision); the most recent change wins. The version with the most recent change overwrites the other.
+
+|*External Calendar Priority*
+|External calendar version always wins, regardless of modification time. As a failsafe, falls back to timestamp comparison if the event source cannot be determined.
+
+|*SuiteCRM Priority*
+|SuiteCRM version always wins, regardless of modification time. As a failsafe, falls back to timestamp comparison if the event source cannot be determined.
+|===
+
+For detailed conflict resolution examples and choosing the right strategy, see link:/admin/administration-panel/calendar-sync/admin-setup#_conflict_resolution_strategy[Conflict Resolution Strategy] in the Administrator Setup Guide.
+
+**No Conflict Scenarios:**
+
+* Identical content: If both events have been modified to the same values, no sync is needed
+* New events: Created in the target system without triggering conflict resolution
+* Deletions: Processed according to deletion behavior configuration
+
+**Security Validation:**
+
+During conflict resolution, event data is validated for security concerns including XSS pattern detection in title, description, and location fields. Suspicious content is logged but synchronization continues.
+
+=== Phase 4: Sync
+
+Changes are applied to both systems to achieve synchronization.
+
+**What Happens:**
+
+* **Create Operations**: New events in one system are created in the other
+* **Update Operations**: Modified events are updated in the target system
+* **Delete Operations**: Deleted events are removed from the target system (if deletion sync enabled)
+* **Link Maintenance**: External Calendar IDs are stored in SuiteCRM for future matching
+* **Status Updates**: Last Sync Date is updated on the Calendar Account record
+
+**Error Handling:**
+
+* Individual event sync failures do not stop the entire sync process
+* Errors are logged to `suitecrm.log` using class-specific prefixes (e.g., `[CalendarSyncOrchestrator]`, `[CalendarSync]`, `[GoogleCalendarProvider]`)
+* Failed events are retried on the next sync run
+
+To view sync errors: `grep -E "error|failed" suitecrm.log | grep -E "CalendarSync|CalendarProvider" | tail -50`
+
+== What Gets Synchronized
+
+Calendar synchronization transfers specific meeting properties between systems. Understanding what syncs helps you manage expectations and troubleshoot data inconsistencies.
+
+=== Synchronized Fields
+
+These fields sync bidirectionally:
+
+* **Title/Subject**: The meeting name or event title
+* **Start Date and Time**: When the meeting begins
+* **End Date and Time**: When the meeting ends
+* **Description**: Meeting details, agenda, or notes
+* **Location**: Physical or virtual meeting location
+
+=== Fields Not Synchronized
+
+These fields remain local to SuiteCRM:
+
+* **Assigned User**: SuiteCRM user ownership
+* **Status**: Meeting status (Planned, Held, Not Held)
+* **Parent Record**: Related Account, Contact, or other SuiteCRM record
+* **Invitees**: Meeting participants (attendees managed separately in each system)
+* **Custom Fields**: Any custom fields added to the Meetings module
+* **Reminders**: Reminder settings configured in SuiteCRM
+
+{{% notice note %}}
+Attendees and invitees are managed independently in each system. Inviting users in SuiteCRM does not add attendees to the external calendar event, and vice versa.
+{{% /notice %}}
+
+=== Data Transformation
+
+When syncing between systems, data may be transformed to fit different formats:
+
+* **HTML Descriptions**: Converted to plain text if the external calendar doesn't support rich text
+* **Time Zones**: Converted to the appropriate time zone for each system
+* **All-Day Events**: Handled according to each system's all-day event implementation
+
+== Sync Direction
+
+Synchronization is bidirectional by default, with independent controls for creation, modification, and deletion.
+
+=== SuiteCRM to External Calendar
+
+Changes in SuiteCRM flow to your external calendar:
+
+* **New Meetings**: Created as events in external calendar
+* **Modified Meetings**: Updates sync to external calendar event
+* **Deleted Meetings**: Removes event from external calendar (if deletion sync enabled)
+
+When a meeting is saved in SuiteCRM:
+
+1. If logic hooks are enabled, sync triggers immediately
+2. Otherwise, changes sync during the next scheduled sync run
+3. External calendar ID is stored in the meeting record for future matching
+
+=== External Calendar to SuiteCRM
+
+Changes in your external calendar flow to SuiteCRM:
+
+* **New Events**: Created as meetings in SuiteCRM
+* **Modified Events**: Updates sync to SuiteCRM meeting
+* **Deleted Events**: Removes meeting from SuiteCRM (if deletion sync enabled)
+
+When an event is modified in the external calendar:
+
+1. Changes are detected during the next sync run (scheduled or manual)
+2. The matching SuiteCRM meeting is updated based on conflict resolution strategy
+3. If no matching meeting exists, a new one is created
+
+=== Deletions
+
+By default, deletions sync bidirectionally. You can customize this behavior to protect data in specific scenarios.
+
+== Deletion Behavior Configuration
+
+Control whether deletions propagate between systems using `config_override.php` settings.
+
+=== Default Behavior
+
+By default, both deletion settings are `true`, enabling full bidirectional deletion sync:
+
+[source,php]
+----
+// Default configuration (deletions sync both ways)
+$sugar_config['calendar_sync']['allow_external_event_deletion'] = true;
+$sugar_config['calendar_sync']['allow_internal_event_deletion'] = true;
+----
+
+With default settings:
+
+* Deleting a meeting in SuiteCRM deletes the event in external calendar
+* Deleting an event in external calendar deletes the meeting in SuiteCRM
+
+=== Protecting External Calendar Events
+
+To preserve external calendar events when SuiteCRM meetings are deleted:
+
+[source,php]
+----
+// Prevent SuiteCRM deletions from affecting external calendar
+$sugar_config['calendar_sync']['allow_external_event_deletion'] = false;
+----
+
+**Result:**
+
+* Deleting a meeting in SuiteCRM does NOT delete the external calendar event
+* The event will be re-synced back to SuiteCRM on the next sync run
+* Useful when external calendar is the authoritative source
+
+=== Protecting SuiteCRM Meetings
+
+To preserve SuiteCRM meetings when external calendar events are deleted:
+
+[source,php]
+----
+// Prevent external deletions from affecting SuiteCRM
+$sugar_config['calendar_sync']['allow_internal_event_deletion'] = false;
+----
+
+**Result:**
+
+* Deleting an event in external calendar does NOT delete the SuiteCRM meeting
+* The meeting will be re-synced back to external calendar on the next sync run
+* Useful when SuiteCRM is the authoritative source
+
+=== One-Way Sync Behavior
+
+To disable deletion sync completely in both directions:
+
+[source,php]
+----
+// No deletions propagate in either direction
+$sugar_config['calendar_sync']['allow_external_event_deletion'] = false;
+$sugar_config['calendar_sync']['allow_internal_event_deletion'] = false;
+----
+
+**Result:**
+
+* Deletions never propagate between systems
+* Deleted events are re-created on the next sync run
+* Leads to orphaned events unless manually cleaned up
+
+{{% notice warning %}}
+Disabling deletion sync can lead to orphaned events that exist in one system but not the other. Consider your data retention policies and cleanup procedures before modifying these settings.
+{{% /notice %}}
+
+== Troubleshooting
+
+This section provides comprehensive troubleshooting guidance for common issues and error messages.
+
+=== Error Message Reference
+
+Common error messages, their causes, and solutions:
+
+[cols="2,2,3"]
+|===
+|Error Message |Cause |Solution
+
+|*Authentication token expired* / *Re-authorization required*
+|OAuth authorization has expired or refresh token is unavailable
+|Edit the Calendar Account, click *Authenticate* to re-authorize, and test connection again. See link:/user/calendar-sync/user-guide#_re_authorizing_oauth[Re-authorizing OAuth].
+
+|*Authentication failed. Please check your CalDAV credentials*
+|CalDAV username or password is incorrect
+|Verify your CalDAV credentials are correct.
+
+|*CalDAV server error: HTTP {code}*
+|The CalDAV server returned an error response
+|Check the HTTP status code: 401 = authentication issue, 403 = permission denied, 404 = calendar not found, 5xx = server error. Verify server URL and credentials.
+
+|*Network error*
+|Connection failed due to network issues, DNS resolution, or firewall
+|Verify the SuiteCRM server can reach the calendar provider's API endpoint. Check firewall rules and DNS resolution. Test connectivity using `curl` from the SuiteCRM server.
+
+|*Calendar not found*
+|The external calendar was deleted, renamed, or the ID changed
+|Verify the calendar still exists in the external system. For CalDAV, verify the Server URL is correct and ends with a trailing slash. Create a new Calendar Account if the calendar no longer exists.
+
+|*This external calendar is already connected to account*
+|The same external calendar is already linked to another Calendar Account
+|Remove the duplicate Calendar Account or use a different external calendar. Each external calendar can only sync with one SuiteCRM Calendar Account to prevent data conflicts.
+
+|*Google API error*
+|Google Calendar API returned an error (permissions, quota, or service issue)
+|Check Google Developer Console for API quotas and error details. Verify OAuth scopes include calendar read/write access. Re-authorize if permissions were revoked.
+
+|*No access token available* / *OAuth connection not found*
+|OAuth token is missing or the connection record was deleted
+|Edit the Calendar Account and click *Authenticate* to establish a new OAuth connection.
+|===
+
+=== Common Issues
+
+Detailed diagnostic steps for frequently encountered problems.
+
+==== Events Not Synchronizing
+
+When events are not syncing between systems, follow these diagnostic steps:
+
+**1. Verify Scheduler Status**
+
+* Navigate to *Calendar Sync Settings* in Administration
+* Check *Scheduler Status* shows "Enabled"
+* Verify *Last Scheduled Run* timestamp is recent (within the sync interval)
+* If scheduler status is "Disabled", ensure the cron job is running - see link:/admin/administration-panel/system#_scheduler[Scheduler Configuration]
+
+**2. Check Calendar Account Connection**
+
+* Navigate to your Calendar Account detail view
+* Verify *Test Successful* shows "Yes"
+* Check *Last Sync Date* is updating regularly
+* If connection test failed, see link:/user/calendar-sync/user-guide#_test_connection_workflow[Test Connection Workflow] to re-test
+* For OAuth accounts, re-authorize if token expired
+
+**3. Verify Sync Window**
+
+* Check the event date falls within the configured sync window
+* Navigate to *Calendar Sync Settings* in Administration
+* Verify *Past Days* and *Future Days* settings include the event date
+* Events outside the sync window are intentionally ignored
+* Adjust sync window settings if needed - see link:/admin/administration-panel/calendar-sync/admin-setup#_sync_window_settings[Sync Window Settings]
+
+**4. Review Logs**
+
+* Navigate to *Administration* > *System Settings*
+* Set *Log Level* to "Info" or "Debug"
+* Trigger manual sync using *Sync Now*
+* Review `suitecrm.log` for entries containing `CalendarSync` or `CalendarProvider`:
++
+[source,bash]
+----
+grep -E "CalendarSync|CalendarProvider" suitecrm.log | tail -100
+----
+* Look for error messages or warnings indicating sync failures
+* Check for authentication errors, API errors, or permission issues
+
+==== Authorization Errors
+
+When you encounter OAuth or authentication errors, follow these steps:
+
+**1. Verify OAuth Provider Configuration** (Google Calendar only)
+
+* Navigate to *Administration* > *External OAuth Providers*
+* Verify the Google OAuth Provider exists and has valid credentials
+* Check Client ID and Client Secret are correct
+* Confirm the OAuth Provider status is Active
+* If credentials are incorrect, update them in Google Developer Console and in SuiteCRM
+
+**2. Re-authorize Calendar Account**
+
+* Edit your Calendar Account
+* Click *Authenticate* to restart the OAuth flow
+* Complete the Google authorization in the popup window
+* Ensure you're authorizing with the correct Google account
+* Click *Save* and then *Test Connection*
+* Click *Save* again to preserve the test result
+
+**3. Check External Calendar Access**
+
+* Log into your external calendar provider
+* Verify the calendar still exists and is accessible
+* For Google Calendar, check authorized apps in Google Account settings
+* For CalDAV, verify username and password are correct
+
+==== Duplicate Events
+
+When the same event appears multiple times in one or both systems:
+
+**1. Check Conflict Resolution Strategy**
+
+* Navigate to *Calendar Sync Settings* in Administration
+* Verify the *Conflict Resolution Strategy* setting
+* Ensure it matches your intended behavior
+* If "Most Recent Change Wins" is causing issues, consider changing to "External Calendar Priority" or "SuiteCRM Priority"
+* See link:/admin/administration-panel/calendar-sync/admin-setup#_conflict_resolution_strategy[Conflict Resolution Strategy] for guidance
+
+**2. Verify Single Calendar Account**
+
+* Navigate to *Calendar Accounts* module
+* Filter by your user
+* Ensure you have only ONE active Calendar Account per external calendar
+* If multiple accounts exist for the same calendar, deactivate or delete duplicates
+* The system will warn about duplicate calendars during connection test
+
+**3. Check Event Matching**
+
+* Open a duplicated meeting in SuiteCRM
+* Check if the *External Calendar ID* field is populated
+* If blank, the meeting is not linked to an external event (orphaned)
+* Delete orphaned meetings and let sync recreate them properly
+* If duplicates persist, contact your administrator to review sync configuration
+
+=== Logging
+
+Calendar synchronization uses the standard SuiteCRM logging system with specific prefixes for easy identification.
+
+==== Enabling Detailed Logging
+
+To enable comprehensive sync logging:
+
+1. Navigate to *Administration* > *System Settings*
+2. Locate *Logger Settings* section
+3. Set *Log Level* to one of:
+   * **Info**: General sync operations and status messages
+   * **Debug**: Detailed sync process information, API calls, and data transformations
+4. Click *Save*
+
+{{% notice warning %}}
+Debug logging generates large log files. Enable it only when troubleshooting specific issues, then return to "Fatal" or "Error" level for normal operation.
+{{% /notice %}}
+
+==== Log Prefixes
+
+Calendar sync entries use class-specific prefixes for filtering. There are two formats used:
+
+**Bracket format** `[ClassName][methodName]`:
+
+[cols="2,3,4"]
+|===
+|Prefix |Description |Filter Command
+
+|`[CalendarSync]`
+|Facade class for sync operations
+|`grep "\[CalendarSync\]" suitecrm.log`
+
+|`[CalendarSyncOrchestrator]`
+|Main sync orchestration logic
+|`grep "\[CalendarSyncOrchestrator\]" suitecrm.log`
+
+|`[CalendarSyncOperationDiscovery]`
+|Event comparison and operation discovery
+|`grep "\[CalendarSyncOperationDiscovery\]" suitecrm.log`
+
+|`[CalendarEventConflictResolver]`
+|Conflict resolution processing
+|`grep "\[CalendarEventConflictResolver\]" suitecrm.log`
+
+|`[SuiteCRMInternalCalendarProvider]`
+|SuiteCRM meeting operations
+|`grep "\[SuiteCRMInternalCalendarProvider\]" suitecrm.log`
+|===
+
+**Colon format** `ClassName: message`:
+
+[cols="2,3,4"]
+|===
+|Prefix |Description |Filter Command
+
+|`GoogleCalendarProvider:`
+|Google Calendar API operations
+|`grep "GoogleCalendarProvider:" suitecrm.log`
+
+|`CalDAVProvider:`
+|CalDAV protocol operations
+|`grep "CalDAVProvider:" suitecrm.log`
+|===
+
+**Example Log Entries:**
+
+[source]
+----
+[CalendarSync][syncAllCalendarAccounts] Starting sync for all calendar accounts
+[CalendarSyncOrchestrator][syncCalendarAccount] Starting sync for account: My Google Calendar
+[CalendarSyncOrchestrator][fetchAndEnrichEvents] Fetched 47 events from external provider
+GoogleCalendarProvider: Successfully connected to Google Calendar
+GoogleCalendarProvider: getEvents called with query: startDate=2024-01-01, endDate=2024-03-31
+CalDAVProvider: Successfully connected to CalDAV server
+[CalendarEventConflictResolver][resolve] Conflict detected - applying timestamp strategy
+[CalendarSyncOrchestrator][syncComplete] Sync completed for account ID 12345
+----
+
+==== Filtering Logs
+
+To filter logs for calendar sync only:
+
+**On Linux/macOS:**
+
+[source,bash]
+----
+# Filter all calendar sync related entries
+grep -E "\[CalendarSync|\[CalendarSyncOrchestrator|CalendarProvider:" suitecrm.log | tail -100
+
+# Filter specific class only
+grep "\[CalendarSyncOrchestrator\]" suitecrm.log | tail -100
+----
+
+**On Windows:**
+
+[source,cmd]
+----
+findstr /R "CalendarSync CalendarProvider" suitecrm.log
+----
+
+**In SuiteCRM UI:**
+
+Navigate to *Administration* > *System Settings* > *System Logs* and filter by keyword "CalendarSync" or "CalendarProvider".
+
+== Security Considerations
+
+Understanding security implications helps you maintain secure calendar synchronization.
+
+=== Data Privacy
+
+==== Direct Connection
+
+* Data flows directly between your SuiteCRM instance and the calendar provider's servers
+* No intermediary services or third-party servers are involved
+* SuiteCRM acts as a client to the external calendar API
+
+==== Data Transmitted
+
+The following meeting data is transmitted over the network:
+
+* Meeting titles and subjects
+* Start and end dates/times
+* Descriptions and meeting notes
+* Location information
+* External calendar identifiers
+
+**Not Transmitted:**
+
+* SuiteCRM user passwords
+* Assigned user information
+* Parent record details (related Accounts, Contacts)
+* Custom fields
+* SuiteCRM-specific metadata
+
+==== Provider Privacy Policies
+
+External calendar providers have their own data retention and privacy policies:
+
+* **Google Calendar**: Data stored on Google servers, subject to Google's privacy policy and data retention
+* **CalDAV Providers**: Data privacy depends on your specific provider (self-hosted vs cloud-hosted)
+* **Self-Hosted CalDAV**: Full control over data storage, retention, and privacy
+
+Review your calendar provider's privacy policy and ensure it meets your organization's compliance requirements (GDPR, HIPAA, etc.).
+
+=== Access Control
+
+==== Per-User Authorization
+
+* Each user authorizes only their own calendar connection
+* Users cannot access other users' external calendars through this system
+* Calendar Account records are owned by individual users
+* Administrators can view Calendar Accounts but cannot authorize on behalf of users
+
+==== Token Storage
+
+**OAuth Tokens (Google Calendar):**
+
+* OAuth access and refresh tokens are stored encrypted in the SuiteCRM database
+* Tokens are encrypted using SuiteCRM's encryption key
+* Tokens are transmitted over HTTPS during authorization
+* Token refresh happens automatically without user interaction
+* Expired tokens require re-authorization by the user
+
+**CalDAV Credentials:**
+
+* Credentials are stored in the SuiteCRM database
+* Passwords are encrypted using Blowfish before storage; usernames are stored in plaintext
+* Ensure database backups are secured and encrypted
+* Consider using app-specific passwords instead of main account passwords
+
+==== Administrator Privileges
+
+Administrators have the following privileges:
+
+* Configure global sync settings (sync window, conflict resolution, etc.)
+* Trigger manual sync for all users via *Sync All Users Now*
+* View all Calendar Account records (but cannot authorize OAuth on behalf of users)
+* Access sync logs and diagnostic information
+* Modify deletion behavior and advanced configuration options
+
+Administrators cannot:
+
+* Access the content of users' external calendars directly
+* Re-authorize OAuth connections on behalf of users
+* View encrypted OAuth tokens in plain text
+
+=== Best Practices
+
+==== Use HTTPS
+
+Ensure HTTPS is enabled on your SuiteCRM instance:
+
+* **Production**: HTTPS is mandatory to protect OAuth tokens and credentials in transit
+* **Development/Testing**: Use HTTPS even in development environments
+* **SSL Configuration**: Use valid SSL certificates (not self-signed in production)
+* **HTTP Strict Transport Security**: Enable HSTS to enforce HTTPS connections
+
+==== Use App Passwords
+
+When available, always use app-specific passwords for CalDAV connections.
+
+**Benefits:**
+
+* Limited scope (calendar access only, no admin privileges)
+* Easy revocation without changing main account password
+* Better security audit trail
+* Compliance with multi-factor authentication policies
+
+==== Regular Auditing
+
+Maintain security through periodic audits:
+
+* **Monthly Review**: Check active Calendar Accounts for unused or orphaned connections
+* **Quarterly Audit**: Verify OAuth tokens are still valid and users still require access
+* **Log Monitoring**: Review sync logs for suspicious activity or repeated failures
+* **Access Review**: Ensure only authorized users have active Calendar Accounts
+
+**Audit Checklist:**
+
+* Review all active Calendar Accounts in the module
+* Verify *Last Sync Date* is recent for all accounts
+* Check for accounts with failed connection tests
+* Remove Calendar Accounts for departed users
+* Review sync logs for authentication failures
+* Verify external calendar access permissions
+
+==== Secure Credential Management
+
+* Store database backups in encrypted storage
+* Enable database encryption for sensitive fields if available
+* Use strong passwords for CalDAV accounts
+* Rotate CalDAV passwords and app passwords regularly
+* Implement IP restrictions on external calendar access when possible
+* Use VPN or private networks for CalDAV connections to self-hosted servers
+
+== Next Steps
+
+After understanding synchronization mechanics and troubleshooting:
+
+* Review link:/admin/administration-panel/calendar-sync/advanced-migration[Advanced Topics & Migration] for complete configuration reference and migration details
+* Consult link:/admin/administration-panel/calendar-sync/admin-setup[Administrator Setup Guide] to adjust global sync settings
+* See link:/user/calendar-sync/caldav-guide[CalDAV Provider Guide] for CalDAV-specific configuration and troubleshooting
