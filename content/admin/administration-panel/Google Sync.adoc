@@ -3,6 +3,10 @@ Title: Google Credentials and Syncing
 Weight: 80
 ---
 
+{{% notice warning %}}
+**Replaced in v7.15+**: This Google Calendar Sync feature has been completely replaced by the new link:../calendar-sync/[Calendar Sync] framework in SuiteCRM 7.15 and later versions. If you're upgrading from an earlier version, your configuration will be automatically migrated. This documentation is preserved for reference only for users on versions 7.11-7.14.
+{{% /notice %}}
+
 {{% notice info %}}
 This enhancement is in **Beta** please help by providing us your feedback!
 It is only available in SuiteCRM versions 7.11 and newer.

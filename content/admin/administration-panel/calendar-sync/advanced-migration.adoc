@@ -1,0 +1,914 @@
+---
+Title: Advanced Topics & Migration
+Weight: 86
+---
+
+:imagesdir: /images/en/admin/calendar-sync
+
+:toc:
+
+== Overview
+
+This guide provides comprehensive technical reference material for advanced Calendar Sync configuration and migration from legacy Google Sync. Use this as your authoritative reference for complete configuration options, migration procedures, and system disabling instructions.
+
+For initial setup, see link:/admin/administration-panel/calendar-sync/admin-setup[Administrator Setup Guide] and link:/user/calendar-sync/user-guide[User Guide].
+
+== Migration from Legacy Google Sync
+
+If you were previously using the legacy Google Calendar sync (available in SuiteCRM 7.11+), the new Calendar Sync framework provides enhanced capabilities including multi-provider support, configurable conflict resolution, and improved architecture.
+
+=== Key Differences
+
+Understanding the differences between legacy and new systems helps you plan your migration:
+
+[cols="1,1,1"]
+|===
+|Feature |Legacy Google Sync |New Calendar Sync
+
+|*Provider Support*
+|Google Calendar only
+|Google Calendar, CalDAV servers, extensible architecture
+
+|*Configuration Location*
+|Admin panel only
+|Admin panel (global settings) + per-user Calendar Accounts
+
+|*User Authorization*
+|User profile Advanced tab
+|Calendar Accounts module with dedicated interface
+
+|*Conflict Resolution*
+|Fixed behavior (most recent change wins)
+|Configurable strategies (timestamp, external priority, SuiteCRM priority)
+
+|*Scheduler Job*
+|"Google Sync Calendars" job
+|"Calendar Accounts Sync" job
+
+|*Deletion Behavior*
+|Fixed bidirectional sync
+|Configurable per-direction deletion controls
+
+|*Real-time Sync*
+|Not available
+|Optional logic hooks for immediate sync on save/delete
+
+|*Data Model*
+|Legacy tables and relationships
+|Modernized data structure with Calendar Account entity
+|===
+
+=== Automatic Migration
+
+When upgrading to a version with the new Calendar Sync framework, migration runs automatically during the upgrade process. The system detects existing legacy Google Sync configuration and migrates it seamlessly.
+
+==== Migration Process
+
+The automatic migration performs these operations:
+
+**1. External OAuth Provider Creation**
+
+* Creates an External OAuth Provider from your existing Google API credentials (Client ID and Client Secret)
+* Migrates OAuth configuration from `config.php` or `config_override.php`
+* Sets the provider status to Active
+* Associates the provider with Google Calendar service
+
+**2. Scheduler Job Migration**
+
+* Locates the legacy *Google Sync Calendars* scheduler job
+* Creates a new *Calendar Accounts Sync* scheduler job with the same interval and status
+* Preserves time range and frequency settings
+
+**3. Calendar Account Creation**
+
+* Scans all users with legacy Google sync configured (user profile Advanced tab settings)
+* Creates Calendar Account records for each user with active Google sync
+* Migrates user-specific settings (calendar selection, sync preferences)
+* Links Calendar Accounts to the newly created External OAuth Provider
+
+**4. OAuth Token Migration**
+
+* Transfers OAuth access tokens and refresh tokens to the new data structure
+* Preserves token expiration timestamps
+* Maintains token encryption and security
+* Associates tokens with the correct Calendar Account records
+
+**5. Meeting Sync Data Migration**
+
+* Migrates existing meeting-to-event mappings from legacy tables
+* Populates External Calendar ID fields in meeting records
+* Preserves sync history and last sync timestamps
+* Updates data relationships to use the new Calendar Account structure
+
+==== Migration Marker File
+
+After successful migration, the system creates a marker file to prevent re-running:
+
+[source]
+----
+include/CalendarSync/migrations/.google_sync_migrated_checked
+----
+
+This file is checked on each system startup. If present, automatic migration is skipped.
+
+{{% notice note %}}
+The automatic migration preserves all existing OAuth tokens and calendar connections. You do not need to re-authorize your Google account after upgrade. If migration encounters errors, check `suitecrm.log` for entries tagged `[CalendarSyncMigration]`.
+{{% /notice %}}
+
+==== Post-Migration Verification
+
+After automatic migration completes, verify the migration succeeded:
+
+**1. Check External OAuth Provider**
+
+* Navigate to *Administration* > *External OAuth Providers*
+* Verify a Google OAuth Provider exists with your credentials
+* Confirm the provider status is Active
+
+**2. Verify Calendar Accounts**
+
+* Navigate to *Calendar Accounts* module
+* Check that Calendar Account records exist for users who had legacy sync configured
+* Verify *OAuth Connection* field is populated
+* Check *Last Sync Date* updates after the first scheduled sync
+
+**3. Test Synchronization**
+
+* Edit a Calendar Account and click *Test Connection*
+* Verify the test completes successfully
+* Click *Sync Now* to trigger manual sync
+* Confirm meetings sync between SuiteCRM and Google Calendar
+
+**4. Review Scheduler**
+
+* Go to *Administration* > *Scheduler*
+* Verify *Calendar Accounts Sync* job exists and is Active
+* Check the job runs successfully (review Last Successful Run timestamp)
+* Optionally disable the legacy *Google Sync Calendars* job if it still exists
+
+=== Manual Migration Steps
+
+If automatic migration did not run or you need to set up a fresh installation without legacy data, follow these manual steps:
+
+**1. Create External OAuth Provider**
+
+* Navigate to *Administration* > *External OAuth Providers*
+* Click *Create External OAuth Provider*
+* Configure the provider:
+  - *Name*: "Google Calendar OAuth" or similar
+  - *Type*: Google
+  - *Client ID*: From Google Developer Console
+  - *Client Secret*: From Google Developer Console
+  - *Status*: Active
+* Click *Save*
+
+See link:/admin/administration-panel/emails/oauth-provider-overview[External OAuth Provider] documentation for detailed Google Developer Console setup.
+
+**2. Create Calendar Accounts for Users**
+
+Each user must create their own Calendar Account:
+
+* User navigates to *Calendar Accounts* module
+* Clicks *Create Calendar Account*
+* Fills in required fields:
+  - *Name*: Descriptive name (e.g., "My Google Calendar")
+  - *Calendar Source*: Google Calendar
+  - *OAuth Connection*: Select the External OAuth Connection recently created
+  - *Calendar User*: The user's SuiteCRM account
+* Click *Authenticate* to complete OAuth authorization
+* Click *Save* to create the account
+
+See link:/user/calendar-sync/user-guide[User Guide] for detailed Calendar Account creation instructions.
+
+**3. Verify Scheduler Configuration**
+
+* Go to *Administration* > *Scheduler*
+* Find the *Calendar Accounts Sync* job
+* Verify it is set to Active
+* Configure sync interval (default: every 15 minutes)
+* Save scheduler configuration
+
+See link:/admin/administration-panel/calendar-sync/admin-setup#_scheduler_configuration[Scheduler Configuration] for frequency adjustment guidance.
+
+**4. Test Synchronization**
+
+* Edit the Calendar Account
+* Click *Test Connection* to verify OAuth and API access
+* Click *Save*
+* From the detail view, click *Sync Now* to trigger immediate sync
+* Verify meetings sync between SuiteCRM and Google Calendar
+
+== Complete Configuration Reference
+
+This section provides a comprehensive reference of all available configuration options for Calendar Sync. These settings are configured in `config_override.php` and offer fine-grained control over synchronization behavior beyond what's available in the administration UI.
+
+=== Full Configuration Array
+
+Add this to your `config_override.php` file to customize calendar sync behavior. Only include the settings you want to override - all settings have sensible defaults.
+
+[source,php]
+----
+<?php
+// Add to config_override.php
+
+$sugar_config['calendar_sync'] = [
+    // ===================================
+    // Sync Window
+    // ===================================
+
+    // Number of days in the past to include in synchronization
+    'sync_window_past_days' => 30,
+
+    // Number of days in the future to include in synchronization
+    'sync_window_future_days' => 90,
+
+    // ===================================
+    // Conflict Resolution
+    // ===================================
+
+    // Strategy for resolving conflicts when the same event is modified in both systems
+    // Valid values: 'timestamp', 'external_based', 'internal_based'
+    'conflict_resolution' => 'timestamp',
+
+    // ===================================
+    // Deletion Behavior
+    // ===================================
+
+    // Allow deletions in external calendar to delete meetings in SuiteCRM
+    'allow_internal_event_deletion' => true,
+
+    // Allow deletions in SuiteCRM to delete events in external calendar
+    'allow_external_event_deletion' => true,
+
+    // ===================================
+    // Real-time Sync
+    // ===================================
+
+    // Enable logic hooks to trigger immediate sync when meetings are saved/deleted
+    'enable_calendar_sync_logic_hooks' => false,
+
+    // ===================================
+    // External Calendar Settings
+    // ===================================
+
+    // Name displayed in external calendar for SuiteCRM events
+    'external_calendar_name' => 'SuiteCRM',
+];
+----
+
+{{% notice warning %}}
+Always test configuration changes in a development or staging environment before applying them to production. Incorrect configuration can cause sync failures or data loss.
+{{% /notice %}}
+
+=== Configuration Options Reference
+
+Detailed reference for each configuration option, including type, default value, valid range, impact, and recommendations.
+
+// ==== run_async
+//
+// Controls whether synchronization jobs run asynchronously (concurrent) or sequentially (one at a time).
+//
+// * **Type**: Boolean
+// * **Default**: `false`
+// * **Valid Values**: `true` or `false`
+// * **Impact**: When enabled, allows concurrent processing of sync jobs controlled by throttling settings. When disabled, jobs run sequentially, which is slower but uses fewer server resources.
+// * **Recommendation**:
+//   - Enable for systems with many users (50+) to improve sync performance
+//   - Enable if you have adequate server resources (multi-core CPU, sufficient RAM)
+//   - Disable for small installations or resource-constrained servers
+//   - Disable if you experience server overload during sync operations
+//
+// **Example:**
+//
+// [source,php]
+// ----
+// // Enable async for better performance on large systems
+// $sugar_config['calendar_sync']['run_async'] = true;
+// ----
+
+// ==== max_running_calendar_account_jobs
+//
+// Maximum number of Calendar Account synchronization jobs that can run simultaneously. This controls how many users' calendars sync at the same time.
+//
+// * **Type**: Integer
+// * **Default**: `30`
+// * **Valid Range**: `1` to `200`
+// * **Impact**: Higher values increase sync speed for many users but consume more server resources (CPU, memory, database connections). Lower values reduce server load but slow down overall sync time.
+// * **Recommendation**:
+//   - Start with `30` for medium installations (50-200 users)
+//   - Increase to `50-100` for large installations with adequate server capacity
+//   - Decrease to `10-20` for resource-constrained environments
+//   - Monitor server load during sync and adjust accordingly
+// * **Note**: Only applies when `run_async` is `true`
+//
+// **Example:**
+//
+// [source,php]
+// ----
+// // Increase for large user base with powerful server
+// $sugar_config['calendar_sync']['max_running_calendar_account_jobs'] = 50;
+// ----
+
+// ==== max_running_meeting_jobs
+//
+// Maximum number of individual Meeting/Event synchronization jobs that can run simultaneously. This controls how many event sync operations run in parallel across all users.
+//
+// * **Type**: Integer
+// * **Default**: `150`
+// * **Valid Range**: `1` to `1000`
+// * **Impact**: Controls granular parallelization of individual event sync operations. Higher values speed up sync for users with many events but increase database load.
+// * **Recommendation**:
+//   - `150` is suitable for most installations
+//   - Increase to `300-500` for high-volume event systems with powerful databases
+//   - Decrease to `50-100` if database becomes a bottleneck during sync
+//   - Users with many events benefit most from higher values
+// * **Note**: Only applies when `run_async` is `true`
+//
+// **Example:**
+//
+// [source,php]
+// ----
+// // Increase for high-volume event systems
+// $sugar_config['calendar_sync']['max_running_meeting_jobs'] = 300;
+// ----
+
+==== sync_window_past_days
+
+Number of days in the past to include in synchronization. Events older than this are ignored.
+
+* **Type**: Integer
+* **Default**: `30`
+* **Valid Range**: `0` to `365`
+* **Impact**: Larger values increase the number of events synchronized, affecting performance and sync duration. Smaller values improve performance but exclude historical events.
+* **Recommendation**:
+  - `30` days for standard usage (recent history)
+  - `0` days to sync only today and future events (minimal resource usage)
+  - `90` days or more for historical event analysis or reporting
+  - `365` days for complete calendar history (use only with adequate resources)
+* **Performance Note**: Past events are more numerous than future events, so larger past windows have significant performance impact
+
+**Example:**
+
+[source,php]
+----
+// Sync only today and future (minimal resource usage)
+$sugar_config['calendar_sync']['sync_window_past_days'] = 0;
+
+// Or sync 90 days of history for reporting
+$sugar_config['calendar_sync']['sync_window_past_days'] = 90;
+----
+
+==== sync_window_future_days
+
+Number of days in the future to include in synchronization. Events beyond this are ignored.
+
+* **Type**: Integer
+* **Default**: `90`
+* **Valid Range**: `1` to `730` (2 years)
+* **Impact**: Determines how far ahead meetings are synchronized. Larger values have minimal performance impact since future events are less numerous.
+* **Recommendation**:
+  - `90` days (3 months) for standard planning horizons
+  - `180` days (6 months) for medium-term planning
+  - `365` days (1 year) for long-term planning and project management
+  - `730` days (2 years) for very long-term planning (rarely needed)
+* **Performance Note**: Future events are typically sparse, so larger future windows have minimal impact
+
+**Example:**
+
+[source,php]
+----
+// Sync 1 year ahead for long-term planning
+$sugar_config['calendar_sync']['sync_window_future_days'] = 365;
+----
+
+==== conflict_resolution
+
+Strategy for resolving conflicts when the same event is modified in both SuiteCRM and the external calendar between sync runs.
+
+* **Type**: String (enum)
+* **Default**: `'timestamp'`
+* **Valid Values**:
+  - `'timestamp'`: Most recent change wins (compares modification timestamps)
+  - `'external_based'`: External calendar changes always take precedence
+  - `'internal_based'`: SuiteCRM changes always take precedence
+* **Impact**: Determines which version of an event is kept when conflicts occur. Incorrect strategy can cause user frustration when their changes are overwritten.
+* **Recommendation**:
+  - Use `'timestamp'` for balanced collaboration (recommended for most installations)
+  - Use `'external_based'` when external calendar (mobile apps) is primary interface for most users
+  - Use `'internal_based'` when SuiteCRM is the authoritative source and external calendar is view-only
+  - Consider user workflows and communication patterns when choosing
+
+For detailed conflict resolution scenarios, see link:/admin/administration-panel/calendar-sync/admin-setup#_conflict_resolution_strategy[Conflict Resolution Strategy].
+
+**Example:**
+
+[source,php]
+----
+// External calendar is primary (mobile users)
+$sugar_config['calendar_sync']['conflict_resolution'] = 'external_based';
+
+// Or SuiteCRM is authoritative source
+$sugar_config['calendar_sync']['conflict_resolution'] = 'internal_based';
+----
+
+==== allow_internal_event_deletion
+
+Controls whether events deleted in the external calendar are also deleted in SuiteCRM.
+
+* **Type**: Boolean
+* **Default**: `true`
+* **Valid Values**: `true` or `false`
+* **Impact**: When `false`, deleting an event in the external calendar will NOT delete the meeting in SuiteCRM. The meeting will be re-synced back to the external calendar on the next sync run.
+* **Recommendation**:
+  - Keep as `true` for true bidirectional sync (recommended for most installations)
+  - Set to `false` to preserve SuiteCRM meeting records when users delete events in external calendar
+  - Set to `false` if SuiteCRM is the system of record for meeting history
+  - Consider data retention policies and compliance requirements
+
+**Example:**
+
+[source,php]
+----
+// Preserve SuiteCRM meetings when external calendar events are deleted
+$sugar_config['calendar_sync']['allow_internal_event_deletion'] = false;
+----
+
+==== allow_external_event_deletion
+
+Controls whether meetings deleted in SuiteCRM are also deleted in the external calendar.
+
+* **Type**: Boolean
+* **Default**: `true`
+* **Valid Values**: `true` or `false`
+* **Impact**: When `false`, deleting a meeting in SuiteCRM will NOT delete the event in the external calendar. The event will be re-synced back to SuiteCRM on the next sync run.
+* **Recommendation**:
+  - Keep as `true` for true bidirectional sync (recommended for most installations)
+  - Set to `false` to preserve external calendar events when SuiteCRM meetings are deleted
+  - Set to `false` if external calendar is the system of record
+  - Useful when external calendar contains events from multiple sources
+
+**Example:**
+
+[source,php]
+----
+// Preserve external calendar events when SuiteCRM meetings are deleted
+$sugar_config['calendar_sync']['allow_external_event_deletion'] = false;
+----
+
+{{% notice warning %}}
+Disabling either deletion setting can lead to orphaned events that exist in one system but not the other. Events will be re-created on the next sync run. Consider implementing manual cleanup procedures if you disable deletion sync.
+{{% /notice %}}
+
+==== enable_calendar_sync_logic_hooks
+
+Enables real-time synchronization via logic hooks triggered on meeting save/delete operations in SuiteCRM.
+
+* **Type**: Boolean
+* **Default**: `false`
+* **Valid Values**: `true` or `false`
+* **Impact**: When enabled, changes to meetings in SuiteCRM trigger immediate sync to external calendar (in addition to scheduled sync). This provides near real-time synchronization but adds processing overhead to meeting save/delete operations.
+* **Recommendation**:
+  - Enable for near real-time synchronization requirements
+  - Enable if users expect immediate reflection of changes in external calendar
+  - Disable if you prefer batch processing only (scheduled sync)
+  - Disable if you experience performance issues during meeting operations
+  - Disable during bulk imports or data migrations to avoid triggering sync for every meeting
+
+**Example:**
+
+[source,php]
+----
+// Enable real-time sync for immediate updates
+$sugar_config['calendar_sync']['enable_calendar_sync_logic_hooks'] = true;
+----
+
+{{% notice note %}}
+Logic hooks only affect SuiteCRM-to-external sync direction. Changes in external calendar are always detected during scheduled sync runs, regardless of this setting.
+{{% /notice %}}
+
+==== external_calendar_name
+
+The name displayed in the external calendar for events created or synced by SuiteCRM. This helps users identify which calendar system created an event.
+
+* **Type**: String
+* **Default**: `'SuiteCRM'`
+* **Valid Range**: Any string (typically 3-50 characters)
+* **Impact**: This name may appear in event descriptions, metadata, or calendar source information in the external calendar system. It does not affect synchronization logic.
+* **Recommendation**:
+  - Use your company name for branding (e.g., "Acme Corp CRM")
+  - Use a descriptive identifier like "CRM Calendar" or "Company Calendar"
+  - Keep it concise for better display in mobile and desktop calendar apps
+  - Avoid special characters that may not display correctly in all calendar systems
+
+**Example:**
+
+[source,php]
+----
+// Brand with company name
+$sugar_config['calendar_sync']['external_calendar_name'] = 'Acme Corp CRM';
+
+// Or use descriptive identifier
+$sugar_config['calendar_sync']['external_calendar_name'] = 'Business Calendar';
+----
+
+=== Configuration Examples
+
+These examples demonstrate complete configuration setups for common scenarios. Use these as starting points and adjust based on your specific requirements.
+
+// ==== High-Performance Setup (Large User Base)
+//
+// Optimized for installations with many users (100+) and powerful server resources.
+//
+// [source,php]
+// ----
+// <?php
+// // High-Performance Setup
+// // Best for: 100+ users, powerful server (multi-core CPU, 16GB+ RAM)
+//
+// $sugar_config['calendar_sync'] = [
+//     // Enable async for concurrent processing
+//     'run_async' => true,
+//
+//     // Increase concurrent jobs for faster sync
+//     'max_running_calendar_account_jobs' => 50,
+//     'max_running_meeting_jobs' => 300,
+//
+//     // Reduce sync window to minimize events processed
+//     'sync_window_past_days' => 7,        // Only 1 week of history
+//     'sync_window_future_days' => 90,     // 3 months ahead
+//
+//     // Balanced conflict resolution
+//     'conflict_resolution' => 'timestamp',
+//
+//     // Disable logic hooks to avoid overhead on save operations
+//     'enable_calendar_sync_logic_hooks' => false,
+// ];
+// ----
+//
+// **Rationale:**
+//
+// * Async processing with high concurrency leverages multi-core CPUs
+// * Reduced sync window (7 days past) minimizes events to process
+// * Logic hooks disabled to avoid slowing down meeting save operations
+// * Suitable for large teams with high meeting volume
+
+==== CRM-Authoritative Setup
+
+SuiteCRM is the source of truth, external calendar is primarily for viewing.
+
+[source,php]
+----
+<?php
+// CRM-Authoritative Setup
+// Best for: Sales teams, CRM-first workflows, controlled planning
+
+$sugar_config['calendar_sync'] = [
+    // SuiteCRM changes always win conflicts
+    'conflict_resolution' => 'internal_based',
+
+    // Preserve SuiteCRM meetings when external events are deleted
+    'allow_internal_event_deletion' => false,
+
+    // Enable logic hooks for immediate sync to external calendar
+    'enable_calendar_sync_logic_hooks' => true,
+
+    // Standard sync window
+    'sync_window_past_days' => 30,
+    'sync_window_future_days' => 90,
+];
+----
+
+**Rationale:**
+
+* SuiteCRM priority ensures CRM data is never overwritten
+* Deleting external events won't remove SuiteCRM meetings (data preservation)
+* Logic hooks provide immediate updates to external calendar after CRM changes
+* Users rely on CRM for scheduling, external calendar for viewing only
+
+**Use Cases:**
+
+* Sales teams who plan all meetings in SuiteCRM
+* Organizations where CRM is the system of record for meeting history
+* Environments where external calendar edits should not affect CRM data
+
+==== External Calendar Primary Setup
+
+External calendar (mobile apps) is the primary interface, SuiteCRM syncs for record-keeping.
+
+[source,php]
+----
+<?php
+// External Calendar Primary Setup
+// Best for: Mobile-first users, field teams, external calendar as source
+
+$sugar_config['calendar_sync'] = [
+    // External calendar changes always win conflicts
+    'conflict_resolution' => 'external_based',
+
+    // Preserve external events when SuiteCRM meetings are deleted
+    'allow_external_event_deletion' => false,
+
+    // Disable logic hooks (batch sync only)
+    'enable_calendar_sync_logic_hooks' => false,
+
+    // Longer sync window for comprehensive history
+    'sync_window_past_days' => 60,
+    'sync_window_future_days' => 180,
+];
+----
+
+**Rationale:**
+
+* External priority ensures mobile edits are never overwritten
+* Deleting SuiteCRM meetings won't remove external events (data preservation)
+* Logic hooks disabled - users edit in external calendar, not CRM
+* Longer sync windows capture more planning data for reporting
+
+**Use Cases:**
+
+* Field teams who primarily use mobile calendar apps
+* Organizations where Google Calendar or Outlook is the primary scheduling tool
+* Users who rarely edit meetings directly in SuiteCRM
+
+==== Minimal Resource Usage Setup
+
+Optimized for resource-constrained environments or small installations.
+
+[source,php]
+----
+<?php
+// Minimal Resource Usage Setup
+// Best for: Small installations, limited server resources, low meeting volume
+
+$sugar_config['calendar_sync'] = [
+    // Minimal sync window to reduce event count
+    'sync_window_past_days' => 0,        // Only today and future
+    'sync_window_future_days' => 30,     // Only 1 month ahead
+
+    // Disable logic hooks to avoid overhead
+    'enable_calendar_sync_logic_hooks' => false,
+
+    // Standard conflict resolution
+    'conflict_resolution' => 'timestamp',
+];
+----
+
+**Rationale:**
+
+* Zero past days eliminates historical event processing
+* Short future window (30 days) reduces API calls and processing time
+* No logic hooks means no overhead during meeting operations
+
+**Use Cases:**
+
+* Small businesses with 5-20 users
+* Shared hosting environments with resource limits
+* Installations where sync speed is not critical
+
+== Disabling Calendar Sync
+
+You may need to temporarily or permanently disable calendar synchronization for maintenance, troubleshooting, or if you no longer use the feature.
+
+=== Complete System Disable
+
+To completely disable calendar synchronization for all users:
+
+**1. Disable the Scheduler Job**
+
+* Navigate to *Administration* > *Scheduler*
+* Locate the *Calendar Accounts Sync* job
+* Edit the job
+* Change *Status* to *Inactive*
+* Click *Save*
+
+This stops all automatic synchronization. Manual sync via *Sync Now* button is still possible.
+
+**2. Disable Logic Hooks (Optional)**
+
+If logic hooks are enabled, disable them to prevent real-time sync:
+
+Add to `config_override.php`:
+
+[source,php]
+----
+$sugar_config['calendar_sync']['enable_calendar_sync_logic_hooks'] = false;
+----
+
+Or uncheck *Enable Calendar Sync Logic Hooks* in Calendar Sync Settings.
+
+**3. Verify Synchronization Stopped**
+
+* Wait for the next scheduled sync interval to pass
+* Check Calendar Sync Settings status page
+* Verify *Last Scheduled Run* timestamp is not updating
+* Review `suitecrm.log` to confirm no sync operations are occurring
+
+{{% notice note %}}
+Disabling the scheduler and logic hooks prevents new sync operations but does not delete existing Calendar Account configurations or synced meeting data. Users' Calendar Accounts remain configured and can be re-activated by enabling the scheduler.
+{{% /notice %}}
+
+=== Individual User Disable
+
+To disable synchronization for a specific user without affecting other users, delete their Calendar Account:
+
+* Navigate to *Calendar Accounts* module
+* Open the user's Calendar Account
+* Click *Delete*
+* Confirm deletion
+
+{{% notice warning %}}
+Deleting a Calendar Account removes all sync configuration and mapping history for that user. The user must recreate the Calendar Account and re-authorize to resume synchronization. Meeting records are preserved, but external calendar event mappings are lost. On next sync, meetings will be re-matched with external calendar events.
+{{% /notice %}}
+
+=== Temporary Disable for Maintenance
+
+To temporarily disable sync during system maintenance:
+
+**1. Before Maintenance**
+
+* Disable the *Calendar Accounts Sync* scheduler job
+* Wait for any running sync operations to complete (check scheduler status)
+* Optionally notify users that sync is temporarily unavailable
+
+**2. During Maintenance**
+
+* Perform system upgrades, data migrations, or other maintenance tasks
+* Sync operations will not interfere with maintenance
+
+**3. After Maintenance**
+
+* Re-enable the *Calendar Accounts Sync* scheduler job
+* Optionally trigger manual sync for all users via *Sync All Users Now*
+* Monitor the first sync run to ensure no errors
+
+=== Re-enabling Calendar Sync
+
+To re-enable previously disabled synchronization:
+
+**1. Enable Scheduler Job**
+
+* Navigate to *Administration* > *Scheduler*
+* Locate the *Calendar Accounts Sync* job
+* Edit the job
+* Change *Status* to *Active*
+* Click *Save*
+
+**2. Re-enable Logic Hooks (If Needed)**
+
+If you disabled logic hooks:
+
+[source,php]
+----
+$sugar_config['calendar_sync']['enable_calendar_sync_logic_hooks'] = true;
+----
+
+Or check *Enable Calendar Sync Logic Hooks* in Calendar Sync Settings.
+
+**3. Verify Synchronization Resumed**
+
+* Wait for the next scheduled sync interval
+* Check Calendar Sync Settings status page
+* Verify *Last Scheduled Run* timestamp updates
+* Test with a Calendar Account using *Test Connection* and *Sync Now*
+
+== Security Considerations
+
+Understanding security implications helps you maintain secure calendar synchronization and protect sensitive data.
+
+=== Data Privacy
+
+**Direct Connection Model:**
+
+* Data flows directly between your SuiteCRM instance and the calendar provider's servers
+* No intermediary services or third-party servers are involved
+* SuiteCRM acts as a client to the external calendar API
+* Network traffic is encrypted when using HTTPS (required)
+
+**Data Transmitted:**
+
+The following meeting data is transmitted over the network:
+
+* Meeting titles and subjects
+* Start and end dates/times
+* Descriptions and meeting notes
+* Location information
+* External calendar identifiers (for matching)
+
+**Data NOT Transmitted:**
+
+* SuiteCRM user passwords
+* Assigned user information
+* Parent record details (related Accounts, Contacts, Opportunities)
+* Custom fields (SuiteCRM-specific metadata)
+* Meeting invitees and attendees (managed independently)
+* Meeting status (Planned, Held, Not Held)
+
+**Provider Privacy Policies:**
+
+External calendar providers have their own data retention and privacy policies:
+
+* **Google Calendar**: Data stored on Google servers, subject to Google's privacy policy and data retention practices
+* **Self-Hosted CalDAV**: Full control over data storage, retention, and privacy policies
+* **Cloud CalDAV Providers**: Review provider-specific privacy policies
+
+Ensure your calendar provider's privacy policy meets your organization's compliance requirements (GDPR, HIPAA, CCPA, etc.).
+
+=== Access Control
+
+**Per-User Authorization:**
+
+* Each user authorizes only their own calendar connection via Calendar Accounts module
+* Users cannot access other users' external calendars through this system
+* Calendar Account records are owned by individual users
+* Administrators can view Calendar Accounts but cannot authorize OAuth on behalf of users
+
+**Token Storage:**
+
+**OAuth Tokens (Google Calendar):**
+
+* OAuth access and refresh tokens are stored encrypted in the SuiteCRM database
+* Tokens are encrypted using SuiteCRM's encryption key (`config.php`)
+* Tokens are transmitted over HTTPS during OAuth authorization flow
+* Token refresh happens automatically without user interaction
+* Expired tokens require re-authorization by the user
+
+**CalDAV Credentials:**
+
+* Username and password are stored in the SuiteCRM database
+* Credentials ARE encrypted by default using Blowfish encryption (db_encrypted => true)
+* Consider using app-specific passwords instead of main account passwords for additional security
+
+**Administrator Privileges:**
+
+Administrators have these privileges:
+
+* Configure global sync settings (sync window, conflict resolution, deletion behavior)
+* Trigger manual sync for all users via *Sync All Users Now*
+* View all Calendar Account records (but cannot authorize OAuth on behalf of users)
+* Access sync logs and diagnostic information
+* Modify advanced configuration options via `config_override.php`
+
+Administrators CANNOT:
+
+* Access the content of users' external calendars directly
+* Re-authorize OAuth connections on behalf of users without their credentials
+* View encrypted OAuth tokens in plain text
+* Decrypt stored CalDAV passwords
+
+=== Best Practices
+
+**Use HTTPS:**
+
+* **Production**: HTTPS is mandatory to protect OAuth tokens and credentials in transit
+* **Development/Testing**: Use HTTPS even in development environments when possible
+* **SSL Configuration**: Use valid SSL certificates from trusted CAs (not self-signed in production)
+
+**Use App Passwords:**
+
+When available, always use app-specific passwords for CalDAV connections.
+
+**Benefits of App Passwords:**
+
+* Limited scope (calendar access only, no admin privileges)
+* Easy revocation without changing main account password
+* Better security audit trail
+* Compliance with multi-factor authentication (MFA) policies
+* Isolation from primary account credentials
+
+**Regular Auditing:**
+
+Maintain security through periodic audits:
+
+* **Monthly Review**: Check active Calendar Accounts for unused or orphaned connections
+* **Quarterly Audit**: Verify OAuth tokens are still valid and users still require access
+* **Log Monitoring**: Review sync logs for suspicious activity or repeated authentication failures
+* **Access Review**: Ensure only authorized users have active Calendar Accounts
+
+**Audit Checklist:**
+
+* [ ] Review all active Calendar Accounts in the module
+* [ ] Verify *Last Sync Date* is recent for all accounts (within expected sync interval)
+* [ ] Check for accounts with failed connection tests
+* [ ] Remove Calendar Accounts for departed or inactive users
+* [ ] Review `suitecrm.log` for authentication failures or repeated errors
+* [ ] Verify external calendar access permissions are still appropriate
+* [ ] Confirm OAuth providers have current credentials
+
+**Secure Credential Management:**
+
+* Store database backups in encrypted storage
+* Enable database encryption for sensitive fields if available (third-party solutions)
+* Use strong passwords for CalDAV accounts (minimum 16 characters)
+* Rotate CalDAV passwords and app passwords regularly (quarterly or annually)
+* Implement IP restrictions on external calendar access when possible (self-hosted CalDAV)
+* Use VPN or private networks for CalDAV connections to self-hosted servers (enhanced security)
+* Document which users have calendar sync enabled and review access permissions
+
+== Next Steps
+
+You've completed the Calendar Sync documentation. For ongoing reference:
+
+* Review link:/admin/administration-panel/calendar-sync/admin-setup[Administrator Setup Guide] for configuration changes
+* Consult link:/user/calendar-sync/user-guide[User Guide] when assisting users with calendar connections
+* Reference link:/user/calendar-sync/caldav-guide[CalDAV Provider Guide] for CalDAV-specific troubleshooting
+* See link:/admin/administration-panel/calendar-sync/understanding-sync-troubleshooting[Understanding Sync & Troubleshooting] for diagnostic procedures
