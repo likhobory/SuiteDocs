@@ -5,15 +5,15 @@ weight: 30
 
 :imagesdir: /images/en/8.x/user/daily-activities/emails
 
-= Composing Emails
+== Composing Emails
 
-== Overview
+=== Overview
 
 SuiteCRM 8 provides a redesigned email compose modal that allows you to send emails directly from the CRM.
 
 The compose modal can be collapsed while navigating the app and supports rich text editing with the Squire editor.
 
-== Opening the Compose Modal
+=== Opening the Compose Modal
 
 There are multiple ways to open the email compose modal. Two of the most common are:
 
@@ -24,13 +24,13 @@ image:email-compose-open.png[Open Compose Modal]
 
 === Compose Modal Fields
 
-=== From
+==== From
 
 Select the outbound email account to send from. If you have multiple outbound email accounts configured, you can choose which one to use. Your default outbound email account will be pre-selected.
 
 If your outbound email account has a signature configured, it will automatically be included in the email body when you select that account.
 
-=== To, CC and BCC
+==== To, CC and BCC
 
 These fields support searching and selecting from SuiteCRM Accounts, Contacts, Leads, Users, or entering individual email addresses.
 
@@ -38,11 +38,11 @@ These fields support searching and selecting from SuiteCRM Accounts, Contacts, L
 * **CC** — Carbon copy recipients (visible to all recipients)
 * **BCC** — Blind carbon copy recipients (hidden from other recipients)
 
-=== Subject
+==== Subject
 
 Enter the subject line for your email.
 
-=== Body (Squire Editor)
+==== Body (Squire Editor)
 
 The body field uses the lightweight Squire editor, offering rich text editing tailored for emails.
 
@@ -100,21 +100,62 @@ Link your email to a specific record in SuiteCRM (e.g., Account, Opportunity, Ca
 
 When a Related To record is selected, and you insert an Email Template, variables in the template will be parsed  on send, based on the selected record.
 
-== Inserting an Email Template
+=== Attachments
+
+You can attach files to your email in two ways:
+
+* Uploading files directly from your computer. (Select "Upload from files")
+* Attaching documents from the Documents module.
+
+==== Attaching a Document
+
+Select a document to attach its latest revision to your email. Multiple documents can be attached as needed.
+
+To attach a document:
+
+* Click the "Attach Document" button in the compose modal footer.
+* Search for the document you want to attach.
+* Select the document from the search results to attach it to your email.
+
+===== Updated Document Attachments
+
+If a document attached to a draft email is updated with a new revision, reopening the compose view displays the latest revision of the document as the attachment.
+
+===== Deleted Document Attachments
+
+If a document attached to a draft email is deleted, reopening the compose view displays a "Document not found" attachment.
+Emails with deleted document attachments cannot be sent.
+
+image:deleted-document-attachment.png[Deleted Document Attachment]
+
+===== Sending Documents as Attachments
+
+When you send an email with an attached Document record, the document's latest revision at the time of sending will be included as the attachment.
+
+==== Difference Between Document Attachments and File Uploads
+
+To tell the difference between a document attachment and a file upload, check the attachment icon:
+
+* Document attachments show a document icon.
+* File uploads show a generic file icon.
+
+image:attached-file-and-document.png[Attached File and Document]
+
+=== Inserting an Email Template
 
 To insert an email template, click the "Insert Template" button in the compose modal footer. This allows you to select from your available email templates and insert the content directly into your email body / subject.
 
 When you select a template, any variables within the template will be parsed based on the selected Related To record.
 
-== Sending Your Email
+=== Sending Your Email
 
 Once you have completed composing your email, click the "Send" button to send it immediately.
 
-== Saving your Email as a Draft
+=== Saving your Email as a Draft
 
 For more information on Drafts, see the link:../managing-drafts[Managing Drafts] section.
 
-== Maximizing the Compose Modal
+=== Maximizing the Compose Modal
 
 The compose modal can be maximized to provide a larger workspace for composing your email.
 
@@ -122,7 +163,7 @@ To maximize the compose modal, click the maximize icon in the top right corner o
 
 image:maximised-compose-modal.png[Maximized Compose Modal]
 
-== Navigating While Composing
+=== Navigating While Composing
 
 The compose modal can be collapsed to allow you to navigate to other records or modules while keeping your email draft open.
 
@@ -132,7 +173,7 @@ To do so, click the minimize icon in the top right corner of the compose modal o
 
 image:minimized-modal.png[Minimized Compose Modal]
 
-== Opening Multiple Compose Modals
+=== Opening Multiple Compose Modals
 
 You can open multiple compose modals at the same time, allowing you to work on several emails simultaneously.
 
