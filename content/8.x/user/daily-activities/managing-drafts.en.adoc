@@ -1,0 +1,66 @@
+---
+title: "Managing Drafts"
+weight: 30
+---
+
+:imagesdir: /images/en/8.x/user/daily-activities
+
+== Overview
+
+SuiteCRM 8 automatically saves your email as a draft when closing, ensuring you never lose your work.
+
+Drafts are stored until manually deleted or sent.
+
+Drafts are saved when you close the compose modal if any of the following fields contain content:
+
+* Email body (excluding email signature)
+* Subject
+* Attachments
+
+== Managing Drafts
+
+=== Draft Saved Notification
+
+When you close the compose modal and a draft is saved, the "Draft has been saved." label briefly appears on screen to confirm your email has been preserved.
+
+=== Drafts Button
+
+When drafts are saved, a button appears in the bottom right corner of the screen displaying:
+
+* The current number of drafts
+* `10+` if there are more than 10 drafts
+
+image:drafts-button.png[Drafts Button]
+
+Click this button to view your list of saved drafts.
+
+=== Draft List
+
+image:draft-list.png[Draft List]
+
+The draft list displays all your saved drafts with the following information for each:
+
+* **Recipient**: Shows the first "To" record, or the Related To record if it's in the To list, or "No Recipients" if none specified
+* **Subject**: The beginning of the email subject
+* **Last Modified**: Date the draft was last modified
+
+Each draft has two actions:
+
+* **Edit** — Opens the draft for editing
+* **Delete** — Removes the draft
+
+=== Dismiss All Drafts
+
+Click the "Dismiss All" button at the top of the draft list to delete all drafts at once. An inline confirmation (Yes/No) will appear before deletion.
+
+ℹ️ Drafts currently being edited will not be dismissed when using "Dismiss All".
+
+=== Editing a Draft
+
+When editing a draft:
+
+* The modal header displays "Draft" instead of "New Email"
+* A trash icon appears in the bottom left corner to dismiss the current draft
+* The draft will not appear in the draft list while being edited
+
+image:draft-edit.png[Editing a Draft]
