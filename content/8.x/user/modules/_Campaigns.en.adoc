@@ -192,7 +192,10 @@ Aside from standard editor buttons there is also:
 |===
 |*image:Unsubscribe-Icon.png[Unsubscribe,width=75]*| This will inject an unsubscribe link to the email body.
 |*image:Code-Icon.png[Code, width=75]*| This will change the editor to a monaco editor - a html field.
+|*image:Variable-Injector-Icon.png[Code, width=75]*| This will allow you to insert placeholder variables into the email.
 |===
+
+To see more information on the Variable Injector, see link:../daily-activities/emails/email-compose.en.adoc#_variable_injection[here.]
 
 == Tracker Urls
 
@@ -234,6 +237,8 @@ You can send a test email to a User, test Target List or specific Email Address.
 image:send_test_entries_demo.gif[Send Test Email]
 
 By doing this you can view the campaign as a recipient and double-check that it appears as it should.
+
+This should also parse the variables in the email body, so you can check that they are working as expected.
 
 Test Entries will generate views and click-thrus etc. which can be viewed from the record subpanels and charts.
 
