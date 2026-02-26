@@ -1,0 +1,105 @@
+---
+title: "Document Management"
+weight: 30
+---
+
+:imagesdir: /images/en/8.x/user/sales-relationships/
+
+== Overview
+
+The Documents module serves as a centralized repository for customer-issued and internal files.
+
+Upload, revise, and view documents while linking them to related records throughout SuiteCRM.
+
+== Document Actions
+
+Access Document actions from the module menu:
+
+* *Create Document* – Opens a form to create a new Document record.
+* *View Documents* – Redirects to the List View for searching and listing Document records.
+
+image:document-listview.png[Document List View]
+
+== Creating a Document
+
+Navigate to the Documents module and select "Create Document" from the Actions menu.
+
+image:document-edit.png[Document Create View]
+
+=== Fields Overview
+
+* *File* - The document file to upload
+* *Status* - Document status (Active, Draft, FAQ, Expired, Pending, Under Review)
+* *Document Name* - Descriptive name for the document
+* *Revision* - Current revision number (starts at 1, auto-increments)
+* *Document Type* - Type category (Mail Merge, EULA, NDA, License Agreement)
+* *Template* - Toggle if document serves as a template
+* *Publish Date* - When the document becomes available
+* *Expiration Date* - When the document expires
+* *Category* - Primary category (Marketing, Sales, Knowledge Base)
+* *Sub Category* - Secondary classification (Marketing Collateral, Product Brochures, FAQ)
+* *Assigned To* - User responsible for the document
+
+ℹ️ The Revision Field has validation to only allow numbers and decimals.
+
+=== Uploading a File
+
+Drag and drop your file into the upload area, or click "Upload" to browse. The document name automatically populates from the filename.
+
+=== Saving a Document
+
+Click "Save" after entering details and uploading your file. SuiteCRM automatically creates the first revision containing the uploaded file.
+
+== Managing Document Revisions
+
+Update documents by creating new revisions.
+
+=== Fields Overview
+
+* *Document Name* - Name of the related Document
+* *Latest Revision* - The Latest revision number for the document
+* *Revision* - Revision to update to
+* *File* - The document file to upload for the new revision
+* *Change log* - Description of changes made in this revision
+
+ℹ️ The Revision Field has validation to only allow numbers and decimals.
+
+=== Creating a New Revision
+
+You can create revisions in two ways:
+
+*From the Document Revisions Subpanel:*
+
+image:document-revisions-subpanel.png[Document Revisions Subpanel]
+
+Access the subpanel on the Document Detail View and click "Create"  within the actions menu to upload a new file and specify the revision number.
+
+*From the Document Edit View:*
+
+Upload a new file and save. If the revision field is unchanged, it auto-increments by 1. Custom revision numbers can be manually entered before saving.
+
+=== Deleting a Revision
+
+To delete a revision, click the trash icon next to the revision in the Document Revisions subpanel. You are unable to delete the current active revision.
+
+To remove the active revision, first create a new revision and then delete the previous one.
+
+== Downloading a Document or Document Revision
+
+To Download a Document or a Document Revision associated file, click the file name link in the Document Detail View or the Document Revisions subpanel. The file will download to your device.
+
+== Relating to Other Records
+
+Documents can be related to other records via the Documents Subpanels. For example, you can relate a Document to an Account, Contact, Lead, etc. To relate a Document to another record, navigate to the record's Detail View, scroll to the Documents subpanel, and click "Select" to choose an existing document or "Create" to create a new one.
+
+== Attaching a Document to an Email
+
+To see information on attaching a Document to an Email, please refer to the link:../../daily-activities/emails/email-compose[Composing Emails] section.
+
+== Configuration
+
+=== Storage Type
+
+Both Documents and Document Revisions use `private-documents` as the default storage type. These fields must use the same storage type to ensure proper functionality.
+
+ℹ️ Changing the storage type for only one of these fields is not supported and may cause issues with document access and revision management.
