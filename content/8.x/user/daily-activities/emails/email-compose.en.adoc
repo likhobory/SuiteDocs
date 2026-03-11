@@ -114,6 +114,14 @@ Once you have completed composing your email, click the "Send" button to send it
 
 For more information on Drafts, see the link:../managing-drafts[Managing Drafts] section.
 
+== Maximizing the Compose Modal
+
+The compose modal can be maximized to provide a larger workspace for composing your email.
+
+To maximize the compose modal, click the maximize icon in the top right corner of the modal.
+
+image:maximised-compose-modal.png[Maximized Compose Modal]
+
 == Navigating While Composing
 
 The compose modal can be collapsed to allow you to navigate to other records or modules while keeping your email draft open.
