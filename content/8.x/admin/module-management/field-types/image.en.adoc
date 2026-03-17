@@ -1,0 +1,145 @@
+---
+title: "Image Field"
+weight: 40
+---
+
+:imagesdir: /images/en/8.x/admin/module-management/field-types
+
+= Image Field
+
+== Overview
+
+The Image field allows you to display images within records that can be uploaded directly from your device.
+This field type is useful for adding visual elements such as product photos, profile pictures, logos, or any other image-based content to your CRM records.
+
+=== Adding an Image Field
+
+Image fields can be added to modules through Studio in the Admin panel.
+
+**To add an Image field:**
+
+. Navigate to the Admin panel
+. Click on *Studio*
+. Select the module you want to add the image field to
+. Click on *Fields*
+. Click *Add Field*
+. Select *Image* from the Data Type dropdown
+. Configure the field settings (see Configuration Options below)
+. Click *Save*
+
+image:add-image-field-studio.png[Add Image Field in Studio]
+
+*Once saved, you will need to add the field to the appropriate layouts (e.g., Detail View, List View) for it to be visible in the module.*
+
+==== Configuration Options
+
+When creating or editing an Image field in Studio, some of the important configuration options are:
+
+Field Name::
+The internal name of the field. This is used in the database and code to reference the field.
+
+Label::
+The display name for the field that will be shown in layouts and forms.
+
+Storage Type::
+Determines where and how the uploaded images are stored:
++
+* Private Images
+* Public Images
+
+To see more information about the differences between these storage types, see link:../../../../admin/configuration/file-storage/file-storage-configuration[Storage Types].
+
+Height::
+Specifies the height (in pixels) that the image will be displayed at in the record view.
++
+Default value can be set with the `image_field_height_default` configuration setting.
+
+Width::
+Specifies the width (in pixels) that the image will be displayed at in the record view.
++
+Default value can be set with the `image_field_width_default` configuration setting.
+
+Max Size (Bytes)::
+Specifies the maximum file size (in bytes) allowed for uploaded images.
+
+Allow Preview::
+When enabled, this option adds a preview capability to the image field, allowing users to view the full-size image. It also provides an option to download the image directly from the record.
++
+The extension of the uploaded image must also be included within the `allowed_preview` configuration setting.
+
+Create Thumbnail::
+When enabled, a thumbnail version of the uploaded image will be automatically generated when the record is saved. The thumbnail will be used in views instead of the full-size image, improving page load times and performance.
++
+The full-size image remains stored and is displayed when using the preview functionality.
+
+Thumbnail Width::
+Specifies the width (in pixels) for the generated thumbnail image. This setting is only applicable when *Create Thumbnail* is enabled.
+
+Thumbnail Height::
+Specifies the height (in pixels) for the generated thumbnail image. This setting is only applicable when *Create Thumbnail* is enabled.
+
+Required Field::
+When enabled, this option makes the image field mandatory, requiring users to upload an image before saving the record.
+
+=== Uploading Images
+
+To upload an image to an Image field, drag and drop an image file onto the field or click to open a file browser and select an image from your device.
+
+Once uploaded, the image will be displayed according to the configured settings.
+
+==== Supported Image Formats
+
+The image field supported formats is based on the `valid_image_ext` configuration setting. By default, this includes common formats such as JPEG, PNG, GIF, and BMP.
+
+=== Viewing Images
+
+How images are displayed in records depends on your thumbnail configuration:
+
+* **Without Thumbnails:** The full-size image is displayed at the height specified in the field configuration.
+* **With Thumbnails:** A smaller thumbnail version is displayed using the configured dimensions.
+
+*The full-size image remains accessible through the preview functionality when **Allow Preview** is enabled.*
+
+=== Image Preview and Download
+
+When the Allow Preview option is enabled for an Image field, users can hover over the image in the record to reveal additional options:
+
+* *Eye icon* - Click to open and view the full-size image
+* *Download icon* - Click to download the image directly to your device
+
+image:image-preview-options.png[Image Preview and Download Options]
+
+These preview and download options are only accessible when Allow Preview is enabled in the field configuration.
+
+=== Replacing or Removing Images
+
+To remove or replace an existing image in an Image field, while on edit, hover over the image to reveal the cross icon.
+
+Click the cross icon to remove the current image, which will allow you to upload a new image in its place.
+
+=== Image Optimization for List Views and Subpanels
+
+To improve performance and maintain clean layouts, SuiteCRM automatically optimizes how images are displayed in List Views
+and Subpanels by limiting their maximum dimensions.
+
+image:optimized-image-listview.png[Optimized Image in List View]
+
+==== List View Optimization
+
+For images displayed in List Views, the maximum dimensions can be controlled using configuration settings:
+
+* `image_field_listview_height_default` - Controls the maximum height
+* `image_field_listview_width_default` - Controls the maximum width
+
+If these settings are not defined, the default maximum dimension of 60px will be applied to non-thumbnail images.
+
+==== Subpanel Optimization
+
+Similarly, images shown in Subpanels respect the following configuration settings:
+
+* `image_field_subpanel_height_default` - Controls the maximum height
+* `image_field_subpanel_width_default` - Controls the maximum width
+
+If no values are specified, the default maximum dimension of 60px will be used for non-thumbnail images.
+
+ℹ️ These dimension restrictions apply to non-thumbnail images. If thumbnails are enabled for the Image field, the configured thumbnail dimensions will be used instead.
