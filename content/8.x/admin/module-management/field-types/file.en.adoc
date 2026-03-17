@@ -1,0 +1,81 @@
+---
+title: "File Field"
+weight: 40
+---
+
+:imagesdir: /images/en/8.x/admin/module-management/field-types
+
+= File Field
+
+== Overview
+
+The File field allows you to attach files to records that can be uploaded directly from your device.
+This field type is useful for adding documents, spreadsheets, PDFs, or any other file-based content to your CRM records.
+
+=== Adding a File Field
+
+File fields can be added to modules through Studio in the Admin panel.
+
+**To add a File field:**
+
+. Navigate to the Admin panel
+. Click on *Studio*
+. Select the module you want to add the file field to
+. Click on *Fields*
+. Click *Add Field*
+. Select *File* from the Data Type dropdown
+. Configure the field settings (see Configuration Options below)
+. Click *Save*
+
+image:add-file-field-studio.png[Add File Field in Studio]
+
+*Once saved, you will need to add the field to the appropriate layouts (e.g., Detail View, List View) for it to be visible in the module.*
+
+==== Configuration Options
+
+When creating or editing a File field in Studio, some of the important configuration options are:
+
+Field Name::
+The internal name of the field. This is used in the database and code to reference the field.
+
+Display Label::
+The display name for the field that will be shown in layouts and forms.
+
+Storage Type::
+Determines where and how the uploaded files are stored:
++
+* Private Documents
+* Public Documents
+* Archived Documents
+
+To see more information about the differences between these storage types, see link:../../../../admin/configuration/file-storage/file-storage-configuration[Storage Types].
+
+Max Size (Bytes)::
+Specifies the maximum file size (in bytes) allowed for uploaded files. This helps prevent excessively large files from being uploaded.
++
+If there is no value specified, the limit comes from the `upload_maxsize` config option.
+
+=== Uploading Files
+
+image:file-upload-area.png[File Upload Area]
+
+To upload a file to a File field, drag and drop a file onto the upload area or click on the upload area to open a file
+browser and select a file from your device. Once uploaded, the file will be attached to the record.
+
+=== Viewing Files
+
+When viewing a file in a record or list, the file name will be displayed as a link.
+Click on the file name link to download the file directly to your device.
+
+=== Replacing or Removing Files
+
+To remove or replace an existing file in a File field, while on edit, click the X icon on the current file to remove it.
+Once the file is removed, the upload area will reappear, allowing you to upload a new file in its place.
+
+=== Valid File Types
+
+By default, certain file extensions are restricted from being uploaded based on the `upload_badext` configuration setting (found in `config.php`).
+
+If you attempt to upload a file with an extension that is listed in the upload_badext configuration, the upload will be blocked, and you will receive an error message.
+
+image:invalid-file-type.png[Invalid File Type Error]
