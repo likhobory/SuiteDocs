@@ -1,256 +1,79 @@
 ---
-title: Downloading & Installing
+title: "Downloading & Installing"
 weight: 20
 ---
 
-:toc:
+:experimental:
+
+= Downloading & Installing
+
+This guide covers the initial setup of SuiteCRM 7, from obtaining the source code to completing the web-based installation wizard.
+
+== 1. Prerequisites
+
+Before you begin, ensure your server environment meets the minimum requirements.
 
 {{% notice info %}}
-The following documentation is for SuiteCRM Version 7.x; to see documentation on the same topic for Version 8+, click link:../../../8.x/admin/installation-guide/downloading-installing[here].
+For a full list of supported databases and web servers, see the link:../../compatibility-matrix[Compatibility Matrix].
 {{% /notice %}}
 
-== Downloading and installing SuiteCRM
+== 2. Downloading SuiteCRM
 
-If you are installing SuiteCRM for the first time, follow the
-instructions in this section. If you have an earlier version of SuiteCRM
-installed, refer to the upgrade section for instructions on how to
-upgrade your SuiteCRM instance. Follow the steps listed below to install
-SuiteCRM:
+The preferred way to install SuiteCRM is by downloading the official zip package from the SuiteCRM website.
 
-.  Install the platform-appropriate (Linux or Windows) version of PHP,
-web server, and database on your machine.
-.  Download the SuiteCRM files from suitecrm.com(see “Downloading the
-latest SuiteCRM files” section).
-.  Copy the SuiteCRM files to your web server.
-.  Install SuiteCRM by following the SuiteCRM installation wizard.
-
-=== Downloading the latest SuiteCRM files
-
-.  Navigate to the SuiteCRM Downloads section at
-http://suitecrm.com/download
-.  Download your flavour of SuiteCRM. We advise that all users download
-the latest SuiteCRM release. The latest version will contain the latest
-features and bug fixes.
-.  If you experience any issues during registering an account on our
-website or downloading SuiteCRM, please use our support forums.
-
-=== Copying SuiteCRM files to web server
-
-Once your SuiteCRM package has downloaded, you will need to unzip the
-files and set permissions required for the installation process. The
-following steps explain in detail the prerequisites to setting up your
-SuiteCRM files for installation:
-
-.  Locate the directory on the web server in which the SuiteCRM
-directory will be located(most commonly the root directory, or within a
-subdirectory).
-.  Unzip SuiteCRM into the directory selected in Step 1. This creates a
-“SuiteCRM” directory within your selected parent directory.
-.  At this stage, you may wish to rename the default “SuiteCRM”
-directory.
-.  Set the correct permissions on the SuiteCRM directory (Linux):
-+
-[source]
+1. Navigate to the https://suitecrm.com/download[Official Download Page^].
+2. Download the latest stable version of SuiteCRM 7.
+3. Upload the `.zip` archive to your web server's root directory (e.g., `/var/www/html/`).
+4. Unzip the archive:
+[source,bash]
 ----
-  sudo chown -R www-data:www-data .
-  sudo chmod -R 755 .
-  sudo chmod -R 775 cache custom modules themes data upload
-  sudo chmod 775 config_override.php 2>/dev/null
+unzip SuiteCRM-7.x.x.zip -d suitecrm
 ----
-.  That `www-data` needs to be replaced by the actual system user that your web server runs under. This varies depending on your
-operating system. Common web server users are as follows:
-..  www-data (Ubuntu Linux/Apache)
-..  apache (Linux/Apache)
-..  nobody (Linux/Apache)
-..  IUSR_computerName (Windows/IIS)
-The commands/steps taken to setting permissions differ depending on
-your operating system. If you are experiencing issues with setting
-permissions on your SuiteCRM instance, visit our support forums.
 
-=== Recommended installation pre-requisites
+== 3. Setting Permissions
 
-* PHP
-* JSON
-* XML Parsing
-* MB Strings Module
-* Writable SugarCRM Configuration File (config.php)
-* Writeable Custom Directory
-* Writable Modules Sub-Directories and Files
-* Writable Upload Directory
-* Writable Data Sub-Directories
-* Writable Cache Sub-Directories
-* PHP Memory Limit (at least 128M)
-* ZLIB Compression Module
-* ZIP Handling Module
-* PCRE Library
-* IMAP Module
-* cURL Module
-* Upload File Size
-* Sprite Support
+SuiteCRM requires specific file permissions to allow the web server to write to the cache, metadata, and upload directories.
 
-==== Notes about PHP configuration
+{{% notice warning %}}
+Incorrect permissions are the #1 cause of installation failure and "White Screen of Death" errors.
+{{% /notice %}}
 
-SuiteCRM up until at least version 8.4.0 assumes that the name of the PHP session identifier (`session.name`) is `PHPSESSID`. If you run into troubles with 403 errors on `/api/graphql` calls, you may want to make sure that you either omit `session.name` in your `php.ini` file, or set it to `PHPSESSID`
+Run the following commands from within your SuiteCRM root directory (replace `www-data` with your specific web server user, e.g., `apache`):
 
-=== Installing SuiteCRM
+[source,bash]
+----
+sudo chown -R www-data:www-data .
+sudo chmod -R 755 .
+sudo chmod -R 775 cache custom modules themes data upload config_override.php
+----
 
-Once you have successfully copied the SuiteCRM files to your web server,
-you need to install SuiteCRM by following the on-screen installation
-wizard. You can navigate to the wizard by entering the following in your
-web browser:
+== 4. Running the Web Installer
 
-`http://<yourServer>/<yourSuiteCRMDirectory>/install.php`
+Once your files and permissions are set, navigate to your SuiteCRM URL in a browser: `http://your-domain.com/install.php`
 
-You can perform a typical installation or a custom installation. Typical
-installation is recommended, but you can choose custom installation for
-the following reasons: The same Database Admin User should not be used
-as the SuiteCRM database administrator Locale settings should be
-specified during installation instead of after logging into SuiteCRM
+1. **License Agreement:** Read the GNU Affero General Public License and click btn:[I Accept].
+2. **System Check:** The installer will verify your PHP settings and permissions.
+* If any items are marked in **red**, you must resolve them before proceeding.
+3. **Database Configuration:**
+* **Host:** Usually `localhost`.
+* **Database Name:** Provide the name of an empty database you have created.
+* **User/Password:** Provide credentials with full privileges to that database.
+4. **Site Configuration:**
+* Create your **Admin** username and password.
+* Enter your **Site URL** (ensure this matches how users will access the CRM).
+5. **Finish:** Click btn:[Install].
 
-=== Performing a typical installation of SuiteCRM
+{{% notice tip %}}
+On the final screen, you will be presented with a **Crontab** command. **Copy this immediately.** You will need it for the next step of the setup.
+{{% /notice %}}
 
-.  Launch your browser and enter the following URL:
+== 5. Post-Installation Task: Cron
 
-`http://<yourServer>/<yourSuiteCRMDirectory>/install.php`
+For SuiteCRM to function (Workflows, Emails, Schedulers), you must add the Cron entry to your server.
 
-* This displays the Welcome page.
-.  Click Next.
-* The Installer displays installation instructions and requirements to
-help determine successful SuiteCRM installation.
-.  Review the information and click Next.
-* This displays the SuiteCRM License Agreement.
-.  Review the license, check I Accept, and click Next. The installer
-checks the system for compatibility and then displays the Installation
-Options page.
-* Note: You can modify any of your settings at any time prior to
-clicking Install in the Confirm Setting menu. To modify any settings,
-click the Back button on your browser to return to the appropriate page.
-.  Select Typical Install.
-.  Click Next. This displays the Database Type page.
-.  Select the database that is installed on your system and click Next. This displays the Database Configuration page.
-
-.. Enter the database name. The Installer uses “suitecrm” as the default
-name for the database. You can specify a new name. +
-.. Enter the Host Name or the Host Instance for the MySQL, MariaDB or
-SQL Server. The host name is, by default, set to localhost if your
-database server is running on the same machine as your web server. +
-.. Enter the username and password for the Database Administrator and
-specify the SuiteCRM Database Username. +
-.. Ensure that the Database Administrator you specify has the
-permissions to create and write to the SuiteCRM database.
-*  For My SQL, MariaDB and SQL Server, by default, the Installer selects
-  the Admin User as the SuiteCRM Database User. The SuiteCRM application
-  uses SuiteCRM Database User to communicate with the SuiteCRM database.
-  You can create a different SuiteCRM Database user at this time.
-*  To select an existing user, choose Provide existing user from
-the SuiteCRM Database Username drop-down list. To create a new SuiteCRM
-Database user, choose Define user. Enter the database username and
-password in the relevant fields. Re-enter the password to confirm it.
-The new user information is displayed in System Credentials on the
-Confirm Settings page at the end of the installation process.
-.. Accept No as the default value if you do not want the SuiteCRM Demo
-data. Select Yes to populate the database with the SuiteCRM Demo data.
-.  Click Next. The Installer validates the credentials of the specified
-administrator. If a database with that name already exists, it displays
-a dialog box asking you to either accept the database name or choose a
-new database. If you use an existing database name, the database tables
-will be dropped.
-.  Click Accept to accept the database name or click Cancel and enter a
-new name in the Database Name field.
-* This displays the Site Configuration page.
-. Enter a name for the SuiteCRM administrator.
-* The SuiteCRM administrator (default name admin) has administrative
-privileges in SuiteCRM. You can change the default username.
-. Enter a password for the SuiteCRM admin, re-enter it to confirm the
-password, and click Next.
-* This displays the Confirm Settings page. The Confirm Settings page
-displays a summary of the specified settings. Click Back on your browser
-to navigate to previous pages if you want to change the settings.
-. Click Print Summary for a printout of the settings for your records.
-* Click Show Passwords and then click Print Summary to include the
-database user password and the SuiteCRM admin password in the printout.
-When you click Show Passwords, the system displays the passwords and
-changes the button name to Hide Passwords. You can click this button to
-hide the passwords again.
-. Click Install.
-* This displays the Perform Setup page with the installation progress.
-. Click Next when the setup is complete.
-* This displays the Registration page(registration is optional).
-. Enter the necessary information and click Send Registration to
-register your SuiteCRM instance with SuiteCRM; or click No Thanks to
-skip registration.
-* This displays the SuiteCRM login page. You can now log into SuiteCRM
-with the SuiteCRM admin name and password that you specified during
-installation.
-
-=== Performing a custom installation of SuiteCRM
-
-.  Launch your browser and go to your new SuiteCRM installation. The URL should be similar to the following:
-`http://crm.yourserver.com/Suite-CRM-Directory/install.php`
-
-.  The _Welcome to the SuiteCRM Setup Wizard_ screen
-You need to accept the license agreement first. To do so:
-..  Click the _I Accept_ checkbox.
-..  Click _Next_ to continue.
-.  The _Pre-Installation requirements_ screen
-The installer will display installation instructions and requirements.
-..  Please review the information and resolve any issues.
-..  Click _Next_ to continue.
-.  The _Configuration_ screen
-This is where you will configure SuiteCRM to work with your customized environment.
-..  _Database Configuration_
-...  _Specify Database Type_
-Select the type of database you will be using. If you do not see your
-database here, please make sure you have installed the correct PHP
-modules.
-...  _Provide Database Name_
-....  _Database Name_
-`suitecrm` is default name for the database. You can specify a
-custom name as well.
-....  _Host Name_
-It is set to `localhost` by default. If your database server is
-running on a different machine as your web server, you can specify a
-custom location.
-....  _User_ & _Password_
-Enter the username and password for the Database Administrator and
-specify the SuiteCRM Database Username. _Note_: You must ensure that
-the Database Administrator you specify has the permissions to create
-and write to the SuiteCRM database.
-....  _SuiteCRM Database User_
-The SuiteCRM application uses the SuiteCRM Database user to
-communicate with the SuiteCRM database. For MySQL, MariaDB and SQL
-Server, the Installer selects the Admin user by default. You can also
-select an existing database user or create a new one. To do so Enter
-the database username and password in the relevant fields and re-enter
-the password to confirm it. This new user information displays in
-_System Credentials_ on the _Confirm Settings_ page at the end of the installation process.
-..  _Site Configuration_
-...  _Identify Administration User_
-....  _SuiteCRM Application Admin Name_
-This is the username of the administrator account. Ex:
-`johnsmith`
-....  _SuiteCRM Admin User Password_
-This is the password of the administrator account. Please re-enter it
-in the _Re-enter SuiteCRM Admin User Password_ section for validation.
-....  _URL of SuiteCRM Instance_
-The URL to the CRM. Ex:
-http://crm.yourserver.com/Suite-CRM-Directory
-....  _Email Address_
-This is the administrator's email address. Ex:
-`john.smith@yourserver.com`
-...  _More Options_
-In this section you can opt to:
-* Populate SuiteCRM with demo data
-* Add branding (Name and logo)
-* Set the system locale
-* Set security options
-Once you are happy with all the settings on the page click _Next_ to
-begin installation.
-.  The _Installation_ screen
-The Installer validates the credentials of the specified
-administrator. If a database with the specified name already exists,
-it displays a dialog box prompting you to either accept the database
-name or choose a new database. If you use an existing database name,
-the database tables will be dropped. Click Accept to drop current
-tables or click Cancel and specify a new database name.
-.  Login to your new SuiteCRM instance!
+1. Open your crontab: `crontab -e -u www-data`
+2. Add the line copied from the installer (usually):
+[source,bash]
+----
+* * * * * cd /var/www/html; php -f cron.php > /dev/null 2>&1
+----

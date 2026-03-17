@@ -1,55 +1,61 @@
 ---
-Title:  Security Policy
-Weight: 2
+title: "Security Policy"
+weight: 2
 ---
+
+= Security Policy
+
+SuiteCRM Ltd is committed to the security of our software and the data of our users. We take all reports of security vulnerabilities seriously and appreciate the efforts of researchers who help us maintain a secure platform.
 
 == Supported Versions
 
-Please check the link:../supported-versions[Supported Versions] page for more information about the actively supported versions
-
-== Raising Issues
-
-As we take security seriously, any reported issue will be reviewed by our Security Team.
-If you have discovered a security risk within SuiteCRM, we would advise that you report it,
-in the first instance, via the Github Security Advisories section
-on the relevant repository:
-
-* if the issue exists in both - SuiteCRM 7 and SuiteCRM 8+ as well, please raise this issue https://github.com/salesagility/SuiteCRM/security[here].
-* If the issue exists only within SuiteCRM 8+  then raise the issue https://github.com/salesagility/SuiteCRM-Core/security[here].
+Vulnerability reports should only be submitted for actively supported versions of the software.
 
 {{% notice info %}}
-When reporting the issue on the Github Security Advisories section, supply the description of security flaws
-and other proof of concept-related materials (POC) in a comment after adding the security advisory.
+Please check the link:../supported-versions[Supported Versions] page for the current list of versions receiving security updates.
 {{% /notice %}}
 
-Alternatively, you can email your report to the Security Team at security@suitecrm.com.
+== Reporting a Vulnerability
 
-*Please don't disclose security bugs publicly* until they have been handled by the security team.
+If you have discovered a security risk within SuiteCRM, we advise that you report it via the **GitHub Security Advisories** section of the relevant repository. This is the most secure and efficient method for our team to track and resolve the issue.
 
-=== Valid security report criteria
+* **SuiteCRM 7 & SuiteCRM 8+:** If the issue exists in both versions, please raise it https://github.com/SuiteCRM/SuiteCRM/security[here^].
+* **SuiteCRM 8 Only:** If the issue exists only within SuiteCRM 8+, raise it https://github.com/SuiteCRM/SuiteCRM-Core/security[here^].
 
-A valid Security Report should meet the following criteria:
+{{% notice tip %}}
+When reporting via GitHub, please provide a detailed description of the flaw and attach any Proof of Concept (POC) materials directly to the advisory.
+{{% /notice %}}
 
-- Should contain 1 issue per report or a maximum of 3 issues if they are related
-- The reported issues must have been previously verified by the reporter
-- Should contain the steps to reproduce the issue or a POC script
-- Should specify the affected versions
-- The specified affected versions should be among the actively supported versions
+Alternatively, you can email your report to the Security Team at **security@suitecrm.com**.
 
-== Response time
+{{% notice warning %}}
+**Please do not disclose security bugs publicly** (including on social media, the forums, or public GitHub issues) until they have been handled and patched by the security team.
+{{% /notice %}}
 
-=== First response
+== Valid Report Criteria
 
-Your email will be acknowledged within 72 hours during the business week (Mon - Fri) Excluding UK National holidays.
+To help our team assess your report quickly, please ensure it meets the following criteria:
+
+* **Scope:** Include one issue per report (or a maximum of three if they are directly related).
+* **Verification:** The issues must have been verified by the reporter before submission.
+* **Reproduction:** Provide clear, step-by-step instructions to reproduce the issue or a working POC script.
+* **Version Data:** Specify the exact version of SuiteCRM and the environment (e.g., PHP version, OS) where the issue was found.
+* **Support Status:** The reported version must be among our actively supported versions.
+
+== Response and Resolution
+
+=== First Response
+Your report will be acknowledged within **72 hours** during the business week (Monday – Friday), excluding UK National Holidays.
 
 === Assessment
-Security Reports will be assessed based on priority following an initial assessment of the severity of the report. The time to fully assess a report may vary depending on multiple factors, including the volume and quality of the report in question.
+Reports are prioritised based on an initial assessment of severity. The time to fully assess a report depends on its complexity and the quality of the documentation provided.
 
-Once a Security Report has been fully assessed it will be assigned a severity and priority grading, this information will be emailed to the reporter along with the anticipated plan for fix to be released.
-If a Security Report is found to be invalid, the reporter will be notified and given the option to create a public issue.
+Once fully assessed, the reporter will be notified of:
+
+1. The assigned **Severity** and **Priority** grading.
+2. The anticipated plan for a fix to be released.
+
+If a report is found to be invalid or out of scope, the reporter will be notified and given the option to create a standard public issue if applicable.
 
 === Resolution
-
-Security issues are then prioritised and worked on based on priority/severity. The time to fix them may vary depending on priority/severity and complexity of the fix required.
-
-Once the security issue is fixed the reporter will be notified.
+Security issues are resolved based on their impact. The time to resolution varies depending on the complexity of the fix and the release cycle. The reporter will be notified once the fix has been merged and a release date is scheduled.
