@@ -11,7 +11,7 @@ weight: 10
 Before reading this page, make sure you are familiar with the link:../process-api/process-api[Process Api] guide.
 {{% /notice %}}
 
-SuiteCRM 8 includes an Async Task system for running long-running background jobs. It is built on Symfony Messenger and provides:
+SuiteCRM 8 includes an Async Task system for executing long-running background jobs. It is built on Symfony Messenger and provides:
 
 * *Three-phase batch processing* — Queueing, Processing, and Finalizing.
 * *Item-level progress tracking* — real-time percentages, counts of completed/failed items.
@@ -19,13 +19,13 @@ SuiteCRM 8 includes an Async Task system for running long-running background job
 * *Self-continuation* — each batch dispatches the next, preventing long-running worker processes.
 * *Configurable transport routing* — route specific tasks to dedicated Messenger transports.
 
-The system is used by Manual Migration Tasks, bulk PDF exports, CSV exports/imports, and any other operation that processes a large number of records in the background.
+The system is used by Manual Migration Tasks, and in the future will be used by other long-running tasks/processes.
 
 == 2. High-Level Architecture
 
 The Async Task system is composed of five layers:
 
-image:migration_layer_architecture.svg[Architecture Layers,width=70%,align=center]
+image:migration_layer_architecture.svg[Architecture Layers,width=70%,align=center,id="migration_layer_architecture",link="#migration_layer_architecture"]
 
 ////
 .ASCII version
@@ -124,7 +124,7 @@ Four message types flow through Symfony Messenger:
 
 | `AsyncTaskRun` | Task triggered or self-continuation | `AsyncTaskRunMessageListener` → Runner
 | `AsyncTaskProgressed` | After each processing batch | `AsyncTaskProgressedMessageListener` → Progressed handler
-| `AsyncTaskCompleted` | All items processed successfully | `AsyncTaskCompletedMessageListener` → Completed handler
+| `AsyncTaskCompleted` | All or part of the items processed successfully | `AsyncTaskCompletedMessageListener` → Completed handler
 | `AsyncTaskFailure` | All items failed or unhandled exception | `AsyncTaskFailureMessageListener` → Failure handler
 |===
 
@@ -178,7 +178,7 @@ The `AsyncTaskRunner` base class orchestrates task execution through three seque
 
 === 4.1 Phase 1: Queueing
 
-image:queueing_phase_flowchart.svg[Queueing phase flowchart,width=70%,align=center]
+image:queueing_phase_flowchart.svg[Queueing phase flowchart,width=70%,align=center,id="queueing_phase_flowchart",link="#queueing_phase_flowchart"]
 
 ////
 .ASCII version
@@ -225,7 +225,7 @@ image:queueing_phase_flowchart.svg[Queueing phase flowchart,width=70%,align=cent
 
 === 4.2 Phase 2: Processing
 
-image:processing_phase_flowchart.svg[Processing phase flowchart,width=70%,align=center]
+image:processing_phase_flowchart.svg[Processing phase flowchart,width=70%,align=center,id="processing_phase_flowchart",link="#processing_phase_flowchart"]
 
 ////
 .ASCII version
@@ -283,7 +283,7 @@ image:processing_phase_flowchart.svg[Processing phase flowchart,width=70%,align=
 
 === 4.3 Phase 3: Finalizing (Optional)
 
-image:finalizing_phase_flowchart.svg[Finalizing phase flowchart,width=70%,align=center]
+image:finalizing_phase_flowchart.svg[Finalizing phase flowchart,width=70%,align=center,id="finalizing_phase_flowchart",link="#finalizing_phase_flowchart"]
 
 ////
 .ASCII version
@@ -322,7 +322,7 @@ The runner never processes all items in a single Messenger message. After each b
 * Allows the Messenger worker to process other messages between batches.
 * Makes the system resilient — if a worker dies mid-batch, only the current item is affected.
 
-image:async_task_run_sequence.svg[Async Task Run Sequence,width=70%,align=center]
+image:async_task_run_sequence.svg[Async Task Run Sequence,width=70%,align=center,id="async_task_run_sequence",link="#async_task_run_sequence"]
 
 ////
 .ASCII version
@@ -434,7 +434,7 @@ This allows administrators to route heavy tasks (e.g. PDF exports) to a dedicate
 
 The Process API is the bridge between frontend action buttons and the async task system.
 
-image:frontend_process_processor_flow.svg[Process Processor flow,width=70%,align=center]
+image:frontend_process_processor_flow.svg[Process Processor flow,width=70%,align=center,id="frontend_process_processor_flow",link="#frontend_process_processor_flow"]
 
 ////
 .ASCII version
@@ -522,7 +522,6 @@ Each runner type uses its own task record table (e.g. `manual_migration_tasks`, 
 | `last_run_datetime` | datetime | Timestamp of the most recent execution.
 | `allow_failure_retry_action` | bool | Enables the "Retry Failed" button.
 | `allow_failure_rerun_action` | bool | Enables the "Re-run" button.
-| `completed_with_failures` | bool | Set by the runner when some items fail.
 |===
 
 == 10. Concrete Runner Types
