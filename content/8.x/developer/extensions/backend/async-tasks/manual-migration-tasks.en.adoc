@@ -10,7 +10,7 @@ weight: 20
 Before reading this page, make sure you are familiar with the link:./async-task-architecture[Async Task Architecture] and the link:../process-api/process-api[Process Api] guides.
 {{% /notice %}}
 
-Manual Migration Tasks provide a framework for running long-running data migration jobs in the background. They are designed for upgrade scenarios where existing data needs to be converted to a new format — for example, migrating file attachments from legacy storage to a new media object system.
+Manual Migration Tasks provide a framework for executing long-running data migration jobs in the background. They are designed for upgrade scenarios where existing data needs to be converted to a new format — for example, migrating file attachments from legacy storage to a new media object system.
 
 Each Manual Migration Task:
 
@@ -42,11 +42,13 @@ This section walks through creating a complete Manual Migration Task using a con
 The example below places code in `core/backend/` because Manual Migration Tasks are typically part of the core platform (shipped with upgrades). If you are building an extension, place the handler and action under `extensions/<your-extension>/backend/` and the migration under `extensions/<your-extension>/backend/Migrations/` instead.
 {{% /notice %}}
 
+In the following subsection we are going to be looking into the implementation of a Manual Migration Task that migrates Notes attachments from legacy storage (files stored in `upload/{note_id}`) to the new media object system. This example is based on a real migration task implemented for SuiteCRM 8.10.0.
+
 === 3.1 Step 1 — Create the Task Handler
 
 The Task Handler contains the core migration logic. Extend `AbstractAsyncTaskHandler` for sensible defaults.
 
-Create the file `core/backend/ManualMigrations/Migrations/MigrateNotesFiles/MigrateNotesFilesTaskHandler.php`:
+The core task handler: `core/backend/ManualMigrations/Migrations/MigrateNotesFiles/MigrateNotesFilesTaskHandler.php`:
 
 [source,php]
 ----
@@ -410,7 +412,6 @@ final class Version20260217120000 extends BaseMigration
             'deleted' => 0,
             'allow_failure_retry_action' => 1,
             'allow_failure_rerun_action' => 0,
-            'completed_with_failures' => 0,
         ]);
 
         $this->log(
@@ -445,7 +446,7 @@ final class Version20260217120000 extends BaseMigration
 |===
 
 {{% notice warning %}}
-Always include a guard clause that checks whether the task record already exists before inserting. Doctrine migrations should be idempotent — re-running them must not create duplicate records.
+Always include a guard clause that checks whether the task record already exists before inserting. Re-running Doctrine migrations must not create duplicate records.
 {{% /notice %}}
 
 === 3.4 Step 4 — Clear the Cache
@@ -516,4 +517,4 @@ When creating a new Manual Migration Task, ensure you have:
 ** An idempotency guard (check before insert).
 ** Correct `allow_failure_retry_action` / `allow_failure_rerun_action` flags matching your handler.
 . [ ] Cleared the cache with `php bin/console cache:clear`.
-. [ ] Tested with the Messenger worker running as the web server user.
+. [ ] Tested with the Messenger worker running as the web server user, see the link:../../../../../admin/async-tasks/messenger-setup[Messenger Setup] guide.
