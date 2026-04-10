@@ -1,6 +1,6 @@
 ---
-Title:  Supported Versions
-Weight: 1
+title: Supported Versions
+weight: 1
 ---
 
 :experimental:
@@ -9,7 +9,7 @@ Weight: 1
 
 Each release of SuiteCRM is supported for a pre-defined period of time after its initial stable release. During this period, bugs and security issues that have been reported are fixed and are released in regular maintenance releases.
 
-After the support period ends, for ESR (Extended Support Release) releases, there is a security support period. Releases during this period are made on an as-needed basis: there can be several security fix releases, or none, depending on the number of reports.
+**ESR (Extended Support Release)** versions have a longer support window. After active support ends, they receive security-only fixes on an as-needed basis. Non-ESR releases do not have a security-only period.
 
 
 == Currently Supported Versions
@@ -26,13 +26,14 @@ After the support period ends, for ESR (Extended Support Release) releases, ther
 
 | 8.9
 | September 2025
-| January 2026
+| April 2026
 | -
 
 |===
 
-== Security only Supported Versions
+== End of Life Versions
 
+Versions listed here no longer receive bug fixes or security updates. If you are running an end-of-life version, we strongly recommend upgrading to a currently supported release.
 
 [cols="1,1,1,1"]
 |===
@@ -42,15 +43,6 @@ After the support period ends, for ESR (Extended Support Release) releases, ther
 | August 2023
 | October 2025
 | March 2026
-
-|===
-
-== End of Life Versions
-
-
-[cols="1,1,1,1"]
-|===
-| Version | Initial Release | Active Support Until | Security Support Until
 
 | 7.12 ESR
 | October 2021
