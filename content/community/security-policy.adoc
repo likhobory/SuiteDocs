@@ -5,7 +5,11 @@ weight: 2
 
 = Security Policy
 
-SuiteCRM Ltd is committed to the security of our software and the data of our users. We take all reports of security vulnerabilities seriously and appreciate the efforts of researchers who help us maintain a secure platform.
+SuiteCRM Ltd is committed to the security of our software and the data of our users. We take all reports of security vulnerabilities seriously and appreciate the efforts of researchers who help us maintain a secure platform. Responsible disclosure is the foundation of a healthy security community, and we welcome researchers who report issues to us privately before making them public.
+
+{{% notice warning %}}
+**Please do not disclose security bugs publicly** (including on social media, the forums, or public GitHub issues) until they have been handled and patched by the security team.
+{{% /notice %}}
 
 == Supported Versions
 
@@ -15,32 +19,57 @@ Vulnerability reports should only be submitted for actively supported versions o
 Please check the link:../supported-versions[Supported Versions] page for the current list of versions receiving security updates.
 {{% /notice %}}
 
+== Scope
+
+The following are in scope for vulnerability reports:
+
+* The SuiteCRM 7 and SuiteCRM 8+ core application code.
+* Authentication, authorisation, and session handling.
+* Data exposure or injection vulnerabilities (e.g. SQL injection, XSS, CSRF).
+
+The following are **out of scope**:
+
+* Third-party plugins, themes, or integrations not maintained by SuiteCRM Ltd.
+* Vulnerabilities in self-hosted infrastructure or configuration choices made by the site administrator.
+* Issues only reproducible on unsupported versions.
+* Theoretical vulnerabilities without a working proof of concept.
+
 == Reporting a Vulnerability
 
-If you have discovered a security risk within SuiteCRM, we advise that you report it via the **GitHub Security Advisories** section of the relevant repository. This is the most secure and efficient method for our team to track and resolve the issue.
+If you have discovered a security risk within SuiteCRM, **please report it via GitHub Security Advisories**. This is our strongly preferred method as it is the most secure and efficient way for our team to track and resolve vulnerabilities.
 
-* **SuiteCRM 7 & SuiteCRM 8+:** If the issue exists in both versions, please raise it https://github.com/SuiteCRM/SuiteCRM/security[here^].
-* **SuiteCRM 8 Only:** If the issue exists only within SuiteCRM 8+, raise it https://github.com/SuiteCRM/SuiteCRM-Core/security[here^].
+* **SuiteCRM 7 & SuiteCRM 8+:** If the issue exists in both versions or only SuiteCRM 7, please https://github.com/SuiteCRM/SuiteCRM/security[report it in the SuiteCRM repository^].
+* **SuiteCRM 8 Only:** If the issue exists only within SuiteCRM 8+, please https://github.com/SuiteCRM/SuiteCRM-Core/security[report it in the SuiteCRM-Core repository^].
 
 {{% notice tip %}}
-When reporting via GitHub, please provide a detailed description of the flaw and attach any Proof of Concept (POC) materials directly to the advisory.
+**When reporting, please provide a detailed description of the flaw**, including how it can be triggered and what impact it has. To prevent sensitive information from becoming public when a CVE is eventually released, please **attach any Proof of Concept (PoC) materials as a comment on the advisory** rather than including them in the main description.
 {{% /notice %}}
 
-Alternatively, you can email your report to the Security Team at **security@suitecrm.com**.
-
-{{% notice warning %}}
-**Please do not disclose security bugs publicly** (including on social media, the forums, or public GitHub issues) until they have been handled and patched by the security team.
-{{% /notice %}}
+If you are unable to use GitHub, you may email your report to the Security Team at **security@suitecrm.com** as a last resort.
 
 == Valid Report Criteria
 
 To help our team assess your report quickly, please ensure it meets the following criteria:
 
-* **Scope:** Include one issue per report (or a maximum of three if they are directly related).
-* **Verification:** The issues must have been verified by the reporter before submission.
-* **Reproduction:** Provide clear, step-by-step instructions to reproduce the issue or a working POC script.
-* **Version Data:** Specify the exact version of SuiteCRM and the environment (e.g., PHP version, OS) where the issue was found.
-* **Support Status:** The reported version must be among our actively supported versions.
+[cols="1,3", options="header"]
+|===
+| Criteria | Requirement
+
+| **Scope**
+| Include one issue per report.
+
+| **Verification**
+| The issue must have been verified by the reporter before submission.
+
+| **Reproduction**
+| Provide clear, step-by-step instructions to reproduce the issue or a working PoC script.
+
+| **Version Data**
+| Specify the exact version of SuiteCRM and the environment (e.g. PHP version, OS) where the issue was found.
+
+| **Support Status**
+| The reported version must be among our actively supported versions.
+|===
 
 == Response and Resolution
 
@@ -48,7 +77,7 @@ To help our team assess your report quickly, please ensure it meets the followin
 Your report will be acknowledged within **72 hours** during the business week (Monday – Friday), excluding UK National Holidays.
 
 === Assessment
-Reports are prioritised based on an initial assessment of severity. The time to fully assess a report depends on its complexity and the quality of the documentation provided.
+Reports are prioritised based on an initial assessment of severity. The time to fully assess a report depends on its complexity and the quality of the documentation provided. We aim to complete an initial assessment within **21 days** of acknowledgement.
 
 Once fully assessed, the reporter will be notified of:
 
@@ -59,3 +88,6 @@ If a report is found to be invalid or out of scope, the reporter will be notifie
 
 === Resolution
 Security issues are resolved based on their impact. The time to resolution varies depending on the complexity of the fix and the release cycle. The reporter will be notified once the fix has been merged and a release date is scheduled.
+
+=== Credit and Acknowledgement
+We are grateful to the researchers who help keep SuiteCRM secure. Unless you wish to remain anonymous, reporters of valid, in-scope vulnerabilities will be credited by name in the release notes for the version that includes the fix.
