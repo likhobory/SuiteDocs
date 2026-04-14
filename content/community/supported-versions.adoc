@@ -24,9 +24,9 @@ Each release of SuiteCRM is supported for a pre-defined period of time after its
 | December 2027
 | March 2028
 
-| 8.9
-| September 2025
+| 8.10
 | April 2026
+| -
 | -
 
 |===
@@ -39,18 +39,38 @@ Versions listed here no longer receive bug fixes or security updates. If you are
 |===
 | Version | Initial Release | Active Support Until | Security Support Until
 
-| 7.14 ESR
-| August 2023
-| October 2025
-| March 2026
+| 8.9
+| September 2025
+| April 2026
+| -
 
-| 7.12 ESR
-| October 2021
-| August 2023
-| November 2023
+| 8.8
+| January 2025
+| September 2025
+| -
 
-| 7.13
-| December 2022
+| 8.7
+| October 2024
+| January 2025
+| -
+
+| 8.6
+| April 2024
+| October 2024
+| -
+
+| 8.5
+| December 2023
+| April 2024
+| -
+
+| 8.4
+| August 2023
+| December 2023
+| -
+
+| 8.3
+| May 2023
 | August 2023
 | -
 
@@ -59,35 +79,21 @@ Versions listed here no longer receive bug fixes or security updates. If you are
 | May 2023
 | -
 
-| 8.3
-| May 2023
+| 7.14 ESR
+| August 2023
+| October 2025
+| March 2026
+
+| 7.13
+| December 2022
 | August 2023
 | -
 
-| 8.4
+| 7.12 ESR
+| October 2021
 | August 2023
-| December 2023
-| -
+| November 2023
 
-| 8.5
-| December 2023
-| April 2024
-| -
-
-| 8.6
-| April 2024
-| October 2024
-| -
-
-| 8.7
-| October 2024
-| January 2025
-| -
-
-| 8.8
-| January 2025
-| September 2025
-| -
 |===
 
 
