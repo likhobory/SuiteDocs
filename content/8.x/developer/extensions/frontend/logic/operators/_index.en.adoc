@@ -154,6 +154,50 @@ In the example above, the Annual Revenue updated to 1000 if Employees is less th
 
 In the example above if the Employee field has any value, then Annual Revenue will update to have the value 1.
 
+=== Is True
+
+[source,php]
+----
+    'name' => 'trackers_enabled',
+    'vname' => 'LBL_TRACKER_LINKS_ENABLED',
+    'type' => 'bool',
+    'footnotes' => [
+        [
+            'labelKey' => 'LBL_TRACKERS_ENABLED_FOOTNOTE',
+            'displayModes' => ['edit', 'create', 'detail'],
+            'activeOn' => [
+                [
+                    'operator' => 'is-true',
+                ]
+            ]
+        ]
+    ]
+----
+
+In the example above, the footnote will be displayed when the trackers_enabled field is true (e.g. true, "true", 1 and "1").
+
+=== Is False
+
+[source,php]
+----
+    'name' => 'trackers_enabled',
+    'vname' => 'LBL_TRACKER_LINKS_ENABLED',
+    'type' => 'bool',
+    'footnotes' => [
+        [
+            'labelKey' => 'LBL_TRACKERS_DISABLED_FOOTNOTE',
+            'displayModes' => ['edit', 'create', 'detail'],
+            'activeOn' => [
+                [
+                    'operator' => 'is-false',
+                ]
+            ]
+        ]
+    ]
+----
+
+In the example above, the footnote will be displayed when the trackers_enabled field is false (e.g. false, "false", 0 and "0").
+
 === Not Equal
 
 [source,php]
