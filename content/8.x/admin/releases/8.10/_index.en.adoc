@@ -1,0 +1,298 @@
+---
+title: "8.10 Releases"
+weight: 9780
+aliases:
+  - /8.x/admin/releases/8.10/
+---
+
+:toc:
+:toc-title:
+:toclevels: 1
+:icons: font
+:imagesdir: /images/en/8.x/admin/release
+
+== 8.10.0
+
+_Released date_
+
+=== icon:box-open[] Assets
+
+* https://github.com/SuiteCRM/SuiteCRM-Core/releases/tag/v8.10.0[GitHub - Download]
+* link:../../installation-guide/downloading-installing[SuiteCRM 8 Install Guide]
+* link:../../upgrading[SuiteCRM 8 Upgrade Guide]
+
+===  icon:check[] Release Notes
+
+==== icon:folder[] Media Upload Directory Changes
+
+The media upload directory structure has been updated to improve file naming consistency.
+
+* *Media Upload Path* - Files previously saved to `public/media-upload` are now saved to `public/media`.
+* *Top-level Directory Rename* - The top-level uploads directory has been renamed to `media`.
+* *Private Media Endpoint* - The endpoint for private media has been updated from `media` to `private/media`.
+* *Upgrade Compatibility* - On upgrade, the new directories are automatically migrated.
+
+==== icon:level-up-alt[] Upgrade Notes - Async Tasks & Manual Migration Tasks
+
+SuiteCRM 8.10 introduces *Async Tasks* - a new type of asynchronous background job designed to handle tasks that require processing a large volume of data.
+
+{{% notice note %}}
+Async Tasks require your environment to be configured with the appropriate async task settings before use.
+{{% /notice %}}
+
+===== icon:cogs[] Configuration
+
+Key configuration areas include:
+
+* *Transport DSNs* - Configure `MESSENGER_INTERNAL_ASYNC_TRANSPORT_DSN` and `MESSENGER_INTERNAL_FAILURE_TRANSPORT_DSN` in `.env.local`. The default uses Doctrine (your existing database). Supported brokers include Doctrine, RabbitMQ (AMQP), and Redis.
+* *Logging* - Control log verbosity with `MESSENGER_LOG_LEVEL` (default: `error`) and optionally set a custom log file with `MESSENGER_LOG_FILE_NAME` in `.env.local`.
+* *Advanced Transport* - Define additional transports via `MESSENGER_TRANSPORTS`, control message routing with `MESSENGER_ROUTING`, and override the serializer with `MESSENGER_SERIALIZER`.
+* *Async Task Routing* - Use `ASYNC_TASK_ROUTES` to route specific task handlers to specific transports.
+* *Batch Size* - Control how many items are queued and processed per batch via `config_override.php`:
+** `max_migration_items_to_queue_per_run` (default: `50`)
+** `max_migration_items_to_process_per_run` (default: `20`)
+
+See the link:../../async-tasks/configuration/[Async Tasks Configuration documentation] for full details on all available options.
+
+===== icon:play[] Running the Messenger Worker
+
+SuiteCRM uses Symfony Messenger to process background tasks. When an operation is triggered, a message is placed on a queue and a separate worker process executes it in the background.
+
+{{% notice warning %}}
+Without a running worker, background tasks will remain in *Pending* status indefinitely.
+{{% /notice %}}
+
+To start the worker and learn more about its operation, see the link:../../async-tasks/Messenger-Setup/[Running the Messenger Worker documentation].
+
+==== Manual Migration Tasks
+
+*Manual Migration Tasks* are a type of *Async Task* designed to handle complex and large data migrations. These can be executed via the Migrations Admin Menu.
+
+As they run asynchronously in the background, you can continue using SuiteCRM normally while a migration runs.
+
+Key points:
+
+* Migration tasks are added automatically after an upgrade but can be created manually for custom purposes.
+* Each task processes data in small batches to avoid overloading the server.
+* Progress is tracked in real time, including items processed, succeeded, and failed.
+* If items fail, you can retry just the failed items or re-run the entire migration depending on the task.
+* To access migrations, navigate to Administration Panel > Admin Tools > Migrations.
+
+A list of available Manual Migration Tasks added with the upgrade to SuiteCRM 8.10:
+
+* Photo & File Migrations:
+** *Migrate Lead Photos*
+** *Migrate Contact Photos*
+** *Migrate Contact Photos*
+** *Migrate Prospect Photos*
+** *Migrate Document Revision Files*
+** *Migrate Notes Attachments*
+
+* Calendar Migrations (added if not previously migrated):
+** *Migrate Legacy Google Calendar Meetings*
+** *Migrate Legacy Google Calendar Users*
+
+For more information, see the link:../../async-tasks/Manual-Migration-Tasks/[Manual Migration Tasks documentation].
+
+==== Legacy File Storage Migration
+
+As referred above, upon upgrade to SuiteCRM 8.10, any existing file attachments (for Contacts, Leads, Prospects/Targets, Document Revisions and Notes) stored using the legacy file storage system can be migrated via Manual Migration Tasks.
+
+As a fallback we have added Backwards compatibility support for legacy files.
+
+* Existing file fields that were using the old file handling system are now auto-detected and displayed.
+
+==== icon:file[] Configuration Changes
+
+A new `TEMPORARY_FILE_BASE_DIR` configuration option has been added to  `.env` to control the directory for temporary file storage used during file uploads and processing.
+
+The default is `tmp`.
+
+==== icon:email[] Email Changes
+
+SuiteCRM 8.10 introduces a range of improvements to the email compose experience.
+
+* *Maximise* - You are now able to maximise the compose modal, giving you more space when writing emails.
+* *Attachments* - You can attach documents directly from within the compose modal.
+* *Variable Injection* - You can insert dynamic content using the Variable Injector button in the email.
+* *Draft Management* - This release also introduces full draft management support. To see more information on this, see the Managing Drafts section below.
+
+To learn more about composing emails in SuiteCRM 8.10, see the link:../../../user/daily-activities/emails/email-compose/[Email Compose documentation].
+
+==== icon:image[] Image Field
+
+The Image field is now available in SuiteCRM!
+
+Allowing you to upload and display images directly within records, the Image field is ideal for product photos, profile pictures, logos, and other visual content.
+
+* *Add to Modules* - Image fields can be added to modules via Studio in the Admin panel.
+* *Configuration Options* - Options include storage type, display dimensions, thumbnail generation, and preview capabilities.
+* *Performance* - SuiteCRM automatically optimises image display in List Views and Subpanels by limiting maximum dimensions - configurable via the `image_field_listview_height_default`, `image_field_listview_width_default`, `image_field_subpanel_height_default`, and `image_field_subpanel_width_default` settings.
+
+For full details, see the link:../../module-management/field-types/image[Image Field documentation].
+
+image:image-field.png[Image Field Example]
+
+==== icon:file[] File Field Improvements
+
+File Fields can now be added via Studio.
+
+If malware scanning is configured the file field upload process will run malware scanning on uploaded files.
+
+To learn more information about malware scanning see link:[here.] // update later
+
+To see more information on adding File Fields to your modules, see the link:../../module-management/field-types/file/[File Field documentation].
+
+==== Document and Notes Update
+
+SuiteCRM 8.10 updates the Documents and Notes modules to move to the SuiteCRM 8 UI.
+
+* *File Field* - File attachments in both modules have been migrated to use the new File field type.
+* *Storage Type* - By default, both Documents and Document Revisions use the private-documents storage type. It is important that both fields use the same storage type to ensure correct functionality - changing the storage type for only one of these fields is not supported.
+* *Document Revisions Widget* - The Documents module introduces a new Document Revisions table widget that replaces the previous subpanel. From this widget, users can add new revisions via the "Add Revision" action, download files by clicking the filename link, or delete a revision using the trash icon. Note that the active revision cannot be deleted - a new revision must first be created before removing the previous one.
+* *Notes* - The Notes module has similarly been updated to use the new File field type for attachments, now following the Suite 8 view patterns for a consistent experience across the application.
+
+==== PDF Generation Changes
+
+On some modules (), the PDF generation process has been updated to use the SuiteCRM 8 PDF generation entrypoint and compose modal.
+
+* *Print as PDF* - PDF documents can be generated from the Print as PDF action menu item within the View of supported modules, including Accounts, Quotes, Invoices, Contracts, Contacts, and Leads.
+* *Template Selection* - After selecting Print as PDF, a list of available PDF Templates is displayed. Once a template is selected, a PDF document is generated using the selected template and the record's data, and is automatically downloaded.
+* *Note Record* - A Note record is also created in the system with the generated PDF attached, using the same name as the generated PDF document.
+
+Other PDF generation options include:
+
+* *Email PDF* - For Quotes, Invoices, and Contracts, an Email PDF option is also available, which opens a pre-composed email modal with the generated PDF attached and content parsed based on the selected record.
+* *Bulk PDF Generation* - Select multiple records from the list view and use Print as PDF from the bulk action menu to generate a single merged PDF document for all selected records. An individual Note record is created for each selected record with the generated PDF attached.
+
+==== New Version Command
+
+There is a new command available to check for the latest SuiteCRM version:
+
+`./bin/console suitecrm:version`
+
+==== Campaigns
+
+SuiteCRM 8.10 introduces improved Campaign Error Handling.
+
+* *Paused Status* - A new Paused status has been added to Email Marketing Records. A record will be paused automatically when the error threshold per batch is reached, or when the selected Outbound Email Record cannot connect to SMTP.
+* *Warning Banner* - While paused, both the queueing and sending process are halted. A warning banner is displayed on the record showing the most recent error that caused the pause.
+* *Resume Action* - The record can be resumed using the new Resume action, which will continue the queueing and sending process from where it left off.
+
+New configuration options for Campaign Emails include:
+
+* *Maximum send retries per recipient on failure* - This defines how many times SuiteCRM will retry sending an email to a recipient if a failure occurs before marking it as permanently failed.
+* *Error threshold per batch (campaign pauses when reached, 0 to disable)* - This defines the maximum number of errors allowed within a single batch before the Email Marketing Record is automatically paused. Setting this to 0 disables the feature, allowing campaigns to continue sending regardless of errors.
+
+For this and more information on Campaigns see link:../../../user/modules/_campaigns/[here.]
+
+==== 7.15 Changes
+
+SuiteCRM 7.15 has been merged into the 8.10 release, bringing with it all the changes from that version.
+
+Some of the key features included in 7.15 were:
+
+* Support for PHP 8.4
+* Advanced Calendar Integration & Sync
+* Survey Styling Improvements
+* Updated Automatic Email Import
+* V8 API: OAuth Auth Code Grant
+
+For more information on what was included in 7.15, see the link:../../../7.x/releases/7.15/[7.15 Release Notes].
+
+==== icon:book[] Documentation
+
+With all the new changes in SuiteCRM 8.10 comes a lot of more documentation!
+
+Documentation has been added for:
+
+* *Modules*
+** link:../../../user/daily-activities/notes-attachments[Notes]
+** link:../../../user/sales-relationships/document-management/[Documents]
+* link:../../../user/modules/_campaigns/[Campaigns]
+* *Field Types*
+** link:../../module-management/field-types/image/[Image Field]
+** link:../../module-management/field-types/file/[File field]
+*Emails*
+** link:../../../user/daily-activities/emails/email-compose/[Composing an Email]
+** link:../../../user/daily-activities/managing-drafts/[Drafts]
+*Async Tasks/Manual Migration Tasks*
+** link:../../async-tasks/[Async Tasks]
+** link:../../async-tasks/Manual-Migration-Tasks/[Manual Migration Tasks]
+*PDF Updates*
+** link:../../../user/sales-relationships/pdf-templates/[PDF Templates]
+*Operators*
+** link:../../developer/operators/[Operators]
+
+==== icon:bug[] Bug Fixes
+
+* PR: https://github.com/SuiteCRM/SuiteCRM-Core/pull/918[918] - Fix https://github.com/SuiteCRM/SuiteCRM-Core/issues/868[#868] - Campaigns set to sent incorrectly
+* PR: https://github.com/SuiteCRM/SuiteCRM-Core/pull/912[912] - Fix https://github.com/SuiteCRM/SuiteCRM-Core/issues/902[#902] - multiselect not selecting
+* PR: https://github.com/SuiteCRM/SuiteCRM-Core/pull/916[916] - Restore deprecated getReleaseDropDown() in Bugs module
+* PR: https://github.com/SuiteCRM/SuiteCRM/pull/9773[9773] - Fix https://github.com/SuiteCRM/SuiteCRM/issues/9772[#9772] - Importing text emails with attachments
+* PR: https://github.com/SuiteCRM/SuiteCRM/pull/10807[10807] - Fix https://github.com/SuiteCRM/SuiteCRM/issues/10804[#10804] - CalendarSync sync-back preserves external fields (Google PATCH + CalDAV RMW)
+
+==== icon:code[] Developer improvements
+
+* Record Thread
+** Click Actions - A new action system for record thread items that fires on row click (not buttons).
+*** Base class: RecordThreadItemClickActionHandler with run(), shouldDisplay(), and checkRecordAccess() methods.
+*** Config: RecordThreadItemClickActionConfig accepts key, asyncProcess?, params?, activeOnFields?, modes?, acl?, and default?.
+*** RecordThreadConfig now accepts clickActions?: RecordThreadItemClickActionConfig[].
+
+* Buttons
+** dynamicEndIcon - reactive end icon (ButtonInterface)
+** endIconTitleKey, endIconKlass, endIcon - static end icon config (ButtonInterface)
+** dynamicLabelKlass - dynamic label class (ButtonInterface)
+
+* Widgets
+** hideIfLoading - hides a widget row while the statistic is loading
+** dynamicLabelTooltip - enables tooltip on dynamic label in a widget row
+
+* Fields
+** emptyDynamicLabelKey- alternate label key when field has no value (FieldInterface)
+** hideIfEmpty - display logic shorthand (FieldInterface)
+** Link Actions - A new linkActions array in a field's viewdef definition controls how field value clicks navigate or trigger actions.
+*** Base class: LinkActionHandler with isRouterLink() and getLink() abstract methods.
+*** LinkActionManager - manager with actions map per mode.
+*** Built-in link actions:
+**** default - existing navigation behaviour
+**** async-process - fires a backend process on click
+**** record-link - navigates to a record using params.moduleField and params.recordField
+
+* Async Action Response Handlers
+** emit-event (EmitEventAsyncAction) - Reads data.event, emits on AppStateStore.eventEmitterMapper
+** record-thread-modal (RecordThreadModalAsyncAction) - Opens a record-thread-modal popup from a backend process response
+
+* List Action
+** modal-create (ModalCreateLineAction, mode: list) - opens a RecordModalComponent to create a related record inline without leaving the list view.
+
+* Record Modal
+** New Action Zones - Three distinct zones, each with its own manager and abstract handler:
+*** header (RecordModalHeaderActionHandler / RecordModalHeaderActionManager) - for actions placed in the modal header, next to the title
+*** footer (RecordModalFooterActionHandler / RecordModalFooterActionManager) - for actions placed in the modal footer, next to the buttons
+*** record (RecordModalRecordActionHandler / RecordModalRecordActionsManager) - for actions for the current record
+
+* Operators
+** is-true - compares against true, "true", 1 and "1"
+** is-false - compares against false, "false", 0 and "0"
+** previous-value-equal - Compares against the field's previous value
+** previous-value-not-equal - Inverse of previous-value-equal
+
+=== icon:heart[] Community
+
+We would love to have your feedback and input to help make SuiteCRM 8 great for everyone.
+
+_Special thanks to the following members for their contributions and participation in this release!_
+
+{{% ghcontributors abuzarfaris kingfisher77 %}}
+
+If you have found an issue you think we should know about, or have suggestion/feedback, please link:https://github.com/suitecrm/SuiteCRM-Core/issues[Submit An Issue].
+
+If you want to get involved and submit a fix, fork the repo and when ready please link:https://github.com/suitecrm/SuiteCRM-Core/pulls[Submit A PR] - More detail for developers can be found link:https://docs.suitecrm.com/8.x/developer/installation-guide/[here].
+
+Please link:https://suitecrm.com/releases/[visit the official website] to find the appropriate upgrade package.
+
+To report any security issues please follow our link:../../../../community/security-policy[Security Policy]
+
+'''
