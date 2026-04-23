@@ -68,11 +68,11 @@ Update documents by creating new revisions.
 
 You can create revisions in two ways:
 
-*From the Document Revisions Subpanel:*
+*From the Document Revisions Widget:*
 
-image:document-revisions-subpanel.png[Document Revisions Subpanel]
+image:document-revisions-subpanel.png[Document Revisions Widget]
 
-Access the subpanel on the Document Detail View and click "Create"  within the actions menu to upload a new file and specify the revision number.
+Access the widget on the Document Detail View and click "Add Revision"  within the actions menu to upload a new file and specify the revision number.
 
 *From the Document Edit View:*
 
@@ -80,7 +80,7 @@ Upload a new file and save. If the revision field is unchanged, it auto-incremen
 
 === Deleting a Revision
 
-To delete a revision, click the trash icon next to the revision in the Document Revisions subpanel. You are unable to delete the current active revision.
+To delete a revision, click the trash icon next to the revision in the Document Revisions widget. You are unable to delete the current active revision.
 
 To remove the active revision, first create a new revision and then delete the previous one.
 
