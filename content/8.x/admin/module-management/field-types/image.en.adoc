@@ -35,52 +35,54 @@ image:add-image-field-studio.png[Add Image Field in Studio]
 
 When creating or editing an Image field in Studio, some of the important configuration options are:
 
-Field Name::
-The internal name of the field. This is used in the database and code to reference the field.
+[cols="1,3", options="header"]
+|===
+|Field Name |Description
 
-Label::
-The display name for the field that will be shown in layouts and forms.
+|*Field Name*
+|The internal name of the field. This is used in the database and code to reference the field.
 
-Storage Type::
-Determines where and how the uploaded images are stored:
-+
-* Private Images
-* Public Images
+|*Label*
+|The display name for the field that will be shown in layouts and forms.
 
-To see more information about the differences between these storage types, see link:../../../../admin/configuration/file-storage/file-storage-configuration[Storage Types].
+|*Storage Type*
+|Determines where and how the uploaded images are stored:
 
-Height::
-Specifies the height (in pixels) that the image will be displayed at in the record view.
-+
-Default value can be set with the `image_field_height_default` configuration setting.
+* *Private Images* - Stored securely with restricted access
+* *Public Images* - Stored with public access
 
-Width::
-Specifies the width (in pixels) that the image will be displayed at in the record view.
-+
-Default value can be set with the `image_field_width_default` configuration setting.
+See link:../../../../admin/configuration/file-storage/file-storage-configuration[Storage Types] for more information.
 
-Max Size (Bytes)::
-Specifies the maximum file size (in bytes) allowed for uploaded images.
+|*Height*
+|Specifies the height (in pixels) that the image will be displayed at in the record view.
 
-Allow Preview::
-When enabled, this option adds a preview capability to the image field, allowing users to view the full-size image. It also provides an option to download the image directly from the record.
-+
-The extension of the uploaded image must also be included within the `allowed_preview` configuration setting.
+Default value: `image_field_height_default` configuration setting
 
-Create Thumbnail::
-When enabled, a thumbnail version of the uploaded image will be automatically generated when the record is saved. The thumbnail will be used in views instead of the full-size image, improving page load times and performance.
-+
-The full-size image remains stored and is displayed when using the preview functionality.
+|*Width*
+|Specifies the width (in pixels) that the image will be displayed at in the record view.
 
-Thumbnail Width::
-Specifies the width (in pixels) for the generated thumbnail image. This setting is only applicable when *Create Thumbnail* is enabled.
+Default value: `image_field_width_default` configuration setting
 
-Thumbnail Height::
-Specifies the height (in pixels) for the generated thumbnail image. This setting is only applicable when *Create Thumbnail* is enabled.
+|*Max Size (Bytes)*
+|Specifies the maximum file size (in bytes) allowed for uploaded images.
 
-Required Field::
-When enabled, this option makes the image field mandatory, requiring users to upload an image before saving the record.
+|*Allow Preview*
+|When enabled, adds preview capability allowing users to view the full-size image and download it directly from the record.
 
+NOTE: The image extension must be included in the `allowed_preview` configuration setting.
+
+|*Create Thumbnail*
+|When enabled, automatically generates a thumbnail version when the record is saved. The thumbnail improves page load times and performance while the full-size image remains accessible via preview.
+
+|*Thumbnail Width*
+|Specifies the width (in pixels) for the generated thumbnail. Only applicable when *Create Thumbnail* is enabled.
+
+|*Thumbnail Height*
+|Specifies the height (in pixels) for the generated thumbnail. Only applicable when *Create Thumbnail* is enabled.
+
+|*Required Field*
+|When enabled, makes the image field mandatory, requiring users to upload an image before saving the record.
+|===
 === Uploading Images
 
 To upload an image to an Image field, drag and drop an image file onto the field or click to open a file browser and select an image from your device.
@@ -128,18 +130,12 @@ image:optimized-image-listview.png[Optimized Image in List View]
 
 For images displayed in List Views, the maximum dimensions can be controlled using configuration settings:
 
-* `image_field_listview_height_default` - Controls the maximum height
-* `image_field_listview_width_default` - Controls the maximum width
-
-If these settings are not defined, the default maximum dimension of 60px will be applied to non-thumbnail images.
+* image_field_listview_height_default - Controls the maximum height (default: 60px)
+* image_field_listview_width_default - Controls the maximum width (default: 100%)
 
 ==== Subpanel Optimization
 
 Similarly, images shown in Subpanels respect the following configuration settings:
 
-* `image_field_subpanel_height_default` - Controls the maximum height
-* `image_field_subpanel_width_default` - Controls the maximum width
-
-If no values are specified, the default maximum dimension of 60px will be used for non-thumbnail images.
-
-ℹ️ These dimension restrictions apply to non-thumbnail images. If thumbnails are enabled for the Image field, the configured thumbnail dimensions will be used instead.
+* image_field_subpanel_height_default - Controls the maximum height (default: 60px)
+* image_field_subpanel_width_default - Controls the maximum width (default: 100%)

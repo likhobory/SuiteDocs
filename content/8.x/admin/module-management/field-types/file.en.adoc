@@ -35,25 +35,23 @@ image:add-file-field-studio.png[Add File Field in Studio]
 
 When creating or editing a File field in Studio, some of the important configuration options are:
 
-Field Name::
-The internal name of the field. This is used in the database and code to reference the field.
+[cols="1,3", options="header"]
+|===
+|Option |Description
+|*Field Name* |The internal name of the field. This is used in the database and code to reference the field.
+|*Display Label* |The display name for the field that will be shown in layouts and forms.
+|*Storage Type* a|Determines where and how the uploaded files are stored:
 
-Display Label::
-The display name for the field that will be shown in layouts and forms.
-
-Storage Type::
-Determines where and how the uploaded files are stored:
-+
 * Private Documents
 * Public Documents
 * Archived Documents
-
 To see more information about the differences between these storage types, see link:../../../../admin/configuration/file-storage/file-storage-configuration[Storage Types].
+|*Max Size (Bytes)* a|Specifies the maximum file size (in bytes) allowed for uploaded files.
 
-Max Size (Bytes)::
-Specifies the maximum file size (in bytes) allowed for uploaded files. This helps prevent excessively large files from being uploaded.
-+
-If there is no value specified, the limit comes from the `upload_maxsize` config option.
+This helps prevent excessively large files from being uploaded.  If there is no value specified, the limit comes from the upload_maxsize config option.
+|*Required Field*
+|When enabled, makes the image field mandatory, requiring users to upload an image before saving the record.
+|===
 
 === Uploading Files
 
