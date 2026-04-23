@@ -44,18 +44,9 @@ The draft list displays all your saved drafts with the following information for
 * **Subject**: The beginning of the email subject
 * **Last Modified**: Date the draft was last modified
 
-Each draft has two actions:
-
-* **Edit** — Opens the draft for editing
-* **Delete** — Removes the draft
-
-=== Dismiss All Drafts
-
-Click the "Dismiss All" button at the top of the draft list to delete all drafts at once. An inline confirmation (Yes/No) will appear before deletion.
-
-ℹ️ Drafts currently being edited will not be dismissed when using "Dismiss All".
-
 === Editing a Draft
+
+To edit a draft, click on the item in the draft list.
 
 When editing a draft:
 
@@ -64,3 +55,22 @@ When editing a draft:
 * The draft will not appear in the draft list while being edited
 
 image:draft-edit.png[Editing a Draft]
+
+=== Deleting a Draft
+
+There are currently 2 ways to delete a draft:
+
+* The trash icon that shows on the draft list
+* The trash icon in the compose modal when editing a draft
+
+=== Dismiss All Drafts
+
+Click the "Dismiss All" button at the top of the draft list to delete all drafts at once. An inline confirmation (Cancel/Confirm) will appear before deletion.
+
+ℹ️ Drafts currently being edited will not be dismissed when using "Dismiss All".
+
+=== Disable Drafts Popup
+
+To disable the drafts popup, navigate to Admin > Email Settings and toggle off "Enable Drafts Popup".
+
+When disabled, drafts will still be saved but the popup will not appear when closing the compose modal.
