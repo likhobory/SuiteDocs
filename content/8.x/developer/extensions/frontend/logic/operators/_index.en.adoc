@@ -198,6 +198,88 @@ In the example above, the footnote will be displayed when the trackers_enabled f
 
 In the example above, the footnote will be displayed when the trackers_enabled field is false (e.g. false, "false", 0 and "0").
 
+=== Previous Value Equal
+
+[source,php]
+----
+'name' => 'contact_name',
+'rname' => 'last_name',
+'id_name' => 'contact_id',
+'vname' => 'LBL_CONTACT_NAME',
+'type' => 'relate',
+'logic' => [
+    'set-contact-name-blank-on-newvalue' => [
+        'key' => 'setEmpty',
+        'modes' => ['edit', 'create'],
+        'triggeringStatus' => ['onValueChange'],
+        'params' => [
+            'fieldDependencies' => [
+                'parent_type',
+            ],
+            'activeOnFields' => [
+                'parent_type' => [
+                    [
+                        'operator' => 'previous-value-equal',
+                        'values' => ['Contacts']
+                    ],
+                    [
+                        'operator' => 'not-equal',
+                        'values' => ['Contacts']
+                    ]
+                ],
+            ]
+        ]
+    ],
+]
+----
+
+In the example above, the contact_name field will be cleared when parent_type previously had the value Contacts and has now changed to a different value.
+
+The previous-value-equal operator checks that the field's value before the change matched the given value(s).
+
+It is used in combination with not-equal to confirm the field has since changed away from that value.
+
+=== Previous Value Not Equal
+
+[source,php]
+----
+'name' => 'contact_name',
+'rname' => 'last_name',
+'id_name' => 'contact_id',
+'vname' => 'LBL_CONTACT_NAME',
+'type' => 'relate',
+'logic' => [
+    'set-contact-name-blank-on-previous-value' => [
+        'key' => 'setEmpty',
+        'modes' => ['edit', 'create'],
+        'triggeringStatus' => ['onValueChange'],
+        'params' => [
+            'fieldDependencies' => [
+                'parent_type',
+            ],
+            'activeOnFields' => [
+                'parent_type' => [
+                    [
+                        'operator' => 'previous-value-not-equal',
+                        'values' => ['Contacts']
+                    ],
+                    [
+                        'operator' => 'is-equal',
+                        'values' => ['Contacts']
+                    ]
+                ],
+            ]
+        ]
+    ],
+]
+----
+
+In the example above, the contact_name field will be cleared when parent_type previously did not have the value Contacts and has now been changed to Contacts.
+
+The previous-value-not-equal operator checks that the field's value before the change did not match the given value(s).
+
+It is used in combination with is-equal to confirm the field has since changed to that value.
+
 === Not Equal
 
 [source,php]
