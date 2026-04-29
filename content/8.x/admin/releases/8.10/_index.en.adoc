@@ -167,7 +167,7 @@ Other PDF generation options include:
 
 ==== New Version Command
 
-There is a new command available to check for the latest SuiteCRM version:
+There is a new command available to check for the SuiteCRM instance current version:
 
 `./bin/console suitecrm:version`
 
