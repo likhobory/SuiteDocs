@@ -56,13 +56,11 @@ See the link:../../async-tasks/configuration/[Async Tasks Configuration document
 
 ===== icon:play[] Running the Messenger Worker
 
-SuiteCRM uses Symfony Messenger to process background tasks. When an operation is triggered, a message is placed on a queue and a separate worker process executes it in the background.
-
 {{% notice warning %}}
-Without a running worker, background tasks will remain in *Pending* status indefinitely.
+*Action Required* — SuiteCRM 8.10 introduces a new background worker that *must* be configured for async tasks (including Manual Migration Tasks) to function. Without a running worker, these tasks will remain in *Pending* status indefinitely.
 {{% /notice %}}
 
-To start the worker and learn more about its operation, see the link:../../async-tasks/Messenger-Setup/[Running the Messenger Worker documentation].
+See the link:../../async-tasks/Messenger-Setup/[Messenger Setup guide] for full instructions on how to configure the worker.
 
 ==== Manual Migration Tasks
 
