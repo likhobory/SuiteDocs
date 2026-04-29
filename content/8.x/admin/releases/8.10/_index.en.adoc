@@ -131,7 +131,7 @@ Allowing you to upload and display images directly within records, the Image fie
 
 For full details, see the link:../../module-management/field-types/image[Image Field documentation].
 
-image:image-field.png[Image Field Example]
+image:image-field-example.png[Image Field Example]
 
 ==== icon:file[] File Field Improvements
 
