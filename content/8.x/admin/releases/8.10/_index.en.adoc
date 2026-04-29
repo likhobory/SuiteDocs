@@ -213,15 +213,15 @@ Documentation has been added for:
 * *Field Types*
 ** link:../../module-management/field-types/image/[Image Field]
 ** link:../../module-management/field-types/file/[File field]
-*Emails*
+* *Emails*
 ** link:../../../user/daily-activities/emails/email-compose/[Composing an Email]
 ** link:../../../user/daily-activities/managing-drafts/[Drafts]
-*Async Tasks/Manual Migration Tasks*
+* *Async Tasks/Manual Migration Tasks*
 ** link:../../async-tasks/[Async Tasks]
 ** link:../../async-tasks/Manual-Migration-Tasks/[Manual Migration Tasks]
-*PDF Updates*
+* *PDF Updates*
 ** link:../../../user/sales-relationships/pdf-templates/[PDF Templates]
-*Operators*
+* *Operators*
 ** link:../../developer/operators/[Operators]
 
 ==== icon:bug[] Bug Fixes
