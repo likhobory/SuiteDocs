@@ -6,8 +6,20 @@ weight: 10
 == Messenger Setup
 
 {{% notice info %}}
-This documentation is for SuiteCRM 8.9.0+
+This documentation is for SuiteCRM 8.10.0+
 {{% /notice %}}
+
+=== Before You Begin
+
+All Messenger worker commands in this guide *must* be run as the same system user that runs your web server. Common web server users include:
+
+* `www-data` (Debian/Ubuntu)
+* `apache` (RHEL/CentOS with Apache)
+* `nginx` (RHEL/CentOS with Nginx)
+
+If the worker runs as a different user, file operations (uploads, media object storage) will fail with permission errors.
+
+Throughout this page, examples use `www-data` as a placeholder — replace it with your actual web server user.
 
 === What is the Messenger Worker?
 
@@ -32,18 +44,14 @@ This starts a worker that:
 * Automatically stops after 1 hour (`--time-limit=3600`) to prevent memory leaks.
 * Stops if memory usage exceeds 256 MB (`--memory-limit=256M`).
 
-{{% notice warning %}}
-The worker *must* run as the same system user that runs your web server (e.g. `www-data`). If the worker runs as a different user, file operations (uploads, media object storage) will fail with permission errors.
-{{% /notice %}}
-
-If you are using Docker, run the worker inside the container:
+If you are using Docker, run the worker inside the container as your web server user:
 
 [source,bash]
 ----
-docker exec -u www-data <container-name> php bin/console messenger:consume internal-async --time-limit=3600 --memory-limit=256M
+docker exec -u <web-server-user> <container-name> php bin/console messenger:consume internal-async --time-limit=3600 --memory-limit=256M
 ----
 
-Replace `<container-name>` with the name of your PHP container.
+Replace `<container-name>` with the name of your PHP container and `<web-server-user>` with your web server user (e.g. `www-data`).
 
 === Running the Worker in Production
 
@@ -59,7 +67,7 @@ Create a configuration file at `/etc/supervisor/conf.d/suitecrm-messenger.conf`:
 ----
 [program:suitecrm-messenger]
 command=php /path/to/suitecrm/bin/console messenger:consume internal-async --time-limit=3600 --memory-limit=256M
-user=www-data
+user=<web-server-user>
 numprocs=1
 autostart=true
 autorestart=true
@@ -69,6 +77,8 @@ process_name=%(program_name)s_%(process_num)02d
 stderr_logfile=/var/log/supervisor/suitecrm-messenger.err.log
 stdout_logfile=/var/log/supervisor/suitecrm-messenger.out.log
 ----
+
+Replace `<web-server-user>` with your web server user (e.g. `www-data`, `apache`, `nginx`).
 
 Then reload Supervisor:
 
@@ -95,8 +105,8 @@ After=network.target
 
 [Service]
 Type=simple
-User=www-data
-Group=www-data
+User=<web-server-user>
+Group=<web-server-user>
 ExecStart=/usr/bin/php /path/to/suitecrm/bin/console messenger:consume internal-async --time-limit=3600 --memory-limit=256M
 Restart=always
 RestartSec=5
@@ -104,6 +114,8 @@ RestartSec=5
 [Install]
 WantedBy=multi-user.target
 ----
+
+Replace `<web-server-user>` with your web server user (e.g. `www-data`, `apache`, `nginx`).
 
 Then enable and start the service:
 
@@ -116,11 +128,13 @@ sudo systemctl start suitecrm-messenger
 
 ==== Option 3: Cron (simple setups)
 
-If you cannot use Supervisor or systemd, you can use cron to start the worker periodically. The `--time-limit` flag ensures old workers exit before new ones start:
+If you cannot use Supervisor or systemd, you can use cron to start the worker periodically. The `--time-limit` flag ensures old workers exit before new ones start.
+
+Add the following entry to your web server user's crontab (e.g. `sudo crontab -u www-data -e`):
 
 [source,bash]
 ----
-* * * * * www-data php /path/to/suitecrm/bin/console messenger:consume internal-async --time-limit=55 --memory-limit=256M > /dev/null 2>&1
+* * * * * php /path/to/suitecrm/bin/console messenger:consume internal-async --time-limit=55 --memory-limit=256M > /dev/null 2>&1
 ----
 
 This starts a new worker every minute. Each worker runs for up to 55 seconds, ensuring it exits before the next one starts.
