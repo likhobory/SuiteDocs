@@ -86,3 +86,21 @@ From SuiteCRM version 8 and above you have two ways to run installer.
 
 * link:../running-the-ui-installer/[Option 1: Installing using the installation page]
 * link:../running-the-cli-installer/[Option 2: Installing using the cli]
+
+'''
+
+== 4. Post-Install Setup
+
+After the installer completes, you need to configure two background processes to keep SuiteCRM running correctly.
+
+=== 4.1 Cron Job (Schedulers)
+
+SuiteCRM requires a cron job to execute scheduled tasks (workflows, email checks, report generation, etc.). Without it, these tasks will not run.
+
+See the link:../../administration-panel/schedulers[Schedulers] page for full instructions on setting up the cron job.
+
+=== 4.2 Messenger Worker (Async Tasks)
+
+Starting from SuiteCRM 8.10, background tasks (such as manual migration tasks) are processed by the Symfony Messenger worker. Without a running worker, these tasks remain in "Pending" status indefinitely.
+
+See the link:../../async-tasks/messenger-setup[Messenger Setup] guide for instructions on configuring the worker for your environment.
