@@ -13,7 +13,7 @@ aliases:
 
 == 8.10.0
 
-_Released date_
+_Released 30th April 2026_
 
 === icon:box-open[] Assets
 
