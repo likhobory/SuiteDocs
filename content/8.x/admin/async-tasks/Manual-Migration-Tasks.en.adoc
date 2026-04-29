@@ -12,7 +12,7 @@ Before using Manual Migration Tasks, make sure the Symfony Messenger worker is r
 == Manual Migration Tasks
 
 {{% notice info %}}
-This documentation is for SuiteCRM 8.9.0+
+This documentation is for SuiteCRM 8.10.0+
 {{% /notice %}}
 
 === What are Manual Migration Tasks?

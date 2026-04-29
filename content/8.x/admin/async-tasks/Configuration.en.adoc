@@ -6,7 +6,7 @@ weight: 20
 == Configuration Reference
 
 {{% notice info %}}
-This documentation is for SuiteCRM 8.9.0+
+This documentation is for SuiteCRM 8.10.0+
 {{% /notice %}}
 
 This page lists all environment variables and system configuration options related to Symfony Messenger and async tasks. Environment variables are set in the `.env.local` file in the root of your SuiteCRM installation. System configuration options are set in `config.php` (in the `public/legacy/` directory).
