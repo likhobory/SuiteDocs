@@ -9,7 +9,7 @@ When making these changes be sure to make them in the custom directory, ie: 'pub
 
 When adding this configuration, it can be added to the `vardefs.php` or the `detailviewdefs.php`.
 
-SuiteCRM 8 has 6 operators that can be used in configuration.
+SuiteCRM 8 has 11 operators that can be used in configuration.
 
 == Available Operators
 
@@ -197,6 +197,34 @@ In the example above, the footnote will be displayed when the trackers_enabled f
 ----
 
 In the example above, the footnote will be displayed when the trackers_enabled field is false (e.g. false, "false", 0 and "0").
+
+=== Any Value
+
+[source,php]
+----
+    'name' => 'annual_revenue',
+    'comment' => 'Annual revenue for this company',
+    'label' => 'LBL_ANNUAL_REVENUE',
+    'logic' => [
+        'update-when-employee-has-value' => [
+            'key' => 'updateValue',
+            'modes' => ['detail', 'edit', 'create'],
+            'params' => [
+                'fieldDependencies' => [
+                    'employees',
+                ],
+                'targetValue' => '100',
+                'activeOnFields' => [
+                    'employees' => [
+                        ['operator' => 'any-value']
+                    ],
+                ]
+            ]
+        ],
+    ]
+----
+
+The `any-value` operator always returns true regardless of the field's value. This is useful when you want logic to trigger on any change to the dependent field.
 
 === Previous Value Equal
 
