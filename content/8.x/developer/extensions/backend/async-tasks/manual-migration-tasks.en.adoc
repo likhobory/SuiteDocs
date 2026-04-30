@@ -7,7 +7,7 @@ weight: 20
 == 1. Introduction
 
 {{% notice info %}}
-Before reading this page, make sure you are familiar with the link:./async-task-architecture[Async Task Architecture] and the link:../process-api/process-api[Process Api] guides.
+Before reading this page, make sure you are familiar with the link:../async-task-architecture[Async Task Architecture] and the link:../../process-api/process-api[Process Api] guides.
 {{% /notice %}}
 
 Manual Migration Tasks provide a framework for executing long-running data migration jobs in the background. They are designed for upgrade scenarios where existing data needs to be converted to a new format — for example, migrating file attachments from legacy storage to a new media object system.
@@ -214,7 +214,7 @@ class MigrateNotesFilesTaskHandler extends AbstractAsyncTaskHandler
 
 ==== 3.1.2 getNextBatchToQueue()
 
-This method is called repeatedly during the Queueing phase (see link:./async-task-architecture#_4_1_phase_1_queueing[Queueing phase]). It must:
+This method is called repeatedly during the Queueing phase (see link:../async-task-architecture#_4_1_phase_1_queueing[Queueing phase]). It must:
 
 * Use `$progress['enqueue_offset']` for pagination (the runner increments this automatically).
 * Return an array of `AsyncTaskBatchItem` objects, each with a unique key and a data payload.
@@ -222,7 +222,7 @@ This method is called repeatedly during the Queueing phase (see link:./async-tas
 
 ==== 3.1.3 processItem()
 
-Processes a single item. See the link:./async-task-architecture#_12_2_the_item_array_processitem_input[item array reference] for the full `$item` structure.
+Processes a single item. See the link:../async-task-architecture#_12_2_the_item_array_processitem_input[item array reference] for the full `$item` structure.
 
 Return a `Feedback` object:
 
@@ -330,7 +330,7 @@ The `PROCESS_TYPE` constant in your action class must match this constructed val
 
 ==== 3.2.2 configure() Method
 
-The `configure()` method sets the async properties that tell the `ProcessProcessor` how to dispatch the task (see link:./async-task-architecture#_8_process_api_integration[Process API integration]):
+The `configure()` method sets the async properties that tell the `ProcessProcessor` how to dispatch the task (see link:../async-task-architecture#_8_process_api_integration[Process API integration]):
 
 * `setAsync(true)` — marks the process as asynchronous.
 * `setAsyncHandlerKey('migrate-notes-files')` — must match the Task Handler's `getHandlerKey()`.

@@ -8,7 +8,7 @@ weight: 10
 == 1. Introduction
 
 {{% notice info %}}
-Before reading this page, make sure you are familiar with the link:../process-api/process-api[Process Api] guide.
+Before reading this page, make sure you are familiar with the link:../../process-api/process-api[Process Api] guide.
 {{% /notice %}}
 
 SuiteCRM 8 includes an Async Task system for executing long-running background jobs. It is built on Symfony Messenger and provides:
@@ -669,5 +669,5 @@ The `$item` parameter passed to `processItem()` is a decoded row from `async_tas
 
 == 14. Next Steps
 
-* link:./manual-migration-tasks[Adding a Manual Migration Task] — step-by-step guide to creating a Manual Migration Task using the async task system.
-* link:../process-api/process-api[Process Api] — how frontend actions trigger backend process handlers.
+* link:../manual-migration-tasks[Adding a Manual Migration Task] — step-by-step guide to creating a Manual Migration Task using the async task system.
+* link:../../process-api/process-api[Process Api] — how frontend actions trigger backend process handlers.
