@@ -122,7 +122,7 @@ SuiteCRM 8.10 introduces *Async Tasks* — a new type of background job designed
 *Action Required* — SuiteCRM 8.10 introduces a new background worker that *must* be configured for async tasks (including Manual Migration Tasks) to function. Without a running worker, these tasks will remain in *Pending* status indefinitely.
 {{% /notice %}}
 
-See the link:../../async-tasks/Messenger-Setup/[Messenger Setup guide] for full instructions on how to configure the worker.
+See the link:../../async-tasks/messenger-setup/[Messenger Setup guide] for full instructions on how to configure the worker.
 
 ==== Manual Migration Tasks
 
@@ -171,7 +171,7 @@ Batch sizes are controlled in `config_override.php`:
 * `max_migration_items_to_queue_per_run` (default: `50`)
 * `max_migration_items_to_process_per_run` (default: `20`)
 
-*Documentation:* link:../../async-tasks/configuration/[Async Tasks Configuration] · link:../../../developer/extensions/backend/async-tasks/[Developer Guide: Async Tasks] · link:../../async-tasks/manual-migration-tasks/[Manual Migrations]
+*Documentation:* link:../../async-tasks/[Async Tasks] · link:../../../developer/extensions/backend/async-tasks/[Developer Guide: Async Tasks] · link:../../async-tasks/manual-migration-tasks/[Manual Migrations]
 
 '''
 
