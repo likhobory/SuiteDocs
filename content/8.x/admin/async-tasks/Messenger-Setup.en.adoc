@@ -29,7 +29,7 @@ SuiteCRM 8 uses Symfony Messenger to process background tasks — operations tha
 
 When a user triggers one of these operations, SuiteCRM places a message on a queue. A separate *worker* process reads messages from the queue and executes them in the background. Without a running worker, background tasks remain in "Pending" status indefinitely.
 
-=== Quick Start
+=== Quick Start (for Development and Testing)
 
 To start the Messenger worker, run the following command on your server:
 
@@ -43,15 +43,6 @@ This starts a worker that:
 * Listens to the `internal-async` transport (the default queue for all async tasks).
 * Automatically stops after 1 hour (`--time-limit=3600`) to prevent memory leaks.
 * Stops if memory usage exceeds 256 MB (`--memory-limit=256M`).
-
-If you are using Docker, run the worker inside the container as your web server user:
-
-[source,bash]
-----
-docker exec -u <web-server-user> <container-name> php bin/console messenger:consume internal-async --time-limit=3600 --memory-limit=256M
-----
-
-Replace `<container-name>` with the name of your PHP container and `<web-server-user>` with your web server user (e.g. `www-data`).
 
 === Running the Worker in Production
 
@@ -160,11 +151,16 @@ The `messenger:consume` command accepts several useful options:
 
 === Verifying the Worker is Running
 
-To check if the worker is processing messages:
+You can check whether the worker process is active on your system:
 
-. Trigger a background task (e.g. run a Manual Migration Task from the Migrations panel).
-. Check if the task status changes from *Pending* to *Running* within a few seconds.
-. Check the Messenger log file for activity. The log is located at:
+[source,bash]
+----
+ps aux | grep messenger:consume
+----
+
+If the worker is running, you will see a process matching the `messenger:consume` command. If no results appear (other than the `grep` command itself), the worker is not running and needs to be started.
+
+You can also check the Messenger log file for recent activity:
 
 ----
 logs/<env>/<env>.messenger.log
@@ -196,9 +192,11 @@ For async tasks (Manual Migration Tasks, etc.), failures are also tracked at the
 
 === Setting Up the Messenger Database Table
 
-The default transport uses Doctrine (your existing database) to store queued messages. The required `messenger_messages` table is created automatically when you run *Admin > Repair > Quick Repair & Rebuild*.
+The default transport uses Doctrine (your existing database) to store queued messages.
 
-If the table does not exist, you can also create it manually:
+The required `messenger_messages` *table is created automatically* when you run *Admin > Repair > Quick Repair & Rebuild*. In most cases, no manual action is needed.
+
+If for any reason the *table was not created*, you can create it manually by running:
 
 [source,bash]
 ----
