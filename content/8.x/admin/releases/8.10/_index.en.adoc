@@ -88,7 +88,7 @@ Both the Documents and Notes modules have been fully migrated to the SuiteCRM 8 
 
 Notes now use the new File field type for attachments, following the same SuiteCRM 8 view patterns as the rest of the application.
 
-*Documentation:* link:../../../user/daily-activities/notes-attachments[Notes] · link:../../../user/sales-relationships/document-management/[Documents]
+*Documentation:* link:../../../user/sales-relationships/document-management/[Documents] · link:../../../user/daily-activities/notes-attachments[Notes]
 
 '''
 
@@ -150,8 +150,6 @@ The following migration tasks are included with the upgrade to 8.10:
 * Migrate Legacy Google Calendar Meetings
 * Migrate Legacy Google Calendar Users
 
-*Documentation:* link:../../async-tasks/[Async Tasks] · link:../../async-tasks/manual-migration-tasks/[Manual Migration Tasks] · link:../../../developer/extensions/backend/async-tasks/[Developer Guide: Async Tasks]
-
 ==== Configuration
 
 The default transport uses your existing database (Doctrine) and works without any additional infrastructure. If you process high volumes of data, RabbitMQ (AMQP) and Redis are also supported.
@@ -173,7 +171,7 @@ Batch sizes are controlled in `config_override.php`:
 * `max_migration_items_to_queue_per_run` (default: `50`)
 * `max_migration_items_to_process_per_run` (default: `20`)
 
-*Documentation:* link:../../async-tasks/configuration/[Async Tasks Configuration]
+*Documentation:* link:../../async-tasks/configuration/[Async Tasks Configuration] · link:../../../developer/extensions/backend/async-tasks/[Developer Guide: Async Tasks] · link:../../async-tasks/manual-migration-tasks/[Manual Migrations]
 
 '''
 
@@ -286,7 +284,7 @@ Four new operators are available:
 | *previous-value-not-equal* | Inverse of `previous-value-equal`
 |===
 
-*Documentation:* link:../../developer/extensions/frontend/logic/operators/[Operators]
+*Documentation:* link:../../../developer/extensions/frontend/logic/operators/[Operators]
 
 '''
 
@@ -333,13 +331,13 @@ _Special thanks to the following contributors for their contributions to this re
 
 {{% ghcontributors abuzarfaris kingfisher77 %}}
 
-* **Found a Bug?** https://github.com/suitecrm/SuiteCRM-Core/issues[Submit an Issue]
-* **Want to contribute?** https://github.com/suitecrm/SuiteCRM-Core/pulls[Open a Pull Request]
-* **Translations:** https://crowdin.com/project/suitecrmtranslations[Join us on Crowdin]
+Visit https://suitecrm.com/releases/[Releases] for the appropriate upgrade package for your installation.
+
+* *Found a Bug?* https://github.com/suitecrm/SuiteCRM-Core/issues[Submit an Issue]
+* *Want to contribute?* https://github.com/suitecrm/SuiteCRM-Core/pulls[Open a Pull Request]
+* *Translations:* https://crowdin.com/project/suitecrmtranslations[Join us on Crowdin]
 
 To report a security issue, please follow our link:../../../../community/security-policy[Security Policy].
-
-Visit https://suitecrm.com/releases/[suitecrm.com/releases] for the appropriate upgrade package for your installation.
 
 '''
 _For professional support and enterprise services, visit https://suitecrm.com/enterprise/support-services/[SuiteCRM Ltd Support Services]._
