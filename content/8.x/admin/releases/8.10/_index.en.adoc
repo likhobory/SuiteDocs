@@ -150,7 +150,7 @@ The following migration tasks are included with the upgrade to 8.10:
 * Migrate Legacy Google Calendar Meetings
 * Migrate Legacy Google Calendar Users
 
-*Documentation:* link:../../async-tasks/[Async Tasks] · link:../../async-tasks/Manual-Migration-Tasks/[Manual Migration Tasks]
+*Documentation:* link:../../async-tasks/[Async Tasks] · link:../../async-tasks/manual-migration-tasks/[Manual Migration Tasks] · link:../../../developer/extensions/backend/async-tasks/[Developer Guide: Async Tasks]
 
 ==== Configuration
 
@@ -286,7 +286,7 @@ Four new operators are available:
 | *previous-value-not-equal* | Inverse of `previous-value-equal`
 |===
 
-*Documentation:* link:../../developer/operators/[Operators]
+*Documentation:* link:../../developer/extensions/frontend/logic/operators/[Operators]
 
 '''
 
