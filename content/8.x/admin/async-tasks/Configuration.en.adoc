@@ -29,15 +29,15 @@ The connection string for the main async task queue.
 | *Location* | `.env.local`
 |===
 
-The default uses Doctrine (your existing database) as the message broker. Messages are stored in the `messenger_messages` table with the queue name `internal_async`.
+The default uses Doctrine (your existing database) as the message broker. Messages are stored in the `messenger_messages` table with the queue name `internal_async`. This is the recommended and tested configuration, suitable for most installations.
 
-Supported transport types:
+Since SuiteCRM uses Symfony Messenger, alternative transports such as AMQP (RabbitMQ), Redis, and others are also available. For details on all supported transports, see the https://symfony.com/doc/current/messenger.html#transport-configuration[Symfony Messenger transport documentation].
 
 [cols="15,45,40"]
 |===
-| *Type* | *DSN Format* | *Use Case*
+| *Type* | *DSN Format* | *Notes*
 
-| Doctrine | `doctrine://default?queue_name=<name>` | Default. Uses your existing database. Suitable for single-server setups.
+| Doctrine | `doctrine://default?queue_name=<name>` | *Default.* Uses your existing database. No additional infrastructure required.
 | AMQP | `amqp://user:pass@host:5672/%2f/<queue>` | RabbitMQ. For high-throughput or distributed setups.
 | Redis | `redis://host:6379/messages` | Redis-based queue. Fast, in-memory.
 |===

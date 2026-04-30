@@ -4,7 +4,7 @@ weight: 30
 ---
 
 {{% notice info %}}
-Before using Manual Migration Tasks, make sure the Symfony Messenger worker is running. See the link:./messenger-setup[Messenger Setup] guide.
+Before using Manual Migration Tasks, make sure the Symfony Messenger worker is running. See the link:../messenger-setup[Messenger Setup] guide.
 {{% /notice %}}
 
 :imagesdir: /images/en/8.x/admin/manual-migration-tasks
@@ -131,13 +131,13 @@ image:migration_task_lifecycle_full.svg[Lifecycle Overview]
 
 === Configuration
 
-Batch sizes and other configuration options are documented in the link:./configuration[Configuration Reference].
+Batch sizes and other configuration options are documented in the link:../configuration[Configuration Reference].
 
 === Troubleshooting
 
 ==== The task stays in "Pending" status
 
-This usually means the Messenger worker is not running. See the link:./messenger-setup[Messenger Setup] guide for how to start and verify the worker.
+This usually means the Messenger worker is not running. See the link:../messenger-setup[Messenger Setup] guide for how to start and verify the worker.
 
 ==== Items are failing
 

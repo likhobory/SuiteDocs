@@ -9,6 +9,13 @@ weight: 10
 This documentation is for SuiteCRM 8.10.0+
 {{% /notice %}}
 
+=== What is the Messenger Worker?
+
+SuiteCRM 8 uses Symfony Messenger to process background tasks in a separate worker process, keeping the web server responsive. Without a running worker, async tasks (manual migrations, bulk exports, etc.) will remain in "Pending" status indefinitely.
+
+For an overview of the async task system and its benefits, see the link:../[Async Tasks overview].
+
+
 === Before You Begin
 
 All Messenger worker commands in this guide *must* be run as the same system user that runs your web server. Common web server users include:
@@ -21,29 +28,6 @@ If the worker runs as a different user, file operations (uploads, media object s
 
 Throughout this page, examples use `www-data` as a placeholder — replace it with your actual web server user.
 
-=== What is the Messenger Worker?
-
-SuiteCRM 8 uses Symfony Messenger to process background tasks — operations that are too slow or resource-intensive to run during an HTTP request. Examples include:
-
-* Manual Migration Tasks (post-upgrade data conversions)
-
-When a user triggers one of these operations, SuiteCRM places a message on a queue. A separate *worker* process reads messages from the queue and executes them in the background. Without a running worker, background tasks remain in "Pending" status indefinitely.
-
-=== Quick Start (for Development and Testing)
-
-To start the Messenger worker, run the following command on your server:
-
-[source,bash]
-----
-php bin/console messenger:consume internal-async --time-limit=3600 --memory-limit=256M
-----
-
-This starts a worker that:
-
-* Listens to the `internal-async` transport (the default queue for all async tasks).
-* Automatically stops after 1 hour (`--time-limit=3600`) to prevent memory leaks.
-* Stops if memory usage exceeds 256 MB (`--memory-limit=256M`).
-
 === Running the Worker in Production
 
 In production, the worker should run continuously and restart automatically if it stops. The recommended approaches are:
@@ -52,7 +36,7 @@ In production, the worker should run continuously and restart automatically if i
 
 Supervisor is a process manager that keeps the worker running and restarts it when it exits (e.g. after reaching the time limit).
 
-Create a configuration file at `/etc/supervisor/conf.d/suitecrm-messenger.conf`:
+Assuming you have systemd supervisor, you can create a configuration file at `/etc/supervisor/conf.d/suitecrm-messenger.conf`:
 
 [source,ini]
 ----
@@ -86,7 +70,7 @@ Set `numprocs` to `1` unless you have tested and confirmed that your tasks are s
 
 ==== Option 2: systemd
 
-Create a systemd service file at `/etc/systemd/system/suitecrm-messenger.service`:
+Assuming you have systemd installed, you can create a systemd service file at `/etc/systemd/system/suitecrm-messenger.service`:
 
 [source,ini]
 ----
@@ -134,6 +118,22 @@ This starts a new worker every minute. Each worker runs for up to 55 seconds, en
 The cron approach is less efficient than Supervisor or systemd because there is a brief gap between worker restarts where no messages are being processed.
 {{% /notice %}}
 
+
+=== Quick Start (for Development and Testing)
+
+To start the Messenger worker, run the following command on your server:
+
+[source,bash]
+----
+php bin/console messenger:consume internal-async --time-limit=3600 --memory-limit=256M
+----
+
+This starts a worker that:
+
+* Listens to the `internal-async` transport (the default queue for all async tasks).
+* Automatically stops after 1 hour (`--time-limit=3600`) to prevent memory leaks.
+* Stops if memory usage exceeds 256 MB (`--memory-limit=256M`).
+
 === Worker Command Options
 
 The `messenger:consume` command accepts several useful options:
@@ -151,7 +151,7 @@ The `messenger:consume` command accepts several useful options:
 
 === Verifying the Worker is Running
 
-You can check whether the worker process is active on your system:
+Depending on the option you've chosen, there are several ways you can check whether the worker process is active on your system, a more generic one is:
 
 [source,bash]
 ----
@@ -168,7 +168,7 @@ logs/<env>/<env>.messenger.log
 
 For example, `logs/prod/prod.messenger.log` in production.
 
-You can increase the log verbosity by setting `MESSENGER_LOG_LEVEL=info` in your `.env.local` file (see the link:./configuration[Configuration Reference]).
+You can increase the log verbosity by setting `MESSENGER_LOG_LEVEL=info` in your `.env.local` file (see the link:../configuration[Configuration Reference]).
 
 === Managing Failed Messages
 
@@ -192,7 +192,7 @@ For async tasks (Manual Migration Tasks, etc.), failures are also tracked at the
 
 === Setting Up the Messenger Database Table
 
-The default transport uses Doctrine (your existing database) to store queued messages.
+By default, SuiteCRM uses Doctrine (your existing database) as the message transport — no additional infrastructure is required. This is suitable for most single-server installations.
 
 The required `messenger_messages` *table is created automatically* when you run *Admin > Repair > Quick Repair & Rebuild*. In most cases, no manual action is needed.
 
@@ -203,7 +203,9 @@ If for any reason the *table was not created*, you can create it manually by run
 php bin/console messenger:setup-transports
 ----
 
+Since SuiteCRM uses Symfony Messenger, alternative transports such as RabbitMQ (AMQP) and Redis are also available if you need to scale beyond a single server. See the link:../configuration[Configuration Reference] for transport DSN options.
+
 === Next Steps
 
-* link:./manual-migration-tasks[Manual Migration Tasks] — learn how to run post-upgrade data migration tasks
-* link:./configuration[Configuration Reference] — see all available environment variables for Messenger and async tasks
+* link:../manual-migration-tasks[Manual Migration Tasks] — learn how to run post-upgrade data migration tasks
+* link:../configuration[Configuration Reference] — see all available environment variables for Messenger and async tasks
