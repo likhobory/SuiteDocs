@@ -54,7 +54,7 @@ as noted in the above section
 
 *8.2.x => current*
 
-|link:../upgrading-82x-versions[Upgrading to SuiteCRM 8.2.x+ versions]
+|link:../running-the-upgrade[Running the Upgrade]
 
 |Upgrade from *RC/8.0.x => 8.1.x*
 |link:../older-versions/upgrading-80-to-81-versions[Upgrading from SuiteCRM 8.0.x to 8.1.x versions]
