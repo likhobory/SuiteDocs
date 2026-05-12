@@ -11,6 +11,65 @@ aliases:
 :icons: font
 :imagesdir: /images/en/8.x/admin/release
 
+== 8.10.1
+
+_Released 13th May 2026_
+
+This maintenance release resolves three regressions introduced in 8.10. It contains no new features. We recommend all SuiteCRM 8.10 users upgrade promptly.
+
+=== icon:box-open[] Assets
+
+* https://github.com/SuiteCRM/SuiteCRM-Core/releases/tag/v8.10.1[GitHub — Download v8.10.1]
+* link:../../installation-guide/downloading-installing[SuiteCRM 8 Install Guide]
+* link:../../upgrading[SuiteCRM 8 Upgrade Guide]
+
+===  icon:check[] Release Notes
+
+==== icon:bug[] Bug Fixes
+
+===== Fix https://github.com/SuiteCRM/SuiteCRM-Core/issues/928[#928]: Core Fields Showing as Missing or Blank After Studio Edit
+
+When editing a standard core field through Studio (for example, marking a field as required or updating a label), SuiteCRM 8.10 was incorrectly injecting a `source: custom_fields` definition into the generated override file. This caused the system to look for the field in the wrong database table, resulting in SQL errors on save, data appearing blank or missing, and failures in logic hooks or integrations that depend on those fields.
+
+8.10.1 corrects the override generation logic. Studio will now produce clean override files that correctly preserve the status of core fields.
+
+*Are you affected?* You are affected if you upgraded to 8.10 and used Studio to edit any standard core field afterwards — for example, changing a label, marking a field as required, or adjusting display properties.
+
+*If you cannot update right away, or you have already made Studio edits to core fields*, you can resolve this manually:
+
+. Locate the affected file at: `public/legacy/custom/Extension/modules/<Module>/Ext/Vardefs/_override_sugarfield_<field>.php`
+. Open the file and delete the line that sets `source` to `custom_fields`
+. Go to *Administration → Repair* and run a *Quick Repair and Rebuild*
+. If SQL scripts appear at the bottom of the Repair page, run them to resync the metadata
+
+We recommend avoiding further core field edits via Studio on production environments until you have applied the 8.10.1 update.
+
+===== Fix https://github.com/SuiteCRM/SuiteCRM-Core/issues/926[#926]: Currency Symbols Not Displaying in Contract PDFs
+
+After upgrading to 8.10, currency variables in PDF templates stopped resolving to their actual values. Instead of displaying the expected currency symbol, documents were showing the raw variable names. This has been fixed and PDFs will once again display currency symbols as expected.
+
+===== Fix https://github.com/SuiteCRM/SuiteCRM-Core/issues/927[#927]: Generated PDFs Downloading with Template Name Instead of Record Name
+
+Before 8.10, generated PDFs for Invoices, Quotes and Contracts were named after the source record (e.g. `Invoice_InvoiceName.pdf`). With the 8.10 upgrade, filenames changed to reflect the PDF template name instead (e.g. `PDF_TemplateName.pdf`). 8.10.1 restores the original behaviour, where  Invoices, Quotes and Contracts PDF will be named after the source record (e.g. `Invoice_InvoiceName.pdf`).
+
+=== icon:heart[] Community
+
+SuiteCRM is built with and for its community — thank you to everyone who reported issues, submitted feedback, and contributed code to this release.
+
+_Special thanks to the following contributors for their contributions to this release:_
+
+{{% ghcontributors BastianHammer restena-sw %}}
+
+Visit https://suitecrm.com/releases/[Releases] for the appropriate upgrade package for your installation.
+
+* *Found a Bug?* https://github.com/suitecrm/SuiteCRM-Core/issues[Submit an Issue]
+* *Want to contribute?* https://github.com/suitecrm/SuiteCRM-Core/pulls[Open a Pull Request]
+* *Translations:* https://crowdin.com/project/suitecrmtranslations[Join us on Crowdin]
+
+To report a security issue, please follow our link:../../../../community/security-policy[Security Policy].
+
+'''
+
 == 8.10.0
 
 _Released: 30th April 2026_
