@@ -28,7 +28,6 @@ ifdef::env-github[:btn:]
 {{% notice info %}}
 Перед использованием заданий ручной миграции убедитесь, что 
 link:../messenger-setup[запущен воркер] Symfony.
-
 {{% /notice %}}
 
 
