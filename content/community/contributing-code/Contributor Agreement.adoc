@@ -6,12 +6,12 @@ Title: Contributor Agreement
 == Where can I find the Contributor Agreement?
 
 You can find the contributor agreement
-https://cla.suitecrm.com/salesagility/SuiteCRM[here].
+https://cla.suitecrm.com/SuiteCRM/SuiteCRM[here].
 
 == What is the Contributor Agreement?
 
 The Contributor Agreement is a document which outlines the license
-agreement between you (the developer) and us (SalesAgility) for any
+agreement between you (the developer) and us (SuiteCRM Ltd) for any
 contributions made to the SuiteCRM project.
 
 == Why do I need to sign it?

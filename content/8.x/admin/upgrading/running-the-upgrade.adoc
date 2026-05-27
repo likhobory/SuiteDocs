@@ -1,6 +1,8 @@
 ---
-Title: Upgrading to SuiteCRM 8.2.x+ versions
+Title: Running the Upgrade
 weight: 30
+aliases:
+  - /8.x/admin/upgrading/upgrading-82x-versions/
 ---
 
 {{% notice note %}}
@@ -58,3 +60,17 @@ If you are using `opcache`, `apcu` or other php caches, you may need to restart 
 == 4. Open your instance
 
 If all the above steps went as expected, you should now be able to login into your instance.
+
+== 5. Check for Manual Migration Tasks
+
+Some upgrades include data migration tasks that need to be run manually after the upgrade. These tasks convert existing data to new formats and run in the background using the Messenger worker.
+
+*5.1.* Navigate to *Admin* → *Migrations* and check if there are any tasks with a "Pending" status.
+
+*5.2.* If there are pending tasks, ensure the Messenger worker is running before starting them. See link:../../async-tasks/messenger-setup[Messenger Setup] for instructions.
+
+*5.3.* Follow the instructions on the link:../../async-tasks/manual-migration-tasks[Manual Migration Tasks] page to run and monitor the tasks.
+
+{{% notice info %}}
+Manual Migration Tasks were introduced in SuiteCRM 8.10.0. If you are upgrading to a version earlier than 8.10.0, you can skip this step.
+{{% /notice %}}

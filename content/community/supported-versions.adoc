@@ -1,6 +1,6 @@
 ---
-Title:  Supported Versions
-Weight: 1
+title: Supported Versions
+weight: 1
 ---
 
 :experimental:
@@ -9,7 +9,7 @@ Weight: 1
 
 Each release of SuiteCRM is supported for a pre-defined period of time after its initial stable release. During this period, bugs and security issues that have been reported are fixed and are released in regular maintenance releases.
 
-After the support period ends, for ESR (Extended Support Release) releases, there is a security support period. Releases during this period are made on an as-needed basis: there can be several security fix releases, or none, depending on the number of reports.
+**ESR (Extended Support Release)** versions have a longer support window. After active support ends, they receive security-only fixes on an as-needed basis. Non-ESR releases do not have a security-only period.
 
 
 == Currently Supported Versions
@@ -24,41 +24,53 @@ After the support period ends, for ESR (Extended Support Release) releases, ther
 | December 2027
 | March 2028
 
-| 8.9
-| September 2025
-| January 2026
+| 8.10
+| April 2026
 | -
-
-|===
-
-== Security only Supported Versions
-
-
-[cols="1,1,1,1"]
-|===
-| Version | Initial Release | Active Support Until | Security Support Until
-
-| 7.14 ESR
-| August 2023
-| October 2025
-| March 2026
+| -
 
 |===
 
 == End of Life Versions
 
+Versions listed here no longer receive bug fixes or security updates. If you are running an end-of-life version, we strongly recommend upgrading to a currently supported release.
 
 [cols="1,1,1,1"]
 |===
 | Version | Initial Release | Active Support Until | Security Support Until
 
-| 7.12 ESR
-| October 2021
-| August 2023
-| November 2023
+| 8.9
+| September 2025
+| April 2026
+| -
 
-| 7.13
-| December 2022
+| 8.8
+| January 2025
+| September 2025
+| -
+
+| 8.7
+| October 2024
+| January 2025
+| -
+
+| 8.6
+| April 2024
+| October 2024
+| -
+
+| 8.5
+| December 2023
+| April 2024
+| -
+
+| 8.4
+| August 2023
+| December 2023
+| -
+
+| 8.3
+| May 2023
 | August 2023
 | -
 
@@ -67,35 +79,21 @@ After the support period ends, for ESR (Extended Support Release) releases, ther
 | May 2023
 | -
 
-| 8.3
-| May 2023
+| 7.14 ESR
+| August 2023
+| October 2025
+| March 2026
+
+| 7.13
+| December 2022
 | August 2023
 | -
 
-| 8.4
+| 7.12 ESR
+| October 2021
 | August 2023
-| December 2023
-| -
+| November 2023
 
-| 8.5
-| December 2023
-| April 2024
-| -
-
-| 8.6
-| April 2024
-| October 2024
-| -
-
-| 8.7
-| October 2024
-| January 2025
-| -
-
-| 8.8
-| January 2025
-| September 2025
-| -
 |===
 
 

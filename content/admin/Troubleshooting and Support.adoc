@@ -1,22 +1,78 @@
 ---
-Title: Troubleshooting and Support
-Weight: 20
+title: "Troubleshooting and Support"
+weight: 20
 ---
 
-== Troubleshooting and Support
+= Troubleshooting and Support
 
-At SalesAgility, we are advocates of Open Source. As such please do not
-contact us directly via email or phone for SuiteCRM support. Instead
-please use our support forum. By using the
-https://community.suitecrm.com[forum] the knowledge is shared
-with everyone in the community. Our developers answer questions on the
-forum daily but it also gives the other members of the community the
-opportunity to contribute. If you would like SalesAgility to customise
-SuiteCRM specifically for your needs, or to provide a hosted and
-supported CRM solution, then please use our
-https://suitecrm.com/about/about-us/contact[contact form].
+== Diagnostic Tools
 
-== Support Packages
+SuiteCRM 7 includes built-in utilities to help you gather technical data before seeking external support.
 
-There are various tiers of support service available for SuiteCRM. Ranging from 2 hours of support per month via tickets/phone up to 12 hours of support including email/ticket/phone support and access to experienced developer knowledge.
+=== Quick Repair and Rebuild
+The first step for almost any issue. It synchronises the database schema with the metadata files and clears the cached definitions. This is found under **Admin > Repair**.
 
+=== Diagnostic Tool
+Located in **Admin > Diagnostic Tool**. Use this to package your `config.php`, `phpinfo`, and database schema. This package is essential when requested by technical support to understand your environment without needing direct server access.
+
+=== Log Monitoring
+* **SuiteCRM Log:** Viewable at the bottom of the Admin page or via the filesystem at `/suitecrm.log`.
+* **PHP Error Logs:** Usually managed by your web server (Apache/Nginx). These contain the technical details behind system crashes or "White Screen" errors.
+
+== The Quick-Fix Map
+
+When a system issue occurs in SuiteCRM 7, it is commonly related to one of three areas: **Permissions**, **background processes (Cron)**, or **Database/Metadata synchronisation**. Use the guides below to diagnose and resolve common administrative issues.
+
+Identify your symptom to find the relevant resolution guide.
+
+[cols="1,1,1", options="header"]
+|===
+|If you see... |Potential Cause |Immediate Action
+
+|**A "White Screen of Death" (WSOD)**
+|Fatal PHP Error or Permissions
+|Check **System Logs** and run **Quick Repair and Rebuild**.
+
+|**Broken Layouts or missing CSS**
+|Cache/Permissions issues
+|Verify **File Permissions** and run **Quick Repair and Rebuild**.
+
+|**Workflows/Campaigns not sending**
+|Scheduler or Cron failure
+|Check **Schedulers** and your server's **Crontab**.
+
+|**Missing Fields in the UI**
+|Metadata out of sync
+|Run **Quick Repair and Rebuild**.
+
+|**Users not able to access new modules**
+|Roles not up to date
+|Run **Repair Roles**.
+
+|**Database Errors after an update**
+|Table schema mismatch
+|Run **Quick Repair and Rebuild** and scroll to the bottom to **Execute** changes.
+|===
+
+== Professional & Community Support
+
+If the self-service steps above do not resolve the issue, you can leverage the following resources.
+
+=== SuiteCRM Community Forums
+The official community forum is a vast knowledge base. When posting, always include your PHP version, SuiteCRM version, and relevant log entries.
+
+* **Visit:** https://community.suitecrm.com[SuiteCRM Community Forums]
+
+=== Official Professional Support
+For guaranteed response times and expert support from the authors and maintainers, consider accessing official SuiteCRM support provided by **SuiteCRM Ltd** . These offer personalised guidance and reliable, ongoing technical expertise.
+
+* **Visit:** https://suitecrm.com/enterprise/support-services/[SuiteCRM Support Services]
+
+=== Bug Reporting
+If you have identified a repeatable bug in the core code, please report it via the relevant official GitHub repository.
+
+* **SuiteCRM 7 (Legacy/Hotfix):** https://github.com/SuiteCRM/SuiteCRM/issues
+
+{{% notice info %}}
+Please do not use GitHub for general "How-to" questions; keep those for the community forums to ensure the developers can focus on code-level issues.
+{{% /notice %}}

@@ -11,13 +11,13 @@ timeout = 47000
 ignoreErrors = ["error-remote-getjson"]
 
 [params]
-  GitHubRepo  = "https://github.com/salesagility/SuiteDocs/"
-  editURL     = "https://github.com/salesagility/SuiteDocs/edit/master/content/"
-  issueURL    = "https://github.com/salesagility/SuiteDocs/issues/new?"
+  GitHubRepo  = "https://github.com/SuiteCRM/SuiteDocs/"
+  editURL     = "https://github.com/SuiteCRM/SuiteDocs/edit/master/content/"
+  issueURL    = "https://github.com/SuiteCRM/SuiteDocs/issues/new?"
   title       = "Documentation for SuiteCRM"
   description = "All you need to know to successfully use SuiteCRM as an End-User, Developer or Administrator, plus Community Guidelines and Technical Blog."
   images      = ["https://docs.suitecrm.com/images/logo-square.png"]
-  author      = "SalesAgility"
+  author      = "SuiteCRM Ltd"
   showVisitedLinks = true
   themeVariant = "suitecrm"
 
@@ -47,7 +47,7 @@ weight = 10
 [[Languages.en.menu.shortcuts]]
 name = "<i class='fa fa-github'></i> GitHub"
 identifier = "ds"
-url = "https://github.com/salesagility/SuiteCRM"
+url = "https://github.com/SuiteCRM/SuiteCRM"
 weight = 11
 
 
@@ -75,7 +75,7 @@ languageDir = "/es/"
 [[Languages.es.menu.shortcuts]]
 name = "<i class='fa fa-github'></i> GitHub"
 identifier = "ds"
-url = "https://github.com/salesagility/SuiteCRM"
+url = "https://github.com/SuiteCRM/SuiteCRM"
 weight = 10
 
 [[Languages.es.menu.shortcuts]]
@@ -86,7 +86,7 @@ weight = 10
 [[Languages.es.menu.shortcuts]]
 name = "<i class='fa fa-github'></i> GitHub"
 identifier = "ds"
-url = "https://github.com/salesagility/SuiteCRM"
+url = "https://github.com/SuiteCRM/SuiteCRM"
 weight = 11
 
 [[Languages.es.menu.shortcuts]]

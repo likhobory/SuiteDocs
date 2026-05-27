@@ -11,6 +11,68 @@ aliases:
 :icons: font
 :imagesdir: /images/en/8.x/admin/release
 
+== 8.9.3
+
+_Released 19th March 2026_
+
+=== icon:box-open[] Assets
+
+* https://github.com/suitecrm/SuiteCRM-Core/releases/tag/v8.9.3[GitHub - Download]
+* link:../../installation-guide/downloading-installing[SuiteCRM 8 Install Guide]
+* link:../../upgrading[SuiteCRM 8 Upgrade Guide]
+* link:../../legacy-migration/8.7.0-legacy-migration/[SuiteCRM 8 Migration from SuiteCRM 7]
+
+===  icon:check[] Release Notes
+
+==== icon:lock[] Security
+
+* CVE: https://nvd.nist.gov/vuln/detail/CVE-2026-29108[CVE-2026-29108: Improper Access Control] | https://github.com/SuiteCRM/SuiteCRM-Core/security/advisories/GHSA-xc8w-xc9v-45w5[GitHub Advisory] | Reporter: JBince
+* CVE: https://nvd.nist.gov/vuln/detail/CVE-2026-29109[CVE-2026-29109: RCE Vulnerability] | https://github.com/SuiteCRM/SuiteCRM-Core/security/advisories/GHSA-mhq2-277m-6w24[GitHub Advisory] | Reporter: Ravindu Wickramasinghe (rvz)
+* CVE: https://nvd.nist.gov/vuln/detail/CVE-2026-32697[CVE-2026-32697: Improper Access Control] | https://github.com/SuiteCRM/SuiteCRM-Core/security/advisories/GHSA-9p9g-224x-6rmm[GitHub Advisory] | Reporter: lighthousekeeper1212
+* CVE: https://nvd.nist.gov/vuln/detail/CVE-2026-29189[CVE-2026-29189: Improper Access Control] | https://github.com/SuiteCRM/SuiteCRM/security/advisories/GHSA-m6x8-3hxp-qxwv[GitHub Advisory] | Reporter: lighthousekeeper1212
+* CVE: https://nvd.nist.gov/vuln/detail/CVE-2026-29098[CVE-2026-29098: Path Traversal Vulnerability] | https://github.com/SuiteCRM/SuiteCRM/security/advisories/GHSA-6858-fhw5-56gf[GitHub Advisory] | Reporter: JBince
+* CVE: https://nvd.nist.gov/vuln/detail/CVE-2026-29099[CVE-2026-29099: SQL Injection Vulnerability] | https://github.com/SuiteCRM/SuiteCRM/security/advisories/GHSA-38rf-h37x-7767[GitHub Advisory] | Reporter: JBince
+* CVE: https://nvd.nist.gov/vuln/detail/CVE-2026-29102[CVE-2026-29102: RCE Vulnerability] | https://github.com/SuiteCRM/SuiteCRM/security/advisories/GHSA-mr5v-wcgr-98qr[GitHub Advisory] | Reporter: Reuben Seah
+* CVE: https://nvd.nist.gov/vuln/detail/CVE-2026-29101[CVE-2026-29101: Path Traversal Vulnerability] | https://github.com/SuiteCRM/SuiteCRM/security/advisories/GHSA-24pf-9cvh-ppcg[GitHub Advisory] | Reporter: Reuben Seah
+* CVE: https://nvd.nist.gov/vuln/detail/CVE-2026-29105[CVE-2026-29105: Open Redirect Vulnerability] | https://github.com/SuiteCRM/SuiteCRM/security/advisories/GHSA-9crg-83cg-wv74[GitHub Advisory] | Reporter: d3dn0v4
+* CVE: https://nvd.nist.gov/vuln/detail/CVE-2026-29104[CVE-2026-29104: Authenticated Arbitrary File Upload Vulnerability] | https://github.com/SuiteCRM/SuiteCRM/security/advisories/GHSA-5hx9-cmmx-26p3[GitHub Advisory] | Reporter: d3dn0v4
+* CVE: https://nvd.nist.gov/vuln/detail/CVE-2026-29106[CVE-2026-29106: XSS Vulnerability] | https://github.com/SuiteCRM/SuiteCRM/security/advisories/GHSA-7qrj-5hj6-7c2m[GitHub Advisory] | Reporter: Suphawith Phusanbai
+* CVE: https://nvd.nist.gov/vuln/detail/CVE-2026-29107[CVE-2026-29107: Authenticated SSRF Vulnerability] | https://github.com/SuiteCRM/SuiteCRM/security/advisories/GHSA-g7cv-4ghj-x98h[GitHub Advisory] | Reporter: Parnuski
+* CVE: https://nvd.nist.gov/vuln/detail/CVE-2026-29097[CVE-2026-29097: SSRF and Dos Vulnerability] | https://github.com/SuiteCRM/SuiteCRM/security/advisories/GHSA-x3p2-qcqh-qx2m[GitHub Advisory] | Reporter: Ravindu Wickramasinghe (rvz)
+* CVE: https://nvd.nist.gov/vuln/detail/CVE-2026-29103[CVE-2026-29103: RCE Vulnerability] | https://github.com/SuiteCRM/SuiteCRM/security/advisories/GHSA-5jjq-9qch-9rg7[GitHub Advisory] | Reporter: DQH1
+* CVE: https://nvd.nist.gov/vuln/detail/CVE-2026-29096[CVE-2026-29096: SQL Injection Vulnerability] | https://github.com/SuiteCRM/SuiteCRM/security/advisories/GHSA-vh42-gmqm-q55m[GitHub Advisory] | Reporter: q1uf3ng
+
+==== icon:bug[] Bug Fixes
+
+* PR: https://github.com/SuiteCRM/SuiteCRM-Core/pull/887[887] - Fix Import Links going to incorrect view
+* PR: https://github.com/SuiteCRM/SuiteCRM-Core/pull/888[888] - Fix https://github.com/SuiteCRM/SuiteCRM-Core/issues/749[#749] - Upgrade doesn't delete old htaccess file, which prevents product images from showing up
+* PR: https://github.com/SuiteCRM/SuiteCRM-Core/pull/881[881] - Fix https://github.com/SuiteCRM/SuiteCRM-Core/issues/797[#797] - Default editor type to TinyMCE and validate preferences
+* PR: https://github.com/SuiteCRM/SuiteCRM-Core/pull/880[880] - Fix https://github.com/SuiteCRM/SuiteCRM-Core/issues/711[#711] - Ensure recursive directory creation in installer
+* PR: https://github.com/SuiteCRM/SuiteCRM-Core/pull/879[879] - Update Dependencies
+
+=== icon:heart[] Community
+
+We would love to have your feedback and input to help make SuiteCRM 8 great for everyone.
+
+_Special thanks to the following members for their contributions and participation in this release!_
+
+{{% ghcontributors BastianHammer %}}
+
+_Special thanks to everyone who reported the security issues addressed in this release!_
+
+{{% ghcontributors JBince rvizx lighthousekeeper1212 quirmz d3dn0v4 yamerooo123 Parnuski DQH1 q1uf3ng %}}
+
+If you have found an issue you think we should know about, or have suggestion/feedback, please link:https://github.com/suitecrm/SuiteCRM-Core/issues[Submit An Issue].
+
+If you want to get involved and submit a fix, fork the repo and when ready please link:https://github.com/suitecrm/SuiteCRM-Core/pulls[Submit A PR] - More detail for developers can be found link:https://docs.suitecrm.com/8.x/developer/installation-guide/[here].
+
+Please link:https://suitecrm.com/releases/[visit the official website] to find the appropriate upgrade package.
+
+To report any security issues please follow our link:../../../../community/security-policy[Security Policy]
+
+'''
+
+
 == 8.9.2
 
 _Released 13th January 2026_

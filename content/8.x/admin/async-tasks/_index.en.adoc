@@ -1,0 +1,67 @@
+---
+title: "Async Tasks"
+weight: 30
+---
+
+{{% notice info %}}
+This documentation is for SuiteCRM 8.10.0+
+{{% /notice %}}
+
+== Async Tasks
+
+=== Overview
+
+SuiteCRM 8.10 introduces a new background task processing system built on https://symfony.com/doc/current/messenger.html[Symfony Messenger]. This system allows SuiteCRM to offload heavy, long-running operations to a background worker so they no longer block the application or tie up your web server.
+
+Before async tasks, operations that touched thousands of records — such as data migrations after an upgrade — had to run within a single HTTP request or be split across scheduled cron jobs. This meant slow page loads, timeouts on large datasets, and limited visibility into progress or failures.
+
+The new async task system changes this fundamentally.
+
+=== Why It Matters
+
+==== Process Large Volumes Without Timeouts
+
+Async tasks break work into small batches and process them one at a time in the background. There are no PHP timeout limits, no memory pressure on your web server, and no risk of a browser timeout killing a long-running operation mid-way.
+
+==== Real-Time Progress Tracking
+
+Every async task tracks its progress as it runs — how many items have been processed, how many succeeded, and how many failed. This information is visible in the SuiteCRM UI so administrators can monitor the status of running tasks at any time.
+
+==== Reliable Failure Handling
+
+When individual items fail, the system records exactly which ones failed and why. Failed items can be retried without re-processing the entire batch. If an entire task fails, it can be re-run from scratch. Nothing is silently lost.
+
+==== Non-Blocking
+
+Users can continue working in SuiteCRM normally while background tasks are running. Tasks are processed by a separate worker process, completely independent of the web server handling user requests.
+
+==== Scalable Infrastructure
+
+The default setup uses your existing database as the message queue — no additional infrastructure is needed. Since SuiteCRM is built on Symfony Messenger, alternative transports such as RabbitMQ, Redis, and others are also available as your needs grow, allowing you to scale workers and route different task types to dedicated queues without changing application code.
+
+=== How It Works
+
+When a user (or the system) triggers an async task, SuiteCRM places a message on a queue. A separate *worker* process — running alongside your web server — picks messages off the queue and executes them in the background.
+
+The worker is a long-running PHP process started via the Symfony Messenger `messenger:consume` command. It can be managed by Supervisor, systemd, or cron, depending on your environment.
+
+Each async task follows a three-phase lifecycle:
+
+. *Queueing* — The task scans for records to process and adds them to the queue in batches.
+. *Processing* — The worker processes each item individually, recording success or failure for each one.
+. *Finalizing* — Once all items are processed, the task performs any cleanup or summary actions.
+
+=== What Uses Async Tasks
+
+SuiteCRM 8.10 introduces async tasks with support for *Manual Migration Tasks* — post-upgrade data migrations that convert existing data to new formats (photo migrations, file attachment migrations, calendar sync migrations). See link:./manual-migration-tasks[Manual Migration Tasks] for details.
+
+In future releases, additional operations (such as bulk PDF generation, CSV exports, and other long-running processes) will be moved to the async task system to take advantage of the same benefits.
+
+=== Getting Started
+
+[cols="1,3"]
+|===
+| link:./messenger-setup[*Messenger Setup*] | Configure the background worker for your environment (Supervisor, systemd, or cron).
+| link:./manual-migration-tasks[*Manual Migration Tasks*] | Learn how to run post-upgrade data migration tasks.
+| link:./configuration[*Configuration Reference*] | All available environment variables and settings for Messenger and async tasks.
+|===

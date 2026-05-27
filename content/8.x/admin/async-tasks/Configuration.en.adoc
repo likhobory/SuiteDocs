@@ -1,0 +1,297 @@
+---
+title: "Configuration Reference"
+weight: 20
+---
+
+== Configuration Reference
+
+{{% notice info %}}
+This documentation is for SuiteCRM 8.10.0+
+{{% /notice %}}
+
+This page lists all environment variables and system configuration options related to Symfony Messenger and async tasks. Environment variables are set in the `.env.local` file in the root of your SuiteCRM installation. System configuration options are set in `config.php` (in the `public/legacy/` directory).
+
+{{% notice note %}}
+Never edit the `.env` file directly — it is overwritten during upgrades. Always create or edit `.env.local` to override values. The `.env.local` file takes precedence over `.env`.
+{{% /notice %}}
+
+=== Transport DSNs
+
+These variables control which message broker SuiteCRM uses to queue background tasks.
+
+==== MESSENGER_INTERNAL_ASYNC_TRANSPORT_DSN
+
+The connection string for the main async task queue.
+
+[cols="20,80"]
+|===
+| *Default* | `doctrine://default?queue_name=internal_async`
+| *Location* | `.env.local`
+|===
+
+The default uses Doctrine (your existing database) as the message broker. Messages are stored in the `messenger_messages` table with the queue name `internal_async`. This is the recommended and tested configuration, suitable for most installations.
+
+Since SuiteCRM uses Symfony Messenger, alternative transports such as AMQP (RabbitMQ), Redis, and others are also available. For details on all supported transports, see the https://symfony.com/doc/current/messenger.html#transport-configuration[Symfony Messenger transport documentation].
+
+[cols="15,45,40"]
+|===
+| *Type* | *DSN Format* | *Notes*
+
+| Doctrine | `doctrine://default?queue_name=<name>` | *Default.* Uses your existing database. No additional infrastructure required.
+| AMQP | `amqp://user:pass@host:5672/%2f/<queue>` | RabbitMQ. For high-throughput or distributed setups.
+| Redis | `redis://host:6379/messages` | Redis-based queue. Fast, in-memory.
+|===
+
+Example — switch to RabbitMQ:
+
+[source,bash]
+----
+MESSENGER_INTERNAL_ASYNC_TRANSPORT_DSN=amqp://guest:guest@localhost:5672/%2f/suitecrm_async
+----
+
+==== MESSENGER_INTERNAL_FAILURE_TRANSPORT_DSN
+
+The connection string for the failure queue. Failed messages are moved here for later inspection and retry.
+
+[cols="20,80"]
+|===
+| *Default* | `doctrine://default?queue_name=failed`
+| *Location* | `.env.local`
+|===
+
+This should generally use the same broker type as the main transport.
+
+=== Logging
+
+==== MESSENGER_LOG_LEVEL
+
+Controls the verbosity of the Messenger log file.
+
+[cols="20,80"]
+|===
+| *Default* | `error`
+| *Location* | `.env.local`
+|===
+
+Valid values (from least to most verbose): `emergency`, `alert`, `critical`, `error`, `warning`, `notice`, `info`, `debug`.
+
+Set to `info` to see each message as it is dispatched and consumed — useful for verifying the worker is running:
+
+[source,bash]
+----
+MESSENGER_LOG_LEVEL=info
+----
+
+==== MESSENGER_LOG_FILE_NAME
+
+Override the default log file name for Messenger logs.
+
+[cols="20,80"]
+|===
+| *Default* | `<env>.messenger.log` (e.g. `prod.messenger.log`)
+| *Location* | `.env.local`
+|===
+
+Example:
+
+[source,bash]
+----
+MESSENGER_LOG_FILE_NAME=my_messenger.log
+----
+
+The log file is written to the log directory (default: `logs/<env>/`). You can change the log directory with `LOG_DIR`.
+
+=== Advanced Transport Configuration
+
+These variables are for advanced setups where you need additional transports beyond the default `internal-async` queue.
+
+==== MESSENGER_TRANSPORTS
+
+Define additional Messenger transports as a JSON object. Custom transports are merged with the built-in defaults (`internal-async`, `failed`, `notifier-sync`).
+
+[cols="20,80"]
+|===
+| *Default* | `{}` (empty — only built-in transports)
+| *Location* | `.env.local`
+|===
+
+Each transport entry can be a simple DSN string or a full configuration object:
+
+[source,bash]
+----
+MESSENGER_TRANSPORTS='{
+    "report-export": "doctrine://default?queue_name=report_export",
+    "high-priority": {
+        "dsn": "amqp://guest:guest@rabbitmq:5672/%2f/high_priority",
+        "options": {
+            "auto_setup": true
+        },
+        "serializer": "messenger.transport.symfony_serializer"
+    }
+}'
+----
+
+**Transport object fields:**
+
+[cols="20,80"]
+|===
+| *Field* | *Description*
+
+| `dsn` | (required) The transport connection string.
+| `options` | (optional) Transport-specific options passed to the broker driver.
+| `serializer` | (optional) Custom serializer service ID. Use a fully-qualified class name to use a custom serializer from an extension.
+|===
+
+{{% notice warning %}}
+Custom transport names must be unique and must not conflict with the built-in names (`internal-async`, `failed`, `notifier-sync`). If you use the same name as a built-in transport, your configuration overrides it.
+{{% /notice %}}
+
+==== MESSENGER_ROUTING
+
+Override or extend the routing of message classes to transports. This controls which transport processes each type of message.
+
+[cols="20,80"]
+|===
+| *Default* | `{}` (empty — uses built-in routing)
+| *Location* | `.env.local`
+|===
+
+The built-in routing is:
+
+[cols="55,45"]
+|===
+| *Message Class* | *Transport*
+
+| `App\AsyncTask\Message\AsyncTaskRun` | `internal-async`
+| `App\AsyncTask\Message\AsyncTaskCompleted` | `internal-async`
+| `App\AsyncTask\Message\AsyncTaskProgressed` | `internal-async`
+| `App\AsyncTask\Message\AsyncTaskFailure` | `internal-async`
+| `App\Notifier\Message\Notification` | `notifier-sync`
+|===
+
+Custom entries are merged with the defaults. To route a custom message class to a custom transport:
+
+[source,bash]
+----
+MESSENGER_ROUTING='{
+    "App\Extension\myExt\Message\MyCustomMessage": "report-export"
+}'
+----
+
+{{% notice note %}}
+Async task messages (`AsyncTaskRun`, `AsyncTaskCompleted`, etc.) should generally stay on `internal-async`. Only override this if you understand the implications — the async task system expects all task messages on the same transport for proper lifecycle management.
+{{% /notice %}}
+
+==== MESSENGER_SERIALIZER
+
+Override the global message serializer configuration.
+
+[cols="20,80"]
+|===
+| *Default* | Symfony serializer with JSON format
+| *Location* | `.env.local`
+|===
+
+The default configuration is:
+
+[source,bash]
+----
+MESSENGER_SERIALIZER='{
+    "default_serializer": "messenger.transport.symfony_serializer",
+    "symfony_serializer": {
+        "format": "json",
+        "context": {}
+    }
+}'
+----
+
+You generally do not need to change this. Per-transport serializers (set via `MESSENGER_TRANSPORTS`) take precedence over the global serializer.
+
+=== Async Task Routing
+
+==== ASYNC_TASK_ROUTES
+
+Route specific async task handlers to specific transports. This allows you to separate different types of background work onto different queues (e.g. send heavy PDF exports to a dedicated transport with more resources).
+
+[cols="20,80"]
+|===
+| *Default* | `{}` (empty — all tasks use the default Messenger routing)
+| *Location* | `.env.local`
+|===
+
+The value is a JSON object with two sections:
+
+* *modules* — route tasks by module and handler key (most specific).
+* *default* — route tasks by handler key regardless of module (fallback).
+
+Module-specific routes take precedence over defaults.
+
+[source,bash]
+----
+ASYNC_TASK_ROUTES='{
+    "modules": {
+        "accounts": {
+            "print-pdf": "report-export",
+            "export": "report-export"
+        }
+    },
+    "default": {
+        "print-pdf": "report-export"
+    }
+}'
+----
+
+In this example:
+
+* PDF exports and CSV exports from the Accounts module go to the `report-export` transport.
+* PDF exports from *any other module* also go to `report-export` (via the `default` section).
+* All other tasks use the standard `internal-async` transport.
+
+{{% notice note %}}
+The transport names used here (e.g. `report-export`) must be defined either as a built-in transport or via `MESSENGER_TRANSPORTS`. If a route references a transport that does not exist, the message will fail to dispatch.
+{{% /notice %}}
+
+=== System Configuration (config.php)
+
+These settings are in the `config.php` file (located in `public/legacy/` or at the SuiteCRM root, depending on your setup). They control batch sizes for async task processing.
+
+==== Batch Size Settings
+
+[cols="45,10,45"]
+|===
+| *Setting* | *Default* | *Description*
+
+| `max_migration_items_to_queue_per_run` | `50` | Maximum items to queue per batch during the queueing phase of Manual Migration Tasks.
+| `max_migration_items_to_process_per_run` | `20` | Maximum items to process per batch during the processing phase of Manual Migration Tasks.
+| `max_processes_items_to_queue_per_run` | `50` | Maximum items to queue per batch during the queueing phase of Process-based async tasks (bulk exports, etc.).
+| `max_processes_items_to_process_per_run` | `20` | Maximum items to process per batch during the processing phase of Process-based async tasks.
+|===
+
+Lower values reduce memory usage per batch but increase the number of batches (and total processing time). Higher values process faster but use more memory.
+
+To change a value, add or edit the entry in `config_override.php`:
+
+[source,php]
+----
+$sugar_config['max_migration_items_to_process_per_run'] = 50;
+----
+
+=== Summary of All Variables
+
+[cols="40,30,30"]
+|===
+| *Variable* | *Default* | *File*
+
+| `MESSENGER_INTERNAL_ASYNC_TRANSPORT_DSN` | `doctrine://default?queue_name=internal_async` | `.env.local`
+| `MESSENGER_INTERNAL_FAILURE_TRANSPORT_DSN` | `doctrine://default?queue_name=failed` | `.env.local`
+| `MESSENGER_LOG_LEVEL` | `error` | `.env.local`
+| `MESSENGER_LOG_FILE_NAME` | `<env>.messenger.log` | `.env.local`
+| `MESSENGER_TRANSPORTS` | `{}` | `.env.local`
+| `MESSENGER_ROUTING` | `{}` | `.env.local`
+| `MESSENGER_SERIALIZER` | `{}` | `.env.local`
+| `ASYNC_TASK_ROUTES` | `{}` | `.env.local`
+| `max_migration_items_to_queue_per_run` | `50` | `config.php`
+| `max_migration_items_to_process_per_run` | `20` | `config.php`
+| `max_processes_items_to_queue_per_run` | `50` | `config.php`
+| `max_processes_items_to_process_per_run` | `20` | `config.php`
+|===

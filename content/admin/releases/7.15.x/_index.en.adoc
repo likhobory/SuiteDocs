@@ -9,6 +9,67 @@ weight: 9840
 :icons: font
 :imagesdir: /images/en/admin/release
 
+== 7.15.1
+
+_Released 19th March 2026_
+
+=== icon:box-open[] Assets
+
+* https://github.com/suitecrm/SuiteCRM/releases/tag/v7.15.1[GitHub - Download]
+* link:../../installation-guide/downloading-installing[SuiteCRM 7 Install Guide]
+* link:../../installation-guide/upgrading[SuiteCRM 7 Upgrade Guide]
+
+===  icon:check[] Release Notes
+
+==== icon:lock[] Security
+
+* CVE: https://nvd.nist.gov/vuln/detail/CVE-2026-29189[CVE-2026-29189: Improper Access Control] | https://github.com/SuiteCRM/SuiteCRM/security/advisories/GHSA-m6x8-3hxp-qxwv[GitHub Advisory] | Reporter: lighthousekeeper1212
+* CVE: https://nvd.nist.gov/vuln/detail/CVE-2026-29100[CVE-2026-29100: HTML Injection Vulnerability] | https://github.com/SuiteCRM/SuiteCRM/security/advisories/GHSA-g7hf-3j93-rwm5[GitHub Advisory] | Reporter: Dimitris Mitropoulos, University of Athens and National Infrastructures for Research and Technology - GRNET
+* CVE: https://nvd.nist.gov/vuln/detail/CVE-2026-29098[CVE-2026-29098: Path Traversal Vulnerability] | https://github.com/SuiteCRM/SuiteCRM/security/advisories/GHSA-6858-fhw5-56gf[GitHub Advisory] | Reporter: JBince
+* CVE: https://nvd.nist.gov/vuln/detail/CVE-2026-29099[CVE-2026-29099: SQL Injection Vulnerability] | https://github.com/SuiteCRM/SuiteCRM/security/advisories/GHSA-38rf-h37x-7767[GitHub Advisory] | Reporter: JBince
+* CVE: https://nvd.nist.gov/vuln/detail/CVE-2026-29102[CVE-2026-29102: RCE Vulnerability] | https://github.com/SuiteCRM/SuiteCRM/security/advisories/GHSA-mr5v-wcgr-98qr[GitHub Advisory] | Reporter: Reuben Seah
+* CVE: https://nvd.nist.gov/vuln/detail/CVE-2026-29101[CVE-2026-29101: Path Traversal Vulnerability] | https://github.com/SuiteCRM/SuiteCRM/security/advisories/GHSA-24pf-9cvh-ppcg[GitHub Advisory] | Reporter: Reuben Seah
+* CVE: https://nvd.nist.gov/vuln/detail/CVE-2026-29105[CVE-2026-29105: Open Redirect Vulnerability] | https://github.com/SuiteCRM/SuiteCRM/security/advisories/GHSA-9crg-83cg-wv74[GitHub Advisory] | Reporter: d3dn0v4
+* CVE: https://nvd.nist.gov/vuln/detail/CVE-2026-29104[CVE-2026-29104: Authenticated Arbitrary File Upload Vulnerability] | https://github.com/SuiteCRM/SuiteCRM/security/advisories/GHSA-5hx9-cmmx-26p3[GitHub Advisory] | Reporter: d3dn0v4
+* CVE: https://nvd.nist.gov/vuln/detail/CVE-2026-29106[CVE-2026-29106: XSS Vulnerability] | https://github.com/SuiteCRM/SuiteCRM/security/advisories/GHSA-7qrj-5hj6-7c2m[GitHub Advisory] | Reporter: Suphawith Phusanbai
+* CVE: https://nvd.nist.gov/vuln/detail/CVE-2026-29107[CVE-2026-29107: Authenticated SSRF Vulnerability] | https://github.com/SuiteCRM/SuiteCRM/security/advisories/GHSA-g7cv-4ghj-x98h[GitHub Advisory] | Reporter: Parnuski
+* CVE: https://nvd.nist.gov/vuln/detail/CVE-2026-29097[CVE-2026-29097: SSRF and Dos Vulnerability] | https://github.com/SuiteCRM/SuiteCRM/security/advisories/GHSA-x3p2-qcqh-qx2m[GitHub Advisory] | Reporter: Ravindu Wickramasinghe (rvz)
+* CVE: https://nvd.nist.gov/vuln/detail/CVE-2026-29103[CVE-2026-29103: RCE Vulnerability] | https://github.com/SuiteCRM/SuiteCRM/security/advisories/GHSA-5jjq-9qch-9rg7[GitHub Advisory] | Reporter: DQH1
+* CVE: https://nvd.nist.gov/vuln/detail/CVE-2026-29096[CVE-2026-29096: SQL Injection Vulnerability] | https://github.com/SuiteCRM/SuiteCRM/security/advisories/GHSA-vh42-gmqm-q55m[GitHub Advisory] | Reporter: q1uf3ng
+* CVE: https://nvd.nist.gov/vuln/detail/CVE-2026-33288[CVE-2026-33288: SQL Vulnerability] | https://github.com/SuiteCRM/SuiteCRM/security/advisories/GHSA-7g39-m4fg-vrq7[GitHub Advisory] | Reporter: Guilherme Mury (Kilserv)
+* CVE: https://nvd.nist.gov/vuln/detail/CVE-2026-33288[CVE-2026-33288: LDAP Injection Vulnerability] | https://github.com/SuiteCRM/SuiteCRM/security/advisories/GHSA-26vx-rj47-x599[GitHub Advisory] | Reporter: Guilherme Mury (Kilserv)
+
+==== icon:bug[] Bug Fixes
+
+* PR: https://github.com/SuiteCRM/SuiteCRM/pull/10753[10753] - Added Redis Password and configuration documentation to SugarCacheRedis.php
+* PR: https://github.com/SuiteCRM/SuiteCRM/pull/9388[9388] - Optimise Export Memory Usage
+* PR: https://github.com/SuiteCRM/SuiteCRM/pull/7317[7317] - Fix https://github.com/SuiteCRM/SuiteCRM/issues/7316[#7316] - Delete Vardefs files after deleting custom field
+* PR: https://github.com/SuiteCRM/SuiteCRM/pull/10751[10751] - SugarApplication::redirect adds "Location", calling with "Location" doubles it result is not working
+* PR: https://github.com/SuiteCRM/SuiteCRM/pull/10781[10781] - Fix https://github.com/SuiteCRM/SuiteCRM/issues/10780[#10780] issue with language file being overwritten
+* PR: https://github.com/SuiteCRM/SuiteCRM/pull/10089[10089] - Fix https://github.com/SuiteCRM/SuiteCRM/issues/5722[#5722] Make SearchForm2.php customizable
+* PR: https://github.com/SuiteCRM/SuiteCRM/pull/10631[10631] - Fix https://github.com/SuiteCRM/SuiteCRM/issues/10630[#10630] - Scheduled task “Run Email Reminder Notifications” does not run when deleting a person
+* PR: https://github.com/SuiteCRM/SuiteCRM/pull/10707[10707] - Fix https://github.com/SuiteCRM/SuiteCRM/issues/10621[#10621] - Localize checkbox values in PDF templates
+* PR: https://github.com/SuiteCRM/SuiteCRM/pull/10768[10768] - Fix https://github.com/SuiteCRM/SuiteCRM/issues/10767[#10767] Image field comes with an extra "10" in image src
+* PR: https://github.com/SuiteCRM/SuiteCRM/pull/10677[10677] - Fix https://github.com/SuiteCRM/SuiteCRM/issues/10676[#10676] - Remove old query which duplicates email address in table
+* PR: https://github.com/SuiteCRM/SuiteCRM/pull/10779[10779] - Update Dependencies
+* PR: https://github.com/SuiteCRM/SuiteCRM/pull/10514[10514] - Fix https://github.com/SuiteCRM/SuiteCRM/issues/10513[#10513] - When field to be updated is email1 then use new logic to update related email account record
+* PR: https://github.com/SuiteCRM/SuiteCRM/pull/10761[10761] - Fix https://github.com/SuiteCRM/SuiteCRM/issues/10759[#10759] Fix issue with white screen on login after requesting 2nd 2FA code
+* PR: https://github.com/SuiteCRM/SuiteCRM/pull/10760[10760] - Fix https://github.com/SuiteCRM/SuiteCRM/issues/9450[#9450] - Prevent Spaces in Grouped Report Ids
+
+=== icon:heart[] Community
+
+_Special thanks to the following members for their contributions and participation in this release!_
+
+{{% ghcontributors o2badad rahulshinde19 pgorod wiatrp SinergiaCRM AlabamaMike azzy9 gunnicom re8260 HVStechnik J-Wick4 %}}
+
+_Special thanks to everyone who reported the security issues addressed in this release!_
+
+{{% ghcontributors lighthousekeeper1212 dimitrop JBince quirmz d3dn0v4 yamerooo123 Parnuski rvizx Guilhermemury DQH1 q1uf3ng %}}
+
+Please https://suitecrm.com/releases/[visit the official website] to find the appropriate upgrade package.
+
+'''
+
 == 7.15.0
 
 _Released 18 December 2025_

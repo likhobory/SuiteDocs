@@ -1,113 +1,71 @@
 ---
-Title:  Raising Issues
-Weight: 20
+title: "Raising Issues"
+weight: 20
 ---
 
 :experimental:
 
 == Raising Issues
 
-An issue is an area where you can feel the project could be improved,
-for example, you could report a problem or bug you've encountered while
-using the software, a feature you feel is missing, or a gap in the
-project's documentation.
+An issue is an area where you feel the project could be improved. For example, you could report a problem or bug you've encountered while using the software or a gap in the project's documentation.
 
-When raising issues via our GitHub repository ensure you state the issue
-clearly with a full description of steps to reproduce, what version(s)
-of SuiteCRM the issue was found in and; if relevant what platform it is
-running on and a screenshot of the issue. This will allow any
-contributor to easily identify and potentially address the issue. Here
-is the GitHub guide to all things issues.
+When raising issues via our GitHub repository, ensure you state the issue clearly using the provided issue templates. A high-quality report includes:
 
-Here is a https://github.com/salesagility/SuiteCRM/issues/8535[good example of a raised issue^].
+* A clear, descriptive title.
+* Full description of steps to reproduce the behaviour.
+* The version(s) of SuiteCRM the issue was found in.
+* Environment details (PHP version, Database version, Web server).
+* Relevant log entries from `suitecrm.log` or your PHP error logs.
+
+Clear reporting allows contributors and the maintainers to easily identify, reproduce, and address the issue.
+
 
 == Security
 
-We take Security seriously here at SuiteCRM so if you have discovered a
-security risk report it by emailing security@suitecrm.com. This will be
-delivered to the product team who handle security issues. *Please don't
-disclose security bugs publicly* until they have been handled by the
-security team.
+We take security seriously at SuiteCRM Ltd. If you believe you have found a security vulnerability in our software, please report it to us.
 
-See the link:../security-policy[Security Policy] for more details on how to report security issues.
+{{% notice warning %}}
+**Please don't disclose security bugs publicly** until they have been handled and patched by the security team.
+{{% /notice %}}
+
+See our link:../../security-policy[Security Policy] for more details.
 
 == GitHub Labels
 
-=== Types of Issue Labels
+Labels help the community and the SuiteCRM Ltd team categorise and prioritise work. You can click the labels below to see the current list of issues on GitHub.
 
-You can click the labels below to see the list of actual Issues on Github that are
-currently marked with that label.
-
-[frame=none, cols="40,60"]
-|===
-
-|btn:[https://github.com/salesagility/SuiteCRM/labels/bug[bug]]| Confirmed or very likely to be a bug.
-
-|btn:[https://github.com/salesagility/SuiteCRM/labels/Low%20Priority[Low priority]]| Low impact (e.g. visual only, typos, alignments).
-
-|btn:[https://github.com/salesagility/SuiteCRM/labels/Medium%20Priority[Medium Priority]]| Medium impact blocker with a workaround.
-
-|btn:[https://github.com/salesagility/SuiteCRM/labels/High%20Priority[High Priority]]| A high impact blocker with no workaround.
-
-|btn:[https://github.com/salesagility/SuiteCRM/labels/Fix%20Proposed[Fix Proposed]]| Issues with a related pull request.
-
-|btn:[https://github.com/salesagility/SuiteCRM/labels/Pending%20Input[Pending Input]]| Pending input from issue raiser.
-
-|btn:[https://github.com/salesagility/SuiteCRM/labels/Language[Language]]| Issues relating to language files
-
-|btn:[https://github.com/salesagility/SuiteCRM/labels/Suggestion[Suggestion]]| Suggestions that will later be moved to https://trello.com/b/Ht7LbMqw/suitecrm-suggestion-box[Trello^]
-
-|btn:[https://github.com/salesagility/SuiteCRM/labels/Question[Question]]| General questions (Should usually be posted to the community forum instead)
-
-|btn:[https://github.com/salesagility/SuiteCRM/labels/Resolved%3A%20Next%20Release[Resolved: next release]]| Solved issues that will be closed after the next release.
-
-|btn:[https://github.com/salesagility/SuiteCRM/labels/invalid[Invalid]]| Issues that are invalid or non-reproducible.
-
-|btn:[https://github.com/salesagility/SuiteCRM/labels/Duplicate[Duplicate]]| Issues which are duplicates of other issues.
-|===
-
-We encourage users who feel an issue should be raised as a higher
-priority for a next release that they should make a comment to that
-effect. This also applies to incorrect labelling.
-
-
-=== Types of Pull Request Labels
-
-You can click the labels below to see the list of actual Pull Requests on Github that are
-currently marked with that label.
+=== Common Issue Labels
 
 [frame=none, cols="40,60"]
 |===
+|btn:[https://github.com/SuiteCRM/SuiteCRM/labels/Type%3ABug[Type: Bug]]| Confirmed or highly likely to be a functional bug.
 
-|btn:[https://github.com/salesagility/SuiteCRM/pulls?q=is%3Aopen+is%3Apr+label%3AAssessed[Assessed]]|
-Pull requests that have been confirmed to fix the original issue by a SalesAgility member.
+|btn:[https://github.com/SuiteCRM/SuiteCRM/labels/Priority%3ACritical[Priority: Critical]]| Issues that cause data loss or completely break the application.
 
-|btn:[https://github.com/salesagility/SuiteCRM/pulls?q=is%3Aopen+is%3Apr+label%3A%22Ready%20to%20Merge%22[Ready to Merge]]|
-Pull requests that have both been assessed and code reviewed by SalesAgility.
+|btn:[https://github.com/SuiteCRM/SuiteCRM/labels/Priority%3AImportant[Priority: Important]]| High-impact issues that affect core business processes.
 
-|btn:[https://github.com/salesagility/SuiteCRM/pulls?q=is%3Aopen+is%3Apr+label%3A%22Requires%20Tests%22[Requires Tests]]|
-Pull requests that require addition acceptance or unit tests before they can be merged.
+|btn:[https://github.com/SuiteCRM/SuiteCRM/labels/Priority%3AModerate[Priority: Moderate]]| Standard bugs that have practical workarounds.
 
-|btn:[https://github.com/salesagility/SuiteCRM/pulls?q=is%3Aopen+is%3Apr+label%3A%22Contribution%20Community%22[Community Contribution]]|
-Pull requests that have been created by a member of the community.
+|btn:[https://github.com/SuiteCRM/SuiteCRM/labels/Status%3AFix%20Proposed[Status: Fix Proposed]]| Issues that have an associated Pull Request already in progress or suggested fix.
 
-|btn:[https://github.com/salesagility/SuiteCRM/pulls?q=is%3Aopen+is%3Apr+label%3AEnhancement[Enhancement]]|
-Pull requests that add additional features or functionality. These pull requests will need to be reviewed by SalesAgility.
+|btn:[https://github.com/SuiteCRM/SuiteCRM/labels/Area%3ALanguage[Area: Language]]| Issues relating specifically to translations or language files.
 
-
-|btn:[https://github.com/salesagility/SuiteCRM/pulls?q=is%3Aopen+is%3Apr+label%3A%22In%20Review%22[In Review]]|
-Currently in-review and requires additional work from creator
-
-|btn:[https://github.com/salesagility/SuiteCRM/pulls?q=is%3Aopen+is%3Apr+label%3A%22Wrong%20Branch%22[Wrong Branch]]|
-Pull requests that have been created to the wrong branch.
-
-|btn:[https://github.com/salesagility/SuiteCRM/pulls?q=is%3Aopen+is%3Apr+label%3ADuplicate[Duplicate]]|
-Duplicate of other pull requests.
-
+|btn:[https://github.com/SuiteCRM/SuiteCRM/labels/Type%3ASuggestion[Type: Suggestion]]| Requests for new features or enhancements. Please use https://community.suitecrm.com/c/suggestion-box/13[community Forum Suggestion Box] for general suggestions and feature requests.
 |===
 
+=== Pull Request Labels
 
+[frame=none, cols="40,60"]
+|===
+|btn:[https://github.com/SuiteCRM/SuiteCRM/pulls?q=is%3Aopen+is%3Apr+label%3AStatus%3AAssessed[Status: Assessed]]|
+PRs that have been assessed by a core team member as ready for code review and testing.
 
+|btn:[https://github.com/SuiteCRM/SuiteCRM/pulls?q=is%3Aopen+is%3Apr+label%3A%22Status%3A%20Requires%20Code%20Review%22[Status: Requires Code Review]]|
+Contributions that need Code reviewed before being tested
 
+|btn:[https://github.com/SuiteCRM/SuiteCRM/pulls?q=is%3Aopen+is%3Apr+label%3A%22Status%3A%20Requires%20Testing%22[Status: Requires Testing]]|
+Contributions that need testing before moving to Ready to Merge.
 
-
+|btn:[https://github.com/SuiteCRM/SuiteCRM/pulls?q=is%3Aopen+is%3Apr+label%3A%22Status%3A%20Ready%20to%20Merge%22[Status: Ready to Merge]]|
+Code that has passed functional assessment and technical code review.
+|===

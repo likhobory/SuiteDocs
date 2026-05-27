@@ -1,0 +1,154 @@
+---
+title: "Manual Migration Tasks"
+weight: 30
+---
+
+{{% notice info %}}
+Before using Manual Migration Tasks, make sure the Symfony Messenger worker is running. See the link:../messenger-setup[Messenger Setup] guide.
+{{% /notice %}}
+
+:imagesdir: /images/en/8.x/admin/manual-migration-tasks
+
+== Manual Migration Tasks
+
+{{% notice info %}}
+This documentation is for SuiteCRM 8.10.0+
+{{% /notice %}}
+
+=== What are Manual Migration Tasks?
+
+Manual Migration Tasks are background data migration jobs that ship with SuiteCRM upgrades. When an upgrade changes how data is stored — for example, moving file attachments to a new storage system — a Manual Migration Task is created automatically so the existing data can be converted at your convenience.
+
+Because these jobs can process thousands of records, they run in the background using SuiteCRM's asynchronous task infrastructure. This means they do not block the application while they work, and you can continue using SuiteCRM normally while a migration runs.
+
+Key points:
+
+* Migration tasks are created automatically during the upgrade process — you do not need to create them yourself.
+* Each task processes data in small batches, so it does not overload the server.
+* Progress is tracked and displayed in real time, including how many items have been processed, how many succeeded, and how many failed.
+* If some items fail, you can retry just the failed items or re-run the entire migration, depending on the task. See Handling Failures section below.
+
+=== Accessing Manual Migration Tasks
+
+To access the Migrations module:
+
+. Log in as an administrator.
+. Navigate to the *Administration Panel*.
+. In the *Admin Tools* section, select *Migrations*.
+
+This opens the Migrations list view, which shows all available migration tasks.
+
+=== Understanding the List View
+
+The Migrations list view displays the following columns:
+
+[cols="20,80"]
+|===
+| *Name* | The name of the migration task (e.g. "Migrate Notes Attachments").
+| *Status* | The current status of the task (see <<task-statuses>> below).
+| *Phase* | The current processing phase (Queueing, Processing, or Finalizing).
+| *Progress* | A summary showing completion percentage, items completed, and items failed.
+| *Last Run* | The date and time the task was last executed.
+| *Assigned To* | The user assigned to the task.
+|===
+
+Click on a task name to open its detail view.
+
+[[task-statuses]]
+=== Task Statuses
+
+A migration task moves through the following statuses during its lifecycle:
+
+[cols="20,80"]
+|===
+| *Initial* | The task has been created but has never been run. The "Run Migration" button is available.
+| *Pending* | The task has been queued and is waiting for the background worker to pick it up.
+| *Running* | The task is actively processing items in the background. Progress updates as batches complete.
+| *Completed* | All items have been processed successfully. The "Delete" button is available.
+| *Failed* | The task encountered errors. Depending on the task, "Retry Failed" and/or "Re-run" buttons may be available.
+|===
+
+=== Running a Migration Task
+
+To run a migration task for the first time:
+
+. Open the Migrations list view (Administration Panel > Admin Tools > Migrations).
+. Click on the task name to open the detail view.
+. Click the *Run Migration* button.
+
+[start=3]
+. A confirmation dialog appears — click *OK* to proceed.
+
+[start=4]
+. The task status changes to *Pending*, then to *Running* once the background worker picks it up.
+
+{{% notice note %}}
+The "Run Migration" button is only visible when the task status is "Initial". Once a task has been run, different actions become available depending on the result.
+{{% /notice %}}
+
+=== Monitoring Progress
+
+While a migration task is running, the detail view displays progress information:
+
+* *Phase* — shows which phase the task is in:
+** *Queueing* — the system is scanning for items to process and adding them to the queue.
+** *Processing* — items are being processed in batches.
+** *Finalizing* — optional post-processing is being performed (not all tasks have this phase).
+* *Progress* — shows a percentage along with counts of completed, failed, and total items.
+* *Last Run* — the timestamp of the most recent execution.
+
+Refresh the page to see updated progress. The progress field updates each time a batch of items completes.
+
+=== Handling Failures
+
+If some items fail during processing, the task status is set to *Completed* (if at least some items succeeded) or *Failed* (if all items failed). Depending on the task's configuration, additional action buttons may appear:
+
+* *Retry Failed* — re-queues only the items that failed and processes them again. This is useful when failures were caused by a temporary issue (e.g. a file lock or a network timeout).
+* *Re-run* — purges all previously processed items and starts the entire migration from scratch. Use this if the underlying issue has been fixed and you want a clean run.
+
+{{% notice note %}}
+Not all tasks support both recovery actions. The available buttons depend on what the task developer has configured.
+{{% /notice %}}
+
+=== Dismissing a Completed Task
+
+Once a migration task has completed (or failed and you do not wish to retry):
+
+. Open the task detail view.
+. Click the *Delete* button.
+. A confirmation dialog appears — click *OK* to proceed.
+. The task record is removed from the list view, and all associated processing data is cleaned up.
+
+{{% notice warning %}}
+Deleting a task is permanent. The task record is soft-deleted and all processing items are purged. If you need to re-run the migration later, the task would need to be re-created.
+{{% /notice %}}
+
+=== Lifecycle Overview
+
+The following diagram summarises the typical administrator workflow for a Manual Migration Task:
+
+image:migration_task_lifecycle_full.svg[Lifecycle Overview]
+
+=== Configuration
+
+Batch sizes and other configuration options are documented in the link:../configuration[Configuration Reference].
+
+=== Troubleshooting
+
+==== The task stays in "Pending" status
+
+This usually means the Messenger worker is not running. See the link:../messenger-setup[Messenger Setup] guide for how to start and verify the worker.
+
+==== Items are failing
+
+Open the task detail view to check the progress counters. Common causes include:
+
+* *File permission issues* — ensure the worker runs as the web server user.
+* *Missing source files* — if migrating files, some legacy files may have been deleted or moved.
+* *Memory limits* — increase the PHP memory limit or reduce the batch size configuration.
+
+Check the SuiteCRM log (`suitecrm.log`) and the PHP error log for detailed error messages.
+
+==== The task completed but some items failed
+
+If the task supports it, use the *Retry Failed* button to re-process only the failed items. If the underlying issue cannot be resolved, you can *Delete* the task and address the failed items manually if needed.

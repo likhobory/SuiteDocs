@@ -9,7 +9,7 @@ When making these changes be sure to make them in the custom directory, ie: 'pub
 
 When adding this configuration, it can be added to the `vardefs.php` or the `detailviewdefs.php`.
 
-SuiteCRM 8 has 6 operators that can be used in configuration.
+SuiteCRM 8 has 11 operators that can be used in configuration.
 
 == Available Operators
 
@@ -153,6 +153,160 @@ In the example above, the Annual Revenue updated to 1000 if Employees is less th
 ----
 
 In the example above if the Employee field has any value, then Annual Revenue will update to have the value 1.
+
+=== Is True
+
+[source,php]
+----
+    'name' => 'trackers_enabled',
+    'vname' => 'LBL_TRACKER_LINKS_ENABLED',
+    'type' => 'bool',
+    'footnotes' => [
+        [
+            'labelKey' => 'LBL_TRACKERS_ENABLED_FOOTNOTE',
+            'displayModes' => ['edit', 'create', 'detail'],
+            'activeOn' => [
+                [
+                    'operator' => 'is-true',
+                ]
+            ]
+        ]
+    ]
+----
+
+In the example above, the footnote will be displayed when the trackers_enabled field is true (e.g. true, "true", 1 and "1").
+
+=== Is False
+
+[source,php]
+----
+    'name' => 'trackers_enabled',
+    'vname' => 'LBL_TRACKER_LINKS_ENABLED',
+    'type' => 'bool',
+    'footnotes' => [
+        [
+            'labelKey' => 'LBL_TRACKERS_DISABLED_FOOTNOTE',
+            'displayModes' => ['edit', 'create', 'detail'],
+            'activeOn' => [
+                [
+                    'operator' => 'is-false',
+                ]
+            ]
+        ]
+    ]
+----
+
+In the example above, the footnote will be displayed when the trackers_enabled field is false (e.g. false, "false", 0 and "0").
+
+=== Any Value
+
+[source,php]
+----
+    'name' => 'annual_revenue',
+    'comment' => 'Annual revenue for this company',
+    'label' => 'LBL_ANNUAL_REVENUE',
+    'logic' => [
+        'update-when-employee-has-value' => [
+            'key' => 'updateValue',
+            'modes' => ['detail', 'edit', 'create'],
+            'params' => [
+                'fieldDependencies' => [
+                    'employees',
+                ],
+                'targetValue' => '100',
+                'activeOnFields' => [
+                    'employees' => [
+                        ['operator' => 'any-value']
+                    ],
+                ]
+            ]
+        ],
+    ]
+----
+
+The `any-value` operator always returns true regardless of the field's value. This is useful when you want logic to trigger on any change to the dependent field.
+
+=== Previous Value Equal
+
+[source,php]
+----
+'name' => 'contact_name',
+'rname' => 'last_name',
+'id_name' => 'contact_id',
+'vname' => 'LBL_CONTACT_NAME',
+'type' => 'relate',
+'logic' => [
+    'set-contact-name-blank-on-newvalue' => [
+        'key' => 'setEmpty',
+        'modes' => ['edit', 'create'],
+        'triggeringStatus' => ['onValueChange'],
+        'params' => [
+            'fieldDependencies' => [
+                'parent_type',
+            ],
+            'activeOnFields' => [
+                'parent_type' => [
+                    [
+                        'operator' => 'previous-value-equal',
+                        'values' => ['Contacts']
+                    ],
+                    [
+                        'operator' => 'not-equal',
+                        'values' => ['Contacts']
+                    ]
+                ],
+            ]
+        ]
+    ],
+]
+----
+
+In the example above, the contact_name field will be cleared when parent_type previously had the value Contacts and has now changed to a different value.
+
+The previous-value-equal operator checks that the field's value before the change matched the given value(s).
+
+It is used in combination with not-equal to confirm the field has since changed away from that value.
+
+=== Previous Value Not Equal
+
+[source,php]
+----
+'name' => 'contact_name',
+'rname' => 'last_name',
+'id_name' => 'contact_id',
+'vname' => 'LBL_CONTACT_NAME',
+'type' => 'relate',
+'logic' => [
+    'set-contact-name-blank-on-previous-value' => [
+        'key' => 'setEmpty',
+        'modes' => ['edit', 'create'],
+        'triggeringStatus' => ['onValueChange'],
+        'params' => [
+            'fieldDependencies' => [
+                'parent_type',
+            ],
+            'activeOnFields' => [
+                'parent_type' => [
+                    [
+                        'operator' => 'previous-value-not-equal',
+                        'values' => ['Contacts']
+                    ],
+                    [
+                        'operator' => 'is-equal',
+                        'values' => ['Contacts']
+                    ]
+                ],
+            ]
+        ]
+    ],
+]
+----
+
+In the example above, the contact_name field will be cleared when parent_type previously did not have the value Contacts and has now been changed to Contacts.
+
+The previous-value-not-equal operator checks that the field's value before the change did not match the given value(s).
+
+It is used in combination with is-equal to confirm the field has since changed to that value.
 
 === Not Equal
 

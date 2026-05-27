@@ -116,6 +116,12 @@ setting) at the "Scheduled Run Date".
 * This status can be achieved by selecting the "Schedule" button.
 
 * To set the record back to draft, select the "Unschedule" button, you *cannot* do this when the sending process has started.
+|*Paused*| * This status is set by hitting the threshold for errors per batch (based on the "Error threshold per batch" setting), or it will pause because the Outbound Email cannot connect to SMTP.
+
+* This will pause both the queueing and sending process for the record until the record is resumed (can be achieved by selecting the "Resume" action).
+
+* When paused, there will be a warning banner showing that the record is paused due to too many errors, along with the most recent error from the latest failed email (or SMTP connection error).
+
 |*Pending Send*| * If the record is "Scheduled" and "Scheduled Run Date" is in the past, the record will show as pending send and will be picked up the next time the Scheduler runs.
 
 * While in "pending send", this record can no longer be "Unscheduled". To stop the process, select the "Abort" button.
@@ -192,7 +198,10 @@ Aside from standard editor buttons there is also:
 |===
 |*image:Unsubscribe-Icon.png[Unsubscribe,width=75]*| This will inject an unsubscribe link to the email body.
 |*image:Code-Icon.png[Code, width=75]*| This will change the editor to a monaco editor - a html field.
+|*image:Variable-Injector-Icon.png[Code, width=75]*| This will allow you to insert placeholder variables into the email.
 |===
+
+To see more information on the Variable Injector, see link:../daily-activities/emails/email-compose.en.adoc#_variable_injection[here.]
 
 == Tracker Urls
 
@@ -235,6 +244,8 @@ image:send_test_entries_demo.gif[Send Test Email]
 
 By doing this you can view the campaign as a recipient and double-check that it appears as it should.
 
+This should also parse the variables in the email body, so you can check that they are working as expected.
+
 Test Entries will generate views and click-thrus etc. which can be viewed from the record subpanels and charts.
 
 image:test-entries-demo.gif[Test Entries]
@@ -269,6 +280,16 @@ Once the record has been scheduled, This action will set the record to Draft and
 The Record can only be unscheduled before the sending process has begun. After this stage the record must be "Aborted" to stop the process.
 {{% /notice %}}
 
+=== Resume
+
+This will resume the queueing/ sending process if the record has been paused.
+
+This will show if the record has been paused due to hitting the error threshold or if the Outbound Email can not connect to SMTP.
+
+There will be a warning banner showing the most recent error that caused the pause, along with the option to resume.
+
+image:warning-banner.png[Campaigns Warning Banner]
+
 === Abort
 
 This will stop the sending process for the record and will delete everything for this record on the message queue.
@@ -295,12 +316,15 @@ Emails that have been scheduler to send will show in the respective targets acti
 {{% /notice %}}
 
 
-==== Inbound Email
+==== Email Settings
 
-This will show you if there is currently an Inbound Email Record that exists that is of type Bounce.
+This will show:
+
+* If there is currently an Inbound Email Record that exists that is of type Bounce
+* If the selected Outbound Email Record can connect to SMTP.
 
 {{% notice note %}}
-A Bounce record can exist and not be configured correctly, be weary of this if running into issues.
+A Bounce record can exist and not be configured correctly, be wary of this if running into issues.
 {{% /notice %}}
 
 ==== Settings
@@ -329,6 +353,8 @@ On this page you can change different Campaign Settings:
 |===
 |*Number of emails marketing records to process per run*| This is the maximum number of Email Marketing Records to process at once time during the Queue and Send Campaign Email Schedulers.
 |*Number of emails processed/sent per batch*|This is the maximum number of Emails to queue and send per run of Email Marketing Record.
+|*Maximum send retries per recipient on failure*|This is the maximum number of times to retry sending an email to a recipient if there is a failure before marking it as failed.
+|*Error threshold per batch (campaign pauses when reached, 0 to disable)*|This is the maximum number of errors allowed per batch before pausing the campaign. Setting this to 0 will disable this feature and allow campaigns to continue regardless of errors.
 |*Trackers Enabled*| This is to enable / disable trackers globally.
 |*Location of campaign tracking files*| This is to define the location of the campaign tracking files.
 |*Keep copies of campaign messages*|This is if you want copies of individual Email Marketing Records.

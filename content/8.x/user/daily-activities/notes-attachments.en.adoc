@@ -1,0 +1,36 @@
+---
+title: "Notes & Attachments"
+weight: 30
+---
+
+:imagesdir: /images/en/8.x/user/daily-activities
+
+== Overview
+
+The Notes module in SuiteCRM can be used to keep a record of any
+comments, observations or explanations that a User may have relating
+internally to their organisation or relating to another SuiteCRM record
+such as an Account, Contact, Lead or many more. Notes are also used to
+keep record of interactions with Customers regarding Cases and Bugs.
+
+== Note Actions
+
+Access Note actions from the module menu:
+
+* *Create Note or Attachment* – Opens a form to create a new Note record.
+* *View Notes* – Redirects to the List View for searching and listing Note records.
+
+== Creating a Note
+
+Navigate to the Notes module and select "Create Note" from the Actions menu.
+
+image:notes-edit.png[Note Create View]
+
+=== Fields Overview
+
+* *Subject* - Subject of the note
+* *Assigned To* - User responsible for the document
+* *Related To* - The Parent record the note is related to (Account, Contact, Lead, etc.)
+* *Contact* - The Contact associated with the note (if applicable). This field will dynamically hide if the Related To is Contacts.
+* *Note* - Note Content
+* *Attachment* - The file attached to the note (if applicable)

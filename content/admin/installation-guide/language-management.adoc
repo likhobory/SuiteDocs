@@ -1,0 +1,52 @@
+---
+title: "Installing and Updating Languages"
+weight: 20
+
+aliases:
+  - /admin/installation-guide/languages/install-a-new-language/
+  - /admin/installation-guide/languages/update-a-language-pack/
+---
+
+= Installing and Updating Languages
+
+As an Administrator, you can localise the SuiteCRM environment by installing new language packs or updating existing ones. This ensures your users can interact with the system in their preferred language.
+
+== Sourcing Language Packs
+
+SuiteCRM translations are community-driven. To ensure interface labels match your specific build, you must download the pack corresponding to your version.
+
+1. Check your version in **Admin > About**.
+2. Visit the link:https://sourceforge.net/projects/suitecrmtranslations/files/[SuiteCRM SourceForge Repository, window="_blank"].
+3. Select the folder for your version (e.g., *v8.x* or *v7.x*).
+4. Download the required `.zip` file (e.g., `es_ES.zip` for Spanish).
+
+== Installing a New Language
+
+1. Navigate to **Admin > Module Loader**.
+2. Click **Choose File** and select your downloaded language `.zip`.
+3. Click **Upload**.
+4. Locate the package in the *Uploaded Packages* list and click **Install**.
+5. Review the licence agreement and click **Commit**.
+
+
+
+== Updating an Existing Language Pack
+
+When a new version of a language pack is released, or when you upgrade SuiteCRM, you should update your translations to ensure all new features are correctly labelled.
+
+1. **Download** the updated `.zip` file from SourceForge following the steps in the "Sourcing" section above.
+2. Navigate to **Admin > Module Loader**.
+3. **Uninstall the old pack:** Find the current language pack in the *Installed* list and click **Uninstall**.
+* *Note:* Choose the "Remove Files" option.
+4. **Upload and Install:** Follow the standard installation steps to upload the new version of the `.zip` file.
+5. **Repair:** It is highly recommended to run a **Quick Repair and Rebuild** immediately after an update.
+
+
+== Enabling the Language
+
+After installation or update, ensure the language is active for use:
+
+1. Go to **Admin > System Settings**.
+2. Select the **Languages** sub-tab.
+3. Move the desired language to the **Enabled** column.
+4. Click **Save**.
