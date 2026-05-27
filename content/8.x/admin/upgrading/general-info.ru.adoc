@@ -67,7 +67,7 @@ link:../before-start[Подготовка к обновлению]
 
 |Release Candidate (RC)/8.0.x/8.1.x => 8.2.x +
 8.2.x => Актуальная версия
-|link:../upgrading-82x-versions[Обновление c версии 8.2.x+ до более поздних версий]
+|link:../running-the-upgrade[Выполнение обновления]
 
 |RC/8.0.x => 8.1.x
 |link:../older-versions/upgrading-80-to-81-versions[Обновление с версии 8.0.x до версии 8.1.x]
